@@ -2,25 +2,30 @@ using UnityEngine;
 
 public class SecretAreaTrigger : MonoBehaviour
 {
-    private bool kameraGizliOdada = false; // Kameranýn nerede olduðunu hatýrla
+    private bool isCameraInSecretRoom = false; // Kameranýn gizli odada olup olmadýðýný tutar
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
         if (other.CompareTag("Player"))
         {
-            // Durumu tersine çevir (true ise false, false ise true yap)
-            kameraGizliOdada = !kameraGizliOdada;
+            
+            isCameraInSecretRoom = !isCameraInSecretRoom;
 
-            Debug.Log("Kamera Modu Deðiþti: " + (kameraGizliOdada ? "Gizli Oda" : "Ana Oda"));
+            // Kamera kontrolcüsünü bul ve yeni oda durumunu bildir
+            CameraRoomController cameraController = FindFirstObjectByType<CameraRoomController>();
+            if (cameraController != null)
+            {
+                cameraController.ChangeRoom(isCameraInSecretRoom);
+            }
 
-            // Kameraya yeni durumu gönder
-            FindFirstObjectByType<CameraRoomController>().OdayiDegistir(kameraGizliOdada);
+            Debug.Log("Kamera modu deðiþtirildi: " + (isCameraInSecretRoom ? "Gizli Oda" : "Ana Oda"));
         }
     }
 
-    // Level atlandýðýnda veya karakter ölünce bu deðiþkeni sýfýrlamak için fonksiyon
+    // Seviye sýfýrlandýðýnda veya karakter öldüðünde durumu baþlangýca döndür
     public void ResetTrigger()
     {
-        kameraGizliOdada = false;
+        isCameraInSecretRoom = false;
     }
 }

@@ -4,52 +4,73 @@ using System.Collections.Generic;
 
 public class LevelManager : MonoBehaviour
 {
+    // Singleton yapýsý: Diðer scriptlerden LevelManager.Instance ile eriþilir
     public static LevelManager Instance;
-    public int mevcutLevelIndex = 0;
-    public List<LevelData> tumLeveller; 
 
-    [HideInInspector] public LevelData aktifLevel;
+    public int currentLevelIndex = 0;   // Mevcut seviyenin liste sýrasý
+    public List<LevelData> allLevels;   // Tüm seviye verilerini tutan liste
 
-    void Awake() { Instance = this; }
-    void Start() { SeviyeyiUygula(); }
+    [HideInInspector] public LevelData activeLevel; // O an oynanan seviyenin verisi
 
-    public void SeviyeAtla()
+    void Awake()
     {
-        mevcutLevelIndex++;
+        Instance = this;
+        if (PlayerPrefs.HasKey("SavedLevel"))
+        {
 
+            currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
+        }
+        else
+        {
+            currentLevelIndex = 0;
+        }
         
-        if (mevcutLevelIndex >= 6)
+    }
+
+    void Start()
+    {
+        ApplyLevel(); // Ýlk seviye ayarlarýný uygula
+    }
+
+    public void NextLevel()
+    {
+        currentLevelIndex++;
+
+        PlayerPrefs.SetInt("SavedLevel", currentLevelIndex);
+        PlayerPrefs.Save();
+
+        // Eðer 6. seviyeye ulaþýldýysa bir sonraki sahneye (Scene) geç
+        if (currentLevelIndex >= allLevels.Count)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             return;
         }
 
-        SeviyeyiUygula();
-        
+        ApplyLevel(); // Yeni seviyenin verilerini yükle
+
+        // Oyuncuyu bul ve baþlangýç noktasýna geri gönder
         FindFirstObjectByType<PlayerController>().ResetPosition();
     }
 
-    void SeviyeyiUygula()
+    void ApplyLevel()
     {
-        if (mevcutLevelIndex < tumLeveller.Count)
+        // Liste sýnýrlarý içerisinde olduðumuzdan emin olalým
+        if (currentLevelIndex < allLevels.Count)
         {
-            aktifLevel = tumLeveller[mevcutLevelIndex];
+            activeLevel = allLevels[currentLevelIndex];
 
-            // Yerçekimi ayarý
-            Physics2D.gravity = new Vector2(0, aktifLevel.yercekimiTers ? 9.81f : -9.81f);
-           
+            // Yerçekimi ayarý: LevelData içindeki bool deðerine göre yön deðiþtirir
+            Physics2D.gravity = new Vector2(0, activeLevel.isGravityInverted ? 9.81f : -9.81f);
 
-            // Gizli Duvar
-            GameObject gizliDuvar = GameObject.Find("Tilemap_Secret");
-            if (gizliDuvar != null)
+            // Gizli Duvar Kontrolü: "Tilemap_Secret" isimli objeyi sahnede ara
+            GameObject secretWall = GameObject.Find("Tilemap_Secret");
+            if (secretWall != null)
             {
-                gizliDuvar.GetComponent<Collider2D>().enabled = !aktifLevel.gizliGecitOdasiVar;
+                // Eðer seviyede gizli geçit varsa duvarýn collider'ýný kapat (geçilebilir yap)
+                secretWall.GetComponent<Collider2D>().enabled = !activeLevel.hasSecretPassage;
             }
 
-          
-         
-
-            Debug.Log("Þu anki Seviye: " + aktifLevel.levelAdi);
+            Debug.Log("Aktif Seviye: " + activeLevel.levelName);
         }
     }
 }

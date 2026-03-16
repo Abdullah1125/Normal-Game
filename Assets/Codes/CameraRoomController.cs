@@ -2,34 +2,38 @@ using UnityEngine;
 
 public class CameraRoomController : MonoBehaviour
 {
-    public float gecisHizi = 5f;
-    private Vector3 anaOdaPos;
-    private Vector3 hedefPos;
+
+    public float transitionSpeed = 5f; // Kameranýn kayma hýzý
+    private Vector3 mainRoomPos;       // Ana oda konumu
+    private Vector3 targetPos;         // Gidilecek hedef konum
 
     void Awake()
     {
-        anaOdaPos = transform.position;
-        hedefPos = anaOdaPos;
+       
+        mainRoomPos = transform.position;
+        targetPos = mainRoomPos;
     }
 
     void Update()
     {
-        // Kamerayý hedef konuma yumuþakça kaydýrýr
-        transform.position = Vector3.Lerp(transform.position, hedefPos, gecisHizi * Time.deltaTime);
+        // Kamerayý hedef konuma yumuþakça kaydýr
+        transform.position = Vector3.Lerp(transform.position, targetPos, transitionSpeed * Time.deltaTime);
     }
 
-    public void OdayiDegistir(bool gizliGecitteMi)
+    public void ChangeRoom(bool isInSecretPassage)
     {
-        LevelData veri = LevelManager.Instance.aktifLevel;
+        LevelData data = LevelManager.Instance.activeLevel;
 
-        if (veri != null && veri.gizliGecitOdasiVar)
+        if (data != null && data.hasSecretPassage)
         {
-            hedefPos = gizliGecitteMi ? veri.gizliOdaPozisyonu : anaOdaPos;
+            // Doðru odayý seç: Gizli geçitteyse secretRoom, deðilse mainRoom
+            targetPos = isInSecretPassage ? data.secretRoomPos : mainRoomPos;
         }
     }
 
-    public void KameraSifirla()
+    public void ResetCamera()
     {
-        hedefPos = anaOdaPos;
+        // Hedefi baþlangýç konumuna döndür
+        targetPos = mainRoomPos;
     }
 }

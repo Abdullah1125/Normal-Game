@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
   m_Name: Level_3
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelID: 0
-  levelAdi: 
-  solYasak: 0
-  sagYasak: 0
-  ziplamaYasak: 0
-  yercekimiTers: 0
-  gizliGecitOdasiVar: 0
-  gizliOdaPozisyonu: {x: 0, y: 0, z: 0}
+  levelID: 3
+  levelName: "Ters Kap\u0131"
+  isLeftForbidden: 0
+  isRightForbidden: 0
+  isJumpForbidden: 0
+  isGravityInverted: 0
+  hasSecretPassage: 1
+  secretRoomPos: {x: 15, y: 0.5, z: -10}
+  isButtonActive: 0
