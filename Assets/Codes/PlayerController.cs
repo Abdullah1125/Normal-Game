@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -116,8 +117,16 @@ public class PlayerController : MonoBehaviour
         Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
         transform.position = startPos;
         rb.linearVelocity = Vector2.zero;
-       
 
+        GateController[] allGates = FindObjectsByType<GateController>(FindObjectsSortMode.None);
+        foreach (GateController gate in allGates) gate.ResetGate();
+
+        GateButton[] allButtons = FindObjectsByType<GateButton>(FindObjectsSortMode.None);
+        foreach (GateButton button in allButtons) button.ResetButton();
+
+        Key[] allKeys = Object.FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Key key in allKeys)key.ResetKey();
+       
     }
 
     public void Move(float dir)
