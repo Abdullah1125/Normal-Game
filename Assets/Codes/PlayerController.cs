@@ -28,6 +28,15 @@ public class PlayerController : MonoBehaviour
     public float checkRadius = 0.25f;
     public LayerMask groundLayer;
 
+    [Header("Olüm")]
+    private Vector2 startPos;
+    public GameObject soulPrefab;
+
+    void Start()
+    {
+        startPos = transform.position;
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -87,7 +96,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-  
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Obstacle"))
+        {
+            Respawn();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            Respawn(); 
+        }
+    }
+    public void Respawn()
+    {
+        Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
+        transform.position = startPos;
+        rb.linearVelocity = Vector2.zero;
+       
+
+    }
+
     public void Move(float dir)
     {
         moveInput = dir;
