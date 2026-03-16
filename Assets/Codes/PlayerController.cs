@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Obstacle"))
         {
-            Respawn();
+            Die();
         }
     }
 
@@ -109,33 +109,65 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Obstacle"))
         {
-            Respawn(); 
+            Die(); 
         }
     }
-    public void Respawn()
+    public void Die()
     {
-        Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
+        if (soulPrefab != null)
+        {
+            Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
+        }
+        ResetPosition();
+    }
+
+
+    public void ResetPosition()
+    {
         transform.position = startPos;
         rb.linearVelocity = Vector2.zero;
 
-        GateController[] allGates = FindObjectsByType<GateController>(FindObjectsSortMode.None);
-        foreach (GateController gate in allGates) gate.ResetGate();
+        SecretAreaTrigger trigger = FindFirstObjectByType<SecretAreaTrigger>();
+        if (trigger != null) trigger.ResetTrigger();
 
-        GateButton[] allButtons = FindObjectsByType<GateButton>(FindObjectsSortMode.None);
-        foreach (GateButton button in allButtons) button.ResetButton();
-
-        Key[] allKeys = Object.FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (Key key in allKeys)key.ResetKey();
        
+        FindFirstObjectByType<CameraRoomController>().KameraSifirla();
+
+        ResetLevelObjects();
+    }
+
+    private void ResetLevelObjects()
+    {
+     
+        var gates = Object.FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var g in gates) g.ResetGate();
+
+    
+        var keys = Object.FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var k in keys) k.ResetKey();
+
+       
+        var buttons = Object.FindObjectsByType<GateButton>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var b in buttons) b.ResetButton();
+
     }
 
     public void Move(float dir)
     {
+        LevelData kural = LevelManager.Instance.aktifLevel;
+        if (kural != null)
+        {
+            if (kural.solYasak && dir < 0) { moveInput = 0; return; }
+            if (kural.sagYasak && dir > 0) { moveInput = 0; return; }
+        }
         moveInput = dir;
     }
 
     public void StartJump()
     {
+
+        
+
         if (isGrounded)
         {
             ApplyJump(firstJumpForce);

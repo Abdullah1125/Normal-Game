@@ -17,6 +17,14 @@ public class GateButton : MonoBehaviour
     {
         if (!hasPressed && other.CompareTag("Player"))
         {
+          
+            if (LevelManager.Instance != null && !LevelManager.Instance.aktifLevel.butonAktif)
+            { 
+                GetComponent<SpriteRenderer>().color = new Color(0.3f, 0.3f, 0.3f);
+                return;
+            }
+          
+
             hasPressed = true;
             if (targetGate != null) targetGate.OpenGate();
             GetComponent<SpriteRenderer>().color = Color.green;
