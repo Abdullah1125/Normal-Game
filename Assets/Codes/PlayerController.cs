@@ -23,11 +23,13 @@ public class PlayerController : MonoBehaviour
     private float moveInput;            // Hareket girdisi (-1, 0, 1)
     private bool isGrounded;            // Yerde mi kontrolü
     private bool isHoldingJump;         // Zıplama tuşuna basılı tutuluyor mu?
+    private float gravityDir;
 
     [Header("Sensors")]
     public Transform groundCheck;       // Yer kontrol objesi
     public float checkRadius = 0.25f;   // Kontrol dairesi yarıçapı
     public LayerMask groundLayer;       // Yer olarak sayılacak katman
+
 
     [Header("Death Settings")]
     private Vector2 startPos;           // Başlangıç noktası
@@ -40,10 +42,14 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;       // Karakterin devrilmesini engelle
         rb.gravityScale = 6f;           // Yerçekimi ağırlığı
-    }
 
+    }
+    
     void Update()
     {
+        // Yer çekimi yönünü belirle (-1 aşağı, 1 yukarı)
+        gravityDir = Mathf.Sign(Physics2D.gravity.y);
+
         // Klavye girdilerini al
         float keyboardInput = Input.GetAxisRaw("Horizontal");
         if (keyboardInput != 0) moveInput = keyboardInput;
@@ -53,13 +59,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump")) StartJump();
         if (Input.GetButtonUp("Jump")) StopJump();
 
-        // Yerde olma kontrolü ve zıplama hakkı yenileme
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
-        if (isGrounded) extraJumps = extraJumpsValue;
+      
 
         // Karakterin yüzünü hareket yönüne çevir
         if (moveInput > 0) transform.localScale = new Vector3(1, 1, 1);
         else if (moveInput < 0) transform.localScale = new Vector3(-1, 1, 1);
+
+        //Karakteri Ters Çevir
+        if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
+        else transform.eulerAngles = Vector3.zero;
     }
 
     void FixedUpdate()
@@ -76,16 +84,24 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(speedDif * airAcceleration * Vector2.right, ForceMode2D.Force);
         }
 
+        // Yerde olma kontrolü ve zıplama hakkı yenileme
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+        if (isGrounded) extraJumps = extraJumpsValue;
+
+        // Karakterin "yükselme" hızını yer çekimine göre kontrol etmeliyiz
+        float upwardVelocity = -gravityDir * rb.linearVelocity.y;
         // Zıplama desteği (Jump Buffer/Apex Boost)
         if (isHoldingJump && rb.linearVelocity.y > 0.1f && rb.linearVelocity.y < 3f)
         {
-            float targetY = rb.linearVelocity.y + extraBoostAmount;
+            float targetY = rb.linearVelocity.y + (extraBoostAmount * -gravityDir);
             float smoothY = Mathf.Lerp(rb.linearVelocity.y, targetY, Time.fixedDeltaTime * boostSmoothness);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, smoothY);
         }
 
         // Hızlı düşüş fiziği
-        if (rb.linearVelocity.y < 0)
+        // Eğer karakter yer çekimi yönünde hızlanıyorsa (düşüyorsa) çarpanı uygula
+        bool isFalling = (gravityDir < 0 && rb.linearVelocity.y < 0) || (gravityDir > 0 && rb.linearVelocity.y > 0);
+        if (isFalling)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
@@ -99,6 +115,10 @@ public class PlayerController : MonoBehaviour
     {
         if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
         ResetPosition();
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.ApplyLevel();
+        }
     }
 
     public void ResetPosition()
@@ -107,25 +127,11 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
 
         // Diğer sistemleri sıfırla
-        SecretAreaTrigger trigger = FindFirstObjectByType<SecretAreaTrigger>();
-        if (trigger != null) trigger.ResetTrigger();
-
-        FindFirstObjectByType<CameraRoomController>().ResetCamera();
-        ResetLevelObjects();
+        CameraRoomController.Instance.ResetCamera();
+        LevelManager.Instance.ResetAllMechanics();
     }
 
-    private void ResetLevelObjects()
-    {
-        // Kapıları, anahtarları ve butonları bulup sıfırla
-        var gates = Object.FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var g in gates) g.ResetGate();
-
-        var keys = Object.FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var k in keys) k.ResetKey();
-
-        var buttons = Object.FindObjectsByType<GateButton>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var b in buttons) b.ResetButton();
-    }
+   
 
     public void Move(float dir)
     {
@@ -155,5 +161,11 @@ public class PlayerController : MonoBehaviour
 
     public void StopJump() => isHoldingJump = false;
 
-    private void ApplyJump(float force) => rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
+    private void ApplyJump(float force)
+    {
+        // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
+        // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
+        float dynamicJump = force + (gravityDir * 0.5f);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, -gravityDir * force);
+    }
 }

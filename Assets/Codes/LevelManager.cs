@@ -1,37 +1,35 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class LevelManager : MonoBehaviour
 {
-    // Singleton yapýsý: Diðer scriptlerden LevelManager.Instance ile eriþilir
     public static LevelManager Instance;
 
-    public int currentLevelIndex = 0;   // Mevcut seviyenin liste sýrasý
-    public List<LevelData> allLevels;   // Tüm seviye verilerini tutan liste
+    public int currentLevelIndex = 0;
+    public List<LevelData> allLevels;
+    [HideInInspector] public LevelData activeLevel;
 
-    [HideInInspector] public LevelData activeLevel; // O an oynanan seviyenin verisi
+    // Oluþturulan mekanikleri takip eden liste
+    private List<GameObject> activeMechanics = new List<GameObject>();
 
     void Awake()
     {
         Instance = this;
         if (PlayerPrefs.HasKey("SavedLevel"))
         {
-
-            currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
+            // currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
         }
         else
         {
             currentLevelIndex = 0;
         }
-        
     }
-
     void Start()
     {
-        ApplyLevel(); // Ýlk seviye ayarlarýný uygula
+        ApplyLevel();
     }
-
     public void NextLevel()
     {
         currentLevelIndex++;
@@ -39,38 +37,75 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.SetInt("SavedLevel", currentLevelIndex);
         PlayerPrefs.Save();
 
-        // Eðer 6. seviyeye ulaþýldýysa bir sonraki sahneye (Scene) geç
         if (currentLevelIndex >= allLevels.Count)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             return;
         }
 
-        ApplyLevel(); // Yeni seviyenin verilerini yükle
-
-        // Oyuncuyu bul ve baþlangýç noktasýna geri gönder
+        ApplyLevel();
         FindFirstObjectByType<PlayerController>().ResetPosition();
     }
 
-    void ApplyLevel()
+    public void ApplyLevel()
     {
-        // Liste sýnýrlarý içerisinde olduðumuzdan emin olalým
-        if (currentLevelIndex < allLevels.Count)
+        if (currentLevelIndex >= allLevels.Count) return;
+
+        activeLevel = allLevels[currentLevelIndex];
+
+        // 2. Eski mekanikleri sil (takip listesinden)
+        foreach (GameObject obj in activeMechanics)
         {
-            activeLevel = allLevels[currentLevelIndex];
-
-            // Yerçekimi ayarý: LevelData içindeki bool deðerine göre yön deðiþtirir
-            Physics2D.gravity = new Vector2(0, activeLevel.isGravityInverted ? 9.81f : -9.81f);
-
-            // Gizli Duvar Kontrolü: "Tilemap_Secret" isimli objeyi sahnede ara
-            GameObject secretWall = GameObject.Find("Tilemap_Secret");
-            if (secretWall != null)
+            if (obj != null)
             {
-                // Eðer seviyede gizli geçit varsa duvarýn collider'ýný kapat (geçilebilir yap)
-                secretWall.GetComponent<Collider2D>().enabled = !activeLevel.hasSecretPassage;
+                Destroy(obj);
             }
+        }
 
-            Debug.Log("Aktif Seviye: " + activeLevel.levelName);
+        activeMechanics.Clear();
+
+        // 3. Yeni mekanikleri oluþtur ve listeye ekle
+        if (activeLevel.specialMechanics != null)
+        {
+            foreach (GameObject prefab in activeLevel.specialMechanics)
+            {
+                if (prefab != null)
+                {
+                    GameObject spawned = Instantiate(prefab);
+                    activeMechanics.Add(spawned);
+                }
+            }
+        }
+
+        // 4. Yerçekimini sýfýrla (her zaman aþaðý)
+        Physics2D.gravity = new Vector2(0, -9.81f);
+
+        // 5. Ýpucu güncelle
+        if (HintManager.Instance != null)
+        {
+            HintManager.Instance.UpdateLevelHint();
+        }
+
+        Debug.Log("Aktif Seviye: " + activeLevel.levelName);
+    }
+
+    // Ölünce mekanikleri sýfýrla (silmeden)
+    public void ResetAllMechanics()
+    {
+        foreach (GameObject obj in activeMechanics)
+        {
+            if (obj == null) continue;
+
+            // Her objedeki resetlenebilir bileþenleri bul ve sýfýrla
+            // Kapýlarý, anahtarlarý ve butonlarý bulup sýfýrla
+            var gates = Object.FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var g in gates) g.ResetGate();
+
+            GateButton button = obj.GetComponentInChildren<GateButton>();
+            if (button != null) button.ResetButton();
+
+            Key key = obj.GetComponentInChildren<Key>();
+            if (key != null) key.ResetKey();
         }
     }
 }

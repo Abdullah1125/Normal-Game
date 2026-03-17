@@ -21,3 +21,6 @@ MonoBehaviour:
   hasSecretPassage: 0
   secretRoomPos: {x: 0, y: 0, z: 0}
   isButtonActive: 1
+  isBlindMemoryMode: 1
+  canSwitchGravityOnButton: 0
+  customGravityScale: 9.81

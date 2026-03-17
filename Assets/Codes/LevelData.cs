@@ -1,23 +1,24 @@
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level_", menuName = "NormalGame/LevelData")]
 public class LevelData : ScriptableObject
 {
-    public int levelID; // Seviyenin benzersiz kimlik numarası
-    public string levelName; // Seviyenin adı
+    public int levelID; // Seviyenin benzersiz kimlik numarasÄ±
+    public string levelName; // Seviyenin adÄ±
 
     [Header("Restrictions (Yasaklar)")]
-    public bool isLeftForbidden; // Sola gitmek yasak mı?
-    public bool isRightForbidden; // Sağa gitmek yasak mı?
-    public bool isJumpForbidden; // Zıplamak yasak mı?
+    public bool isLeftForbidden; // Sola gitmek yasak 
+    public bool isRightForbidden; // SaÄŸa gitmek yasak 
+    public bool isJumpForbidden; // ZÄ±plamak yasak    
 
-    [Header("World Settings (Dünya Ayarları)")]
-    public bool isGravityInverted; // Yerçekimi ters mi?
+    [Header("Interactive Element Settings (EtkileÅŸim AyarlarÄ±)")]
+    public bool isButtonActive = true; // Buton etkileÅŸime aÃ§Ä±k 
 
-    [Header("Secret Passage Settings (Gizli Geçit Ayarları)")]
-    public bool hasSecretPassage; // Gizli geçit odası var mı?
-    public Vector3 secretRoomPos; // Gizli odanın kamera pozisyonu
+    [Header("Special Mechanical Prefabs(Ã–zel Mekanik PrefablarÄ±)")]
+    public List<GameObject> specialMechanics; // Buraya istediÄŸin kadar mekanik sÃ¼rÃ¼kle!
 
-    [Header("Interactive Element Settings (Etkileşim Ayarları)")]
-    public bool isButtonActive = true; // Buton etkileşime açık mı?
+    [Header("Hint System(Ä°pucu Sistemi)")]
+    [TextArea(3, 10)]
+    public string levelHint;
 }
