@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour
         Instance = this;
         if (PlayerPrefs.HasKey("SavedLevel"))
         {
-            // currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
+            currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
         }
         else
         {

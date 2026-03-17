@@ -12,16 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelID: 0
-  levelName: 
+  levelID: 5
+  levelName: "Yer\xE7ekimi De\u011Fi\u015Ftiren D\xFC\u011Fme"
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isGravityInverted: 0
-  hasSecretPassage: 0
-  secretRoomPos: {x: 0, y: 0, z: 0}
   isButtonActive: 1
-  isBlindMemoryMode: 0
-  canSwitchGravityOnButton: 1
-  customGravityScale: 5.8
-  levelHint: 
+  specialMechanics:
+  - {fileID: 5969259166198355378, guid: ca4f209a6712f594d8f66cd6b697e5ef, type: 3}
+  levelHint: "Ba\u015F A\u015Fa\u011F\u0131 Buton "

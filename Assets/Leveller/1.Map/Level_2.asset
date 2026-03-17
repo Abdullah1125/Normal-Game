@@ -17,7 +17,7 @@ MonoBehaviour:
   isLeftForbidden: 1
   isRightForbidden: 0
   isJumpForbidden: 0
-  isGravityInverted: 0
-  hasSecretPassage: 0
-  secretRoomPos: {x: 0, y: 0, z: 0}
   isButtonActive: 1
+  specialMechanics:
+  - {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+  levelHint: "Geri D\xF6n\xFC\u015F Yok"

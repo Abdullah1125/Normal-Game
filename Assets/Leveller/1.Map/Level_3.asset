@@ -17,7 +17,8 @@ MonoBehaviour:
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isGravityInverted: 0
-  hasSecretPassage: 1
-  secretRoomPos: {x: 15, y: 0.5, z: -10}
   isButtonActive: 0
+  specialMechanics:
+  - {fileID: 899300247014029947, guid: c69756b9fd745f24d8e401126c9ff197, type: 3}
+  - {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+  levelHint: "Gizli Ge\xE7it"

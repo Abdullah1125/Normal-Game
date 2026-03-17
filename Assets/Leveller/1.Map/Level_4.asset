@@ -17,10 +17,8 @@ MonoBehaviour:
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isGravityInverted: 0
-  hasSecretPassage: 0
-  secretRoomPos: {x: 0, y: 0, z: 0}
   isButtonActive: 1
-  isBlindMemoryMode: 1
-  canSwitchGravityOnButton: 0
-  customGravityScale: 9.81
+  specialMechanics:
+  - {fileID: 917639485641154654, guid: 8c35ac05a84837a4c8f1e186fb86d54f, type: 3}
+  - {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+  levelHint: "Haf\u0131zan Yerinde mi?"
