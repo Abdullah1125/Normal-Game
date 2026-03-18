@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
-  m_Name: Level_4
+  m_Name: Level_1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelID: 4
-  levelName: "K\xF6r Haf\u0131za"
+  levelID: 1
+  levelName: Normal
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isButtonActive: 1
+  isActive: 1
   specialMechanics:
-  - {fileID: 917639485641154654, guid: 8c35ac05a84837a4c8f1e186fb86d54f, type: 3}
-  - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
-  levelHint: "Haf\u0131zan Yerinde mi?"
+  - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
+  levelHint: 

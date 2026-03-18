@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GateButton : MonoBehaviour
 {
-    public GateController targetGate; // Butonun tetikleyeceði kapý objesi
+    
     private Color originalColor;      // Butonun baþlangýç rengini saklar
     private Vector3 originalScale;    // Butonun baþlangýç boyutunu saklar
     private bool hasPressed = false;  // Butona basýlýp basýlmadýðýný takip eder
@@ -20,7 +20,7 @@ public class GateButton : MonoBehaviour
         if (!hasPressed && other.CompareTag("Player"))
         {
             
-            if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isButtonActive)
+            if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
             {
                 sr.color = new Color(0.3f, 0.3f, 0.3f);
                 return;

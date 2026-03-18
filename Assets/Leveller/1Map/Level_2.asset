@@ -19,5 +19,5 @@ MonoBehaviour:
   isJumpForbidden: 0
   isButtonActive: 1
   specialMechanics:
-  - {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+  - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
   levelHint: "Geri D\xF6n\xFC\u015F Yok"

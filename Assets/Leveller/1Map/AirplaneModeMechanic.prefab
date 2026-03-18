@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirplaneModeMechanic
   checkInterval: 1
-  testAirplaneMode: 0
+  testAirplaneMode: 1

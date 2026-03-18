@@ -20,5 +20,5 @@ MonoBehaviour:
   isButtonActive: 0
   specialMechanics:
   - {fileID: 899300247014029947, guid: c69756b9fd745f24d8e401126c9ff197, type: 3}
-  - {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+  - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
   levelHint: "Gizli Ge\xE7it"

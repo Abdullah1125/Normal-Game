@@ -2,20 +2,25 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-    public GateController targetGate;
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
       
         if (other.CompareTag("Player"))
         {
-          
-            if (targetGate != null)
+            if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
             {
-                targetGate.OpenGate();
+               
+                return;
             }
 
-            
+            if (GateController.Instance != null)
+            {
+                GateController.Instance.OpenGate();
+            }
+
+
             gameObject.SetActive(false);
 
             Debug.Log("Key collected, gate is opening!");

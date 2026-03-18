@@ -6,6 +6,9 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; }
+
+
     [Header("Movement Settings")]
     public float moveSpeed = 10f;       // Yatay hareket hızı
     public float airAcceleration = 25f; // Havada hızlanma katsayısı
@@ -48,6 +51,15 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;       // Karakterin devrilmesini engelle
         rb.gravityScale = 6f;           // Yerçekimi ağırlığı

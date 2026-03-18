@@ -106,6 +106,8 @@ public class LevelManager : MonoBehaviour
 
             Key key = obj.GetComponentInChildren<Key>();
             if (key != null) key.ResetKey();
+
+           
         }
     }
 }

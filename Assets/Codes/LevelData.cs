@@ -13,7 +13,7 @@ public class LevelData : ScriptableObject
     public bool isJumpForbidden; // Zıplamak yasak    
 
     [Header("Interactive Element Settings (Etkileşim Ayarları)")]
-    public bool isButtonActive = true; // Buton etkileşime açık 
+    public bool isActive = true; // Buton ve Anahtar etkileşime açık 
 
     [Header("Special Mechanical Prefabs(Özel Mekanik Prefabları)")]
     public List<GameObject> specialMechanics; // Buraya istediğin kadar mekanik sürükle!
