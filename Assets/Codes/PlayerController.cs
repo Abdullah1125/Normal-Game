@@ -1,5 +1,7 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -18,6 +20,13 @@ public class PlayerController : MonoBehaviour
     [Header("Jump Boost")]
     public float extraBoostAmount = 2f; // Zirve noktasındaki ekstra itiş
     public float boostSmoothness = 3f;  // İtişin yumuşaklığı
+
+    [Header("Mobile Jump Assist")]
+    public float coyotoTime = 0.15f;
+    public float jumpBufferTime = 0.15f;
+
+    private float coyoteTimeCounter;
+    private float jumpBufferCounter;
 
     private Rigidbody2D rb;
     private float moveInput;            // Hareket girdisi (-1, 0, 1)
@@ -55,11 +64,47 @@ public class PlayerController : MonoBehaviour
         if (keyboardInput != 0) moveInput = keyboardInput;
         else if (Input.GetButtonUp("Horizontal")) moveInput = 0;
 
-        // Zıplama kontrolleri
-        if (Input.GetButtonDown("Jump")) StartJump();
-        if (Input.GetButtonUp("Jump")) StopJump();
+       
+       
 
-      
+        //Coyoto Time Sayacı
+        if (isGrounded)
+        {
+            coyoteTimeCounter = coyotoTime;
+            extraJumps = extraJumpsValue;
+        } 
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+
+        //Jump Buffer sayacı
+        if (Input.GetButtonDown("Jump"))
+            jumpBufferCounter = jumpBufferTime;
+        else
+            jumpBufferCounter -= Time.deltaTime;
+
+        //Zıplama kontrolü
+        if (jumpBufferCounter > 0f)
+        {
+            if (LevelManager.Instance.activeLevel.isJumpForbidden) return;
+
+            if (coyoteTimeCounter > 0f && extraJumps == extraJumpsValue)
+            {
+                ApplyJump(firstJumpForce);
+                coyoteTimeCounter = 0f;
+                jumpBufferCounter = 0f;
+                isHoldingJump = true;
+            }
+            else if (extraJumps > 0)
+            {
+                ApplyJump(doubleJumpForce);
+                extraJumps--;
+                jumpBufferCounter = 0f;
+                isHoldingJump = true;
+            }
+
+        }
+
+        if (Input.GetButtonUp("Jump")) StopJump();
 
         // Karakterin yüzünü hareket yönüne çevir
         if (moveInput > 0) transform.localScale = new Vector3(1, 1, 1);
@@ -125,7 +170,8 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = startPos;
         rb.linearVelocity = Vector2.zero;
-
+        coyoteTimeCounter = 0f;
+        jumpBufferCounter = 0f;
         // Diğer sistemleri sıfırla
         CameraRoomController.Instance.ResetCamera();
         LevelManager.Instance.ResetAllMechanics();
@@ -144,28 +190,18 @@ public class PlayerController : MonoBehaviour
         }
         moveInput = dir;
     }
-
-    public void StartJump()
-    {
-        // Zıplama yasağı kontrolü ve zıplama uygulaması
-        if (LevelManager.Instance.activeLevel.isJumpForbidden) return;
-
-        if (isGrounded) ApplyJump(firstJumpForce);
-        else if (extraJumps > 0)
-        {
-            ApplyJump(doubleJumpForce);
-            extraJumps--;
-        }
-        isHoldingJump = true;
-    }
-
     public void StopJump() => isHoldingJump = false;
 
     private void ApplyJump(float force)
     {
         // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
         // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
-        float dynamicJump = force + (gravityDir * 0.5f);
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, -gravityDir * force);
+       rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+    rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
+    }
+    public void StartJump()
+    {
+        jumpBufferCounter = jumpBufferTime;
+        isHoldingJump = true;
     }
 }

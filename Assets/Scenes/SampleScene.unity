@@ -996,12 +996,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 14
   airAcceleration: 25
-  firstJumpForce: 25
-  doubleJumpForce: 18
+  firstJumpForce: 25.5
+  doubleJumpForce: 18.2
   fallMultiplier: 10
   extraJumpsValue: 1
-  extraBoostAmount: 8
-  boostSmoothness: 5
+  extraBoostAmount: 8.5
+  boostSmoothness: 4.5
+  coyotoTime: 0.15
+  jumpBufferTime: 0.15
   groundCheck: {fileID: 196354818}
   checkRadius: 0.25
   groundLayer:
