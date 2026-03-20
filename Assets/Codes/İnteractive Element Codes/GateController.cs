@@ -11,25 +11,26 @@ public class GateController : MonoBehaviour
 
     void Awake()
     {
-       
+
         startPos = transform.position;
         targetPos = startPos + moveOffset;
-        Instance = this;
+        if (Instance == null) Instance = this;
     }
 
     void Update()
     {
-    
-        if (isOpening)
-        {
-            // MoveTowards: Mevcut konumdan hedef konuma sabit hýzla ilerle
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-        }
+
+        Vector3 currentTarget = isOpening ? targetPos : startPos;
+
+        // MoveTowards her iki yön için de otomatik çalýþýr
+        transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
     }
 
- 
-    public void OpenGate() => isOpening = true;
 
+    public void OpenGate() => isOpening = true;
+    public void CloseGate() => isOpening = false;
+       
+    
     // Kapýyý baþlangýç durumuna döndüren metot
     public void ResetGate()
     {

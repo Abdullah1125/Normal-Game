@@ -10,7 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5670725035138520134, guid: e64b2e2f2b8d8fd4ca9277c3d51e6712, type: 3}
       propertyPath: m_Name
-      value: Key Variant
+      value: Key1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670725035138520134, guid: e64b2e2f2b8d8fd4ca9277c3d51e6712, type: 3}
+      propertyPath: m_TagString
+      value: LevelMechanic
       objectReference: {fileID: 0}
     - target: {fileID: 8278642786291132499, guid: e64b2e2f2b8d8fd4ca9277c3d51e6712, type: 3}
       propertyPath: m_LocalPosition.x

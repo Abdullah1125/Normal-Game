@@ -65,10 +65,7 @@ public class EscapeKey : MonoBehaviour
             }
         }
     }
-    public void ResetKey()
-    {
-        gameObject.SetActive(true);
-    }
+   
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

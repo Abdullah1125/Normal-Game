@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour
         Instance = this;
         if (PlayerPrefs.HasKey("SavedLevel"))
         {
-           // currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
+           //currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
         }
         else
         {
@@ -107,7 +107,8 @@ public class LevelManager : MonoBehaviour
             Key key = obj.GetComponentInChildren<Key>();
             if (key != null) key.ResetKey();
 
-           
+            BoxButton boxbutton = obj.GetComponentInChildren<BoxButton>();
+            if (boxbutton != null) boxbutton.ResetButton();
         }
     }
 }

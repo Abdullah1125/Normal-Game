@@ -49,12 +49,11 @@ public class GateButton : MonoBehaviour
             transform.localScale = new Vector3(originalScale.x, originalScale.y * 0.6f, 1f);
         }
     }
-
     public void ResetButton()
     {
-        // Butonu baþlangýç deðerlerine sýfýrla
         hasPressed = false;
-        GetComponent<SpriteRenderer>().color = originalColor;
-        transform.localScale = originalScale;
+        sr.color = Color.white;
+        gameObject.SetActive(true);
     }
+
 }
