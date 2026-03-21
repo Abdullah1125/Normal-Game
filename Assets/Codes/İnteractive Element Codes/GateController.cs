@@ -35,6 +35,7 @@ public class GateController : MonoBehaviour
     public void ResetGate()
     {
         isOpening = false;
+
         transform.position = startPos;
     }
 }

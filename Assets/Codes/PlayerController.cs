@@ -20,6 +20,11 @@ public class PlayerController : MonoBehaviour
     public int extraJumpsValue = 1;     // Toplam çift zıplama hakkı
     private int extraJumps;             // Kalan zıplama hakkı
 
+    [Header("Juicy Movement")]
+    public float acceleration = 50f;      // Yerden kalkış hızı
+    public float deceleration = 40f;      // Yerde durma hızı
+    public float airDeceleration = 10f;    // Havada süzülme (Düşük olursa momentum korunur)
+
     [Header("Jump Boost")]
     public float extraBoostAmount = 2f; // Zirve noktasındaki ekstra itiş
     public float boostSmoothness = 3f;  // İtişin yumuşaklığı
@@ -27,7 +32,6 @@ public class PlayerController : MonoBehaviour
     [Header("Mobile Jump Assist")]
     public float coyotoTime = 0.15f;
     public float jumpBufferTime = 0.15f;
-
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
@@ -41,7 +45,6 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;       // Yer kontrol objesi
     public float checkRadius = 0.25f;   // Kontrol dairesi yarıçapı
     public LayerMask groundLayer;       // Yer olarak sayılacak katman
-
 
     [Header("Death Settings")]
     private Vector2 startPos;           // Başlangıç noktası
@@ -129,17 +132,23 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+
+        float targetSpeed = moveInput * moveSpeed;
+        float accelRate;
+
         // Yatay hareket fiziği
         if (isGrounded)
         {
-            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
         }
         else
         {
-            float targetSpeed = moveInput * moveSpeed;
-            float speedDif = targetSpeed - rb.linearVelocity.x;
-            rb.AddForce(speedDif * airAcceleration * Vector2.right, ForceMode2D.Force);
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? airAcceleration : airDeceleration;
         }
+
+        float speedDif = targetSpeed - rb.linearVelocity.x;
+        float movement = speedDif * accelRate;
+        rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
 
         // Yerde olma kontrolü ve zıplama hakkı yenileme
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);

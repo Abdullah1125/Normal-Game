@@ -1000,6 +1000,9 @@ MonoBehaviour:
   doubleJumpForce: 18.2
   fallMultiplier: 10
   extraJumpsValue: 1
+  acceleration: 50
+  deceleration: 40
+  airDeceleration: 4.5
   extraBoostAmount: 8.5
   boostSmoothness: 4.5
   coyotoTime: 0.15
