@@ -14,6 +14,7 @@ public class Box : MonoBehaviour
     public static Box Instance;
     void Awake()
     {
+        if (Instance == null) Instance = this;
         rb = GetComponent<Rigidbody2D>();
 
         // Profesyonel Rigidbody Ayarlarý
@@ -21,8 +22,8 @@ public class Box : MonoBehaviour
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate; // Titremeyi önler
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        if (Instance == null) Instance = this;
-
+       
+        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
     }
 
     void FixedUpdate()

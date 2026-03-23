@@ -18,5 +18,7 @@ MonoBehaviour:
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
-  specialMechanics: []
+  specialMechanics:
+  - {fileID: 1606094445828512302, guid: d03a99eb25b018145ad20072f392e053, type: 3}
+  - {fileID: 6706844271257675222, guid: d2f041acb37cdd24ab3bf67fb33c17d4, type: 3}
   levelHint: 

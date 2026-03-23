@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6662439436129186843}
   - component: {fileID: 7884870573291561319}
   m_Layer: 0
-  m_Name: EscapeKey
+  m_Name: V_EscapeKey
   m_TagString: LevelMechanic
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

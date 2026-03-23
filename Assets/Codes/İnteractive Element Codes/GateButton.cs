@@ -2,58 +2,84 @@ using UnityEngine;
 
 public class GateButton : MonoBehaviour
 {
-    
-    private Color originalColor;      // Butonun baþlangýç rengini saklar
-    private Vector3 originalScale;    // Butonun baþlangýç boyutunu saklar
-    private bool hasPressed = false;  // Butona basýlýp basýlmadýðýný takip eder
+    [Header("Ayarlar")]
+    public Color normalColor = Color.white;
+    public Color pressedColor = Color.green;
+    public Color disabledColor = new Color(0.3f, 0.3f, 0.3f);
+    public float pressedScaleY = 0.6f;
+
+    private Vector3 originalScale;
+    private bool isPressed = false;
     private SpriteRenderer sr;
+
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        originalColor = sr.color;
         originalScale = transform.localScale;
+        if (sr != null) sr.color = normalColor;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
-        if (!hasPressed && other.CompareTag("Player"))
+        if (IsPlayer(other) && !isPressed)
         {
-            
-            if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
-            {
-                sr.color = new Color(0.3f, 0.3f, 0.3f);
-                return;
-            }
-
-            GravityButtonTrigger gravityTrigger = GetComponent<GravityButtonTrigger>();
-            if (gravityTrigger != null)
-            {
-                gravityTrigger.ExecuteFlip();
-            }
-
-            hasPressed = true;
-
-            // Kapý referansý varsa kapýyý aç
-            if (GateController.Instance != null)
-            {
-                GateController.Instance.OpenGate();
-            }
-            else
-            {
-                Debug.LogError("Sahnede GateController bulunamadý!");
-            }
-
-            // Görsel geri bildirim: Yeþil renk ve yassýlaþma efekti
-            sr.color = Color.green;
-            transform.localScale = new Vector3(originalScale.x, originalScale.y * 0.6f, 1f);
+            TryPressButton();
         }
     }
-    public void ResetButton()
+
+    private void OnTriggerStay2D(Collider2D other)
     {
-        hasPressed = false;
-        sr.color = Color.white;
-        gameObject.SetActive(true);
+        // Enter kaçýrýlýrsa Stay yakalar
+        if (IsPlayer(other) && !isPressed)
+        {
+            TryPressButton();
+        }
     }
 
+    private bool IsPlayer(Collider2D other)
+    {
+        return other.CompareTag("Player");
+    }
+
+    private void TryPressButton()
+    {
+        // Level aktif mi kontrol et
+        if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
+        {
+            if (sr != null) sr.color = disabledColor;
+            return;
+        }
+
+        PressButton();
+    }
+
+    private void PressButton()
+    {
+        isPressed = true;
+
+        // Gravity trigger varsa çalýþtýr
+        GravityButtonTrigger gravityTrigger = GetComponent<GravityButtonTrigger>();
+        if (gravityTrigger != null)
+        {
+            gravityTrigger.ExecuteFlip();
+        }
+
+        // Kapýyý aç
+        if (GateController.Instance != null)
+        {
+            GateController.Instance.OpenGate();
+        }
+
+        // Görsel efekt
+        if (sr != null) sr.color = pressedColor;
+        transform.localScale = new Vector3(originalScale.x, originalScale.y * pressedScaleY, originalScale.z);
+    }
+
+    public void ResetButton()
+    {
+        isPressed = false;
+        if (sr != null) sr.color = normalColor;
+        transform.localScale = originalScale;
+        gameObject.SetActive(true);
+    }
 }

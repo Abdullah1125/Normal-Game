@@ -2471,6 +2471,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GateController
   moveOffset: {x: 0, y: 3, z: 0}
   moveSpeed: 2
+  totalKeysNeeded: 2
+  keyCountText: {fileID: 0}
 --- !u!212 &1383220965
 SpriteRenderer:
   serializedVersion: 2

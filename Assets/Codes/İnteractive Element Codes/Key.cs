@@ -17,7 +17,7 @@ public class Key : MonoBehaviour
 
             if (GateController.Instance != null)
             {
-                GateController.Instance.OpenGate();
+                GateController.Instance.RegisterKeyCollected();
             }
 
 
