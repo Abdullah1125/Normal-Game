@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
-  m_Name: Level_1
+  m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelID: 1
-  levelName: Normal
+  levelID: 5
+  levelName: "Yorulan Z\u0131plama"
   isLeftForbidden: 0
   isRightForbidden: 0
-  isJumpForbidden: 0
+  isJumpForbidden: 1
   isActive: 1
   specialMechanics:
-  - {fileID: 1606094445828512302, guid: d03a99eb25b018145ad20072f392e053, type: 3}
-  - {fileID: 6706844271257675222, guid: d2f041acb37cdd24ab3bf67fb33c17d4, type: 3}
-  levelHint: 
+  - {fileID: 9005363598061900755, guid: 5166acdbe3f77054ab43cb7aa9b3dfd1, type: 3}
+  - {fileID: 8920717485495889620, guid: de98df109ba5e0a43bb2bd1682fedc0c, type: 3}
+  levelHint: "Z\u0131p Z\u0131p"

@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private float moveInput;            // Hareket girdisi (-1, 0, 1)
-    private bool isGrounded;            // Yerde mi kontrolü
+    public bool isGrounded { get; private set; }            // Yerde mi kontrolü
     private bool isHoldingJump;         // Zıplama tuşuna basılı tutuluyor mu?
     private float gravityDir;
 

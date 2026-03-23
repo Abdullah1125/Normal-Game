@@ -15,7 +15,7 @@ public class GateController : MonoBehaviour
 
     void Awake()
     {
-
+       
         startPos = transform.position;
         targetPos = startPos + moveOffset;
         if (Instance == null) Instance = this;
@@ -35,9 +35,11 @@ public class GateController : MonoBehaviour
     // Kapýyý baþlangýç durumuna döndüren metot
     public void ResetGate()
     {
+
         keysCollected = 0;
         isOpening = false;
         transform.position = startPos;
+        
     }
     public void RegisterKeyCollected()
     {
@@ -54,6 +56,7 @@ public class GateController : MonoBehaviour
     {
         if (keyCountText != null)
         {
+
             keyCountText.text = keysCollected + " / " + totalKeysNeeded;
         }
     }
