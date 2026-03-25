@@ -13,9 +13,9 @@ public class LevelUIManager : MonoBehaviour
 
     void Start()
     {
-        // 1. ADIM: Ýlk açýlýþta 12 tane buton oluþtur ve listeye kaydet
+        // Ýlk açýlýþta 12 tane buton oluþtur ve listeye kaydet
         PrepareButtons();
-        // 2. ADIM: Sayfayý verilerle doldur
+        //Sayfayý verilerle doldur
         RefreshPage();
     }
 
@@ -25,8 +25,7 @@ public class LevelUIManager : MonoBehaviour
         foreach (Transform t in gridParent) Destroy(t.gameObject);
         spawnedButtons.Clear();
 
-        // Sahnede SADECE 12 tane buton oluþturuyoruz, daha fazla deðil!
-        for (int i = 0; i < levelsPerPage; i++)
+        // Sahnede SADECE 12 tane buton oluþturuyoruz
         {
             GameObject btnObj = Instantiate(buttonPrefab, gridParent);
             LevelMenuButton script = btnObj.GetComponent<LevelMenuButton>();
@@ -52,12 +51,12 @@ public class LevelUIManager : MonoBehaviour
                 data.isUnlocked = PlayerPrefs.GetInt("LevelUnlocked_" + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt("LevelComplete_" + data.levelID, 0) == 1;
 
-                // Butonu yeni verilerle "Boyuyoruz"
+               
                 spawnedButtons[i].Setup(currentDataIndex, data);
             }
             else
             {
-                // Eðer o sayfada o kadar level yoksa butonu gizle
+             
                 spawnedButtons[i].gameObject.SetActive(false);
             }
         }

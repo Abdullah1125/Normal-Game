@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using TMPro; // Yazý için bu kütüphaneyi ekledik
+using TMPro; 
 
 public class LevelTransition : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class LevelTransition : MonoBehaviour
 
     [Header("Ayarlar")]
     public Image fadeImage;
-    public TextMeshProUGUI levelText; // Buraya ekrandaki yazýyý sürükle
+    public TextMeshProUGUI levelText; 
     public float fadeDuration = 0.5f;
 
     [Header("Renkler")]
@@ -45,17 +45,17 @@ public class LevelTransition : MonoBehaviour
         StartCoroutine(FadeRoutine(0f, 1f, onComplete, true));
     }
 
-    // YENÝ: Yazý gönderilebilen geçiþ fonksiyonu
+    // Yazý gönderilebilen geçiþ fonksiyonu
     public void DoTransition(string message, System.Action middleAction)
     {
         if (levelText != null) levelText.text = message;
         StartCoroutine(TransitionRoutine(middleAction));
     }
 
-    // ESKÝ: Sadece aksiyon alan orijinal fonksiyon (Hata vermemesi için korundu)
+    // ESKÝ: Sadece aksiyon alan orijinal fonksiyon.
     public void DoTransition(System.Action middleAction)
     {
-        if (levelText != null) levelText.text = ""; // Yazý istemiyorsan boþ býrakýr
+        if (levelText != null) levelText.text = ""; 
         StartCoroutine(TransitionRoutine(middleAction));
     }
 
@@ -71,7 +71,7 @@ public class LevelTransition : MonoBehaviour
             elapsed += Time.deltaTime;
             float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
 
-            // Paneli boya
+           
             fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, alpha);
 
             // Yazýyý da panel ile ayný oranda göster/gizle
