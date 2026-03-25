@@ -17,13 +17,14 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        if (PlayerPrefs.HasKey("SavedLevel"))
+        // Sahneye girerken hangi level'dan baþlayacaðýmýzý seçme ekranýndan alýyoruz
+        currentLevelIndex = PlayerPrefs.GetInt("SelectedInternalIndex", 0);
+
+        // Verileri diskten tazele (Kilitler doðru gelsin)
+        foreach (var level in allLevels)
         {
-           //currentLevelIndex = PlayerPrefs.GetInt("SavedLevel");
-        }
-        else
-        {
-            currentLevelIndex = 0;
+            level.isUnlocked = PlayerPrefs.GetInt("LevelUnlocked_" + level.levelID, level.levelID == 0 ? 1 : 0) == 1;
+            level.isCompleted = PlayerPrefs.GetInt("LevelComplete_" + level.levelID, 0) == 1;
         }
     }
     void Start()
@@ -32,19 +33,37 @@ public class LevelManager : MonoBehaviour
     }
     public void NextLevel()
     {
-        currentLevelIndex++;
+        if (allLevels[currentLevelIndex].isCompleted)
+        {
+            Debug.Log("Bu level zaten bitmiþti, Menüye dönülüyor...");
+            GoToLevelSelect();
+            return; 
+        }
+        //Mevcut level'ý bitir ve kaydet
+        allLevels[currentLevelIndex].isCompleted = true;
+        PlayerPrefs.SetInt("LevelComplete_" + allLevels[currentLevelIndex].levelID, 1);
 
-        PlayerPrefs.SetInt("SavedLevel", currentLevelIndex);
+        //Sonraki level kilidini aç
+        int nextGlobalID = allLevels[currentLevelIndex].levelID + 1;
+        PlayerPrefs.SetInt("LevelUnlocked_" + nextGlobalID, 1);
         PlayerPrefs.Save();
 
-        if (currentLevelIndex >= allLevels.Count)
+        if (LevelTransition.Instance != null)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            return;
+            string mesaj = allLevels[currentLevelIndex].levelID+1 + ".Level Tamamlandý!";
+            LevelTransition.Instance.DoTransition(mesaj , () =>
+            {
+                currentLevelIndex++;
+                ApplyLevel();
+                FindFirstObjectByType<PlayerController>().ResetPosition();
+            });
         }
-
-        ApplyLevel();
-        FindFirstObjectByType<PlayerController>().ResetPosition();
+        else
+        {
+            currentLevelIndex++;
+            ApplyLevel();
+            FindFirstObjectByType<PlayerController>().ResetPosition();
+        }
     }
 
     public void ApplyLevel()
@@ -109,6 +128,20 @@ public class LevelManager : MonoBehaviour
 
             BoxButton boxbutton = obj.GetComponentInChildren<BoxButton>();
             if (boxbutton != null) boxbutton.ResetButton();
+        }
+    }
+    void GoToLevelSelect()
+    {
+        if (LevelTransition.Instance != null)
+        {
+            LevelTransition.Instance.FadeOut(() =>
+            {
+                SceneManager.LoadScene("Levels");
+            });
+        }
+        else
+        {
+            SceneManager.LoadScene("Levels");
         }
     }
 }

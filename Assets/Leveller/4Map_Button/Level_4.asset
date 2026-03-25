@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
+  m_Name: Level_4
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  levelID: 21
+  levelName: Normal
+  isUnlocked: 0
+  isCompleted: 0
+  isLeftForbidden: 0
+  isRightForbidden: 0
+  isJumpForbidden: 0
+  isActive: 1
+  specialMechanics:
+  - {fileID: 1686427910927934492, guid: 8501907609526a045aa8305c2ff2a552, type: 3}
+  levelHint: 

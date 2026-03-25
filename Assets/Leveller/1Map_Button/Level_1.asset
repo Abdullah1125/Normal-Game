@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21f3157e5c4f9c4ea3a1c001e06b07c, type: 3}
   m_Name: Level_1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelID: 1
+  levelID: 0
   levelName: Normal
+  isUnlocked: 1
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isButtonActive: 1
+  isActive: 1
   specialMechanics:
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
   levelHint: 

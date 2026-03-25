@@ -6,6 +6,8 @@ public class LevelData : ScriptableObject
 {
     public int levelID; // Seviyenin benzersiz kimlik numarası
     public string levelName; // Seviyenin adı
+    public bool isUnlocked;   // Bu level açıldı mı?
+    public bool isCompleted;  // Bu level geçildi mi?
 
     [Header("Restrictions (Yasaklar)")]
     public bool isLeftForbidden; // Sola gitmek yasak 
