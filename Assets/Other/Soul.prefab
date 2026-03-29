@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570b74ba19acfe42afde83591bd362c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoulEffect
-  soultime: 3
+  lifeTime: 3
 --- !u!212 &7635025498503846681
 SpriteRenderer:
   serializedVersion: 2
@@ -97,7 +97,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 6193214451070592927, guid: 34cec1bc4efb5d84facdd51d13a69f53, type: 3}
   m_Color: {r: 0.554717, g: 0.554717, b: 0.554717, a: 1}
   m_FlipX: 0
   m_FlipY: 0

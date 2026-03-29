@@ -1540,6 +1540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 17.5
   airAcceleration: 25
+  canMove: 1
   firstJumpForce: 25.5
   doubleJumpForce: 18.2
   fallMultiplier: 10

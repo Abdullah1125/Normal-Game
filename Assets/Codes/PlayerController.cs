@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 10f;       // Yatay hareket hızı
     public float airAcceleration = 25f; // Havada hızlanma katsayısı
-
+    public bool canMove = true;
     [Header("Jump Settings")]
     public float firstJumpForce = 13f;  // İlk zıplama gücü
     public float doubleJumpForce = 10f; // Çift zıplama gücü
@@ -79,8 +79,11 @@ public class PlayerController : MonoBehaviour
         if (keyboardInput != 0) moveInput = keyboardInput;
         else if (Input.GetButtonUp("Horizontal")) moveInput = 0;
 
-       
-       
+        if (!canMove)
+        {
+            moveInput = 0;
+            return;
+        }
 
         //Coyoto Time Sayacı
         if (isGrounded)

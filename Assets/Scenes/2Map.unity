@@ -281,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 196354817}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.99, z: 0}
+  m_LocalPosition: {x: 0.07, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -972,7 +972,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 25
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 6193214451070592927, guid: 34cec1bc4efb5d84facdd51d13a69f53, type: 3}
   m_Color: {r: 0.8867924, g: 0.8750267, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -996,6 +996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 14
   airAcceleration: 25
+  canMove: 1
   firstJumpForce: 25.5
   doubleJumpForce: 18.2
   fallMultiplier: 10
@@ -8446,9 +8447,19 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 602
     m_Data: {fileID: 11400000, guid: b71d02179c89248409b1354bb9429a87, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 602
     m_Data: {fileID: 6854721034057008510, guid: 72ac560dc047db84fa0289e684e541ac, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 602
     m_Data:
@@ -8471,6 +8482,10 @@ Tilemap:
   m_TileColorArray:
   - m_RefCount: 602
     m_Data: {r: 1, g: 1, b: 1, a: 1}
+  - m_RefCount: 0
+    m_Data: {r: 4.5e-44, g: 4.5e-44, b: 4.5e-44, a: 4.5e-44}
+  - m_RefCount: 0
+    m_Data: {r: 4.5e-44, g: 4.5e-44, b: 4.5e-44, a: 4.5e-44}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

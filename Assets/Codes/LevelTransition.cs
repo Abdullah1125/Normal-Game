@@ -90,6 +90,11 @@ public class LevelTransition : MonoBehaviour
 
     private IEnumerator TransitionRoutine(System.Action middleAction)
     {
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.canMove = false;
+        }
+
         // Ekraný kapatýrken yazýyý da göster
         yield return FadeRoutine(0f, 1f, null, true);
 
@@ -101,5 +106,10 @@ public class LevelTransition : MonoBehaviour
 
         // Ekraný açarken her þeyi gizle
         yield return FadeRoutine(1f, 0f, null, false);
+
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.canMove = true;
+        }
     }
 }

@@ -48,10 +48,16 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.SetInt("LevelUnlocked_" + nextGlobalID, 1);
         PlayerPrefs.Save();
 
+        if (currentLevelIndex + 1 >= allLevels.Count)
+        {
+            Debug.Log("Bu mapteki tüm leveller bitti! Menüye gönderiliyor...");
+            GoToLevelSelect();
+            return; 
+        }
         if (LevelTransition.Instance != null)
         {
-            string mesaj = allLevels[currentLevelIndex].levelID+1 + ".Level Tamamlandý!";
-            LevelTransition.Instance.DoTransition(mesaj , () =>
+
+            LevelTransition.Instance.DoTransition(() =>
             {
                 currentLevelIndex++;
                 ApplyLevel();

@@ -10,7 +10,7 @@ public class LevelUIManager : MonoBehaviour
     private int currentPage = 0;
     private int levelsPerPage = 12; 
     private List<LevelMenuButton> spawnedButtons = new List<LevelMenuButton>();
-
+    public GameObject comingSoonPanel;
     void Start()
     {
         // Ýlk açýlýþta 12 tane buton oluþtur ve listeye kaydet
@@ -25,7 +25,8 @@ public class LevelUIManager : MonoBehaviour
         foreach (Transform t in gridParent) Destroy(t.gameObject);
         spawnedButtons.Clear();
 
-        // Sahnede SADECE 12 tane buton oluþturuyoruz
+       
+        for (int i = 0; i < levelsPerPage; i++)
         {
             GameObject btnObj = Instantiate(buttonPrefab, gridParent);
             LevelMenuButton script = btnObj.GetComponent<LevelMenuButton>();
@@ -36,6 +37,9 @@ public class LevelUIManager : MonoBehaviour
     public void RefreshPage()
     {
         int startIndex = currentPage * levelsPerPage;
+
+        if (comingSoonPanel != null)
+            comingSoonPanel.SetActive(currentPage > 0);
 
         for (int i = 0; i < spawnedButtons.Count; i++)
         {
@@ -51,12 +55,12 @@ public class LevelUIManager : MonoBehaviour
                 data.isUnlocked = PlayerPrefs.GetInt("LevelUnlocked_" + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt("LevelComplete_" + data.levelID, 0) == 1;
 
-               
-                spawnedButtons[i].Setup(currentDataIndex, data);
+                bool isComingSoon = (currentPage > 0);
+                spawnedButtons[i].Setup(currentDataIndex, data, isComingSoon);
             }
             else
             {
-             
+               
                 spawnedButtons[i].gameObject.SetActive(false);
             }
         }
