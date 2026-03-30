@@ -50,6 +50,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 startPos;           // Başlangıç noktası
     public GameObject soulPrefab;       // Ölünce çıkacak ruh objesi
 
+    [Header("Sounds")]
+    public AudioSource walkSound;
+
     void Start() => startPos = transform.position;
 
     void Awake()
@@ -131,6 +134,15 @@ public class PlayerController : MonoBehaviour
         //Karakteri Ters Çevir
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
+
+        if (Mathf.Abs(moveInput) > 0.1f && isGrounded)
+        {
+            if (!walkSound.isPlaying) walkSound.Play();
+        }
+        else
+        {
+            walkSound.Stop();
+        }
     }
 
     void FixedUpdate()
