@@ -6,13 +6,22 @@ public class AudioSettings : MonoBehaviour
 {
     public AudioMixer mainMixer;
 
-    [Header("UI Elemanlarý")]
+    [Header("UI")]
     public Slider musicSlider; 
     public Slider sfxSlider;   
     private bool isMusicMuted = false;
     private bool isSFXMuted = false;
 
-  
+    void Start()
+    { 
+        float savedMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        float savedSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f); 
+        mainMixer.SetFloat("MusicVol", Mathf.Log10(savedMusic) * 20);
+        mainMixer.SetFloat("SFXVol", Mathf.Log10(savedSFX) * 20);
+        if (musicSlider != null) musicSlider.value = savedMusic;
+        if (sfxSlider != null) sfxSlider.value = savedSFX;
+    }
+
     public void ToggleMusic()
     {
         isMusicMuted = !isMusicMuted;
@@ -50,13 +59,14 @@ public class AudioSettings : MonoBehaviour
     public void SetMusicVolume(float value)
     {
         mainMixer.SetFloat("MusicVol", Mathf.Log10(value) * 20);
-        
+        PlayerPrefs.SetFloat("MusicVolume", value);
         if (value > 0.01f) isMusicMuted = false;
     }
 
     public void SetSFXVolume(float value)
     {
         mainMixer.SetFloat("SFXVol", Mathf.Log10(value) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", value);
         if (value > 0.01f) isSFXMuted = false;
     }
 }

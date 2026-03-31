@@ -112,6 +112,7 @@ public class LevelManager : MonoBehaviour
         }
 
         Debug.Log("Aktif Seviye: " + activeLevel.levelName);
+        PlayerController.Instance.ResetSpeed();
     }
 
     // Ölünce mekanikleri sýfýrla (silmeden)

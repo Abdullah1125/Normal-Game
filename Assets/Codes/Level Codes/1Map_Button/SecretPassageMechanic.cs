@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class SecretPassageMechanic : MonoBehaviour
 {
-    [Header("Duvar Ayarlarý")]
+    [Header("Wall Settings")]
     public string targetObjectName = "Tilemap_Secret";
 
-    [Header("Kamera Ayarlarý")]
+    [Header("Camera Settings")]
     public Vector3 secretRoomPos;
 
     private GameObject secretWall;

@@ -6,7 +6,7 @@ public class EscapeKey : MonoBehaviour
     public Vector2 firstEscapeOffset = new Vector2(5, 2);  // İlk kaçacağı yer
     public Vector2 secondEscapeOffset = new Vector2(10, 0); // İkinci (son) kaçacağı yer
 
-    [Header("Ayarlar")]
+    [Header("Settings")]
     public float triggerDistance = 3.5f;
     public float moveSpeed = 10f;
 

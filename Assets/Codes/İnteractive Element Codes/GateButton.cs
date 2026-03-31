@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GateButton : MonoBehaviour
 {
-    [Header("Ayarlar")]
+    [Header("Settings")]
     public Color normalColor = Color.white;
     public Color pressedColor = Color.green;
     public Color disabledColor = new Color(0.3f, 0.3f, 0.3f);
@@ -63,7 +63,7 @@ public class GateButton : MonoBehaviour
         {
             gravityTrigger.ExecuteFlip();
         }
-
+        SoundManager.PlaySFX(SoundManager.instance.buttonSound);
         // Kapýyý aç
         if (GateController.Instance != null)
         {

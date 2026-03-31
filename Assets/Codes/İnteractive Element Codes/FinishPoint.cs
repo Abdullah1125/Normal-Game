@@ -8,7 +8,7 @@ public class FinishPoint : MonoBehaviour
         
         if (other.CompareTag("Player"))
         {
-           
+            SoundManager.PlaySFX(SoundManager.instance.doorPassSound);
             LevelManager.Instance.NextLevel();
         }
     }

@@ -7,12 +7,12 @@ public class LevelTransition : MonoBehaviour
 {
     public static LevelTransition Instance;
 
-    [Header("Ayarlar")]
+    [Header("Settings")]
     public Image fadeImage;
     public TextMeshProUGUI levelText; 
     public float fadeDuration = 0.5f;
 
-    [Header("Renkler")]
+    [Header("Colors")]
     public Color fadeColor = Color.black;
 
     private void Awake()

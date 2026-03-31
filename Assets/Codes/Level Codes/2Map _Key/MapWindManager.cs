@@ -4,13 +4,13 @@ public class MapWindManager : MonoBehaviour
 {
 
 
-    [Header("Rüzgar Gücü")]
+    [Header("Wind Power")]
     public Vector2 windForce = new Vector2(-20f, 0f);
     public bool isWindActive = true;
 
-    [Header("Hýz Ayarlarý")]
-    public float ruzgarliHiz = 4f;    // Rüzgar varkenki hýzý (Normali 10 ise bu 4 olsun)
-    private float normalHiz;          // Karakterin orijinal hýzý (Otomatik kaydedilir)
+    [Header("Speed Settings")]
+    public float windSpeed = 4f;    // Rüzgar varkenki hýzý (Normali 10 ise bu 4 olsun)
+    private float normalSpeed;          // Karakterin orijinal hýzý (Otomatik kaydedilir)
 
     private PlayerController playerScript;
     private Rigidbody2D playerRb;
@@ -19,17 +19,17 @@ public class MapWindManager : MonoBehaviour
     void Start()
     {
         // Senin istediðin Tag kontrolü ile karakteri ve scriptini bul
-        GameObject playerObj = GameObject.FindWithTag("Player");
+    
 
-        if (playerObj != null)
+        if (PlayerController.Instance != null)
         {
-            playerRb = playerObj.GetComponent<Rigidbody2D>();
-            playerScript = playerObj.GetComponent<PlayerController>();
+            playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();
+            playerScript = PlayerController.Instance.GetComponent<PlayerController>();
 
             // Karakterin orijinal hýzýný (moveSpeed) hafýzaya al
             if (playerScript != null)
             {
-                normalHiz = playerScript.moveSpeed;
+                normalSpeed = PlayerController.Instance.defaultSpeed;
                 ApplyWindEffect(); // Oyun baþlarken rüzgar varsa hýzý düþür
             }
         }
@@ -50,9 +50,9 @@ public class MapWindManager : MonoBehaviour
         if (playerScript == null) return;
 
         if (isWindActive)
-            playerScript.moveSpeed = ruzgarliHiz; // Hýzý düþür
+            playerScript.moveSpeed = windSpeed; // Hýzý düþür
         else
-            playerScript.moveSpeed = normalHiz;   // Eski haline getir
+            playerScript.moveSpeed = normalSpeed;   // Eski haline getir
     }
-
+   
 }

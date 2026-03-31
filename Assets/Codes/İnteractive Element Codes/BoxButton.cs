@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoxButton : MonoBehaviour
 {
-    [Header("Ayarlar")]
+    [Header("Settings")]
     public Color normalColor = Color.white;
     public Color pressedColor = Color.green;
 

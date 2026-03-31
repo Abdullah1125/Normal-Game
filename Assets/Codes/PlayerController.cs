@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,9 +11,11 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Movement Settings")]
-    public float moveSpeed = 10f;       // Yatay hareket hızı
+    public float moveSpeed = 14f;       // Yatay hareket hızı
+    public float defaultSpeed = 14f;
     public float airAcceleration = 25f; // Havada hızlanma katsayısı
     public bool canMove = true;
+
     [Header("Jump Settings")]
     public float firstJumpForce = 13f;  // İlk zıplama gücü
     public float doubleJumpForce = 10f; // Çift zıplama gücü
@@ -21,8 +24,8 @@ public class PlayerController : MonoBehaviour
     private int extraJumps;             // Kalan zıplama hakkı
 
     [Header("Juicy Movement")]
-    public float acceleration = 50f;      // Yerden kalkış hızı
-    public float deceleration = 40f;      // Yerde durma hızı
+    public float acceleration = 75f;      // Yerden kalkış hızı
+    public float deceleration = 50f;      // Yerde durma hızı
     public float airDeceleration = 10f;    // Havada süzülme (Düşük olursa momentum korunur)
 
     [Header("Jump Boost")]
@@ -30,8 +33,8 @@ public class PlayerController : MonoBehaviour
     public float boostSmoothness = 3f;  // İtişin yumuşaklığı
 
     [Header("Mobile Jump Assist")]
-    public float coyotoTime = 0.15f;
-    public float jumpBufferTime = 0.15f;
+    public float coyotoTime = 0.2f;
+    public float jumpBufferTime = 0.2f;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;       // Karakterin devrilmesini engelle
         rb.gravityScale = 6f;           // Yerçekimi ağırlığı
-
+        moveSpeed = defaultSpeed;
     }
     
     void Update()
@@ -137,7 +140,12 @@ public class PlayerController : MonoBehaviour
 
         if (Mathf.Abs(moveInput) > 0.1f && isGrounded)
         {
-            if (!walkSound.isPlaying) walkSound.Play();
+            if (!walkSound.isPlaying)
+            {
+              
+                walkSound.pitch = Random.Range(0.8f, 1.2f);
+                walkSound.Play();
+            }
         }
         else
         {
@@ -162,7 +170,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float speedDif = targetSpeed - rb.linearVelocity.x;
-        float movement = speedDif * accelRate;
+        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, 0.95f) * Mathf.Sign(speedDif);
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
 
         // Yerde olma kontrolü ve zıplama hakkı yenileme
@@ -194,12 +202,31 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
-        ResetPosition();
-        if (LevelManager.Instance != null)
+        if (!canMove) return;
+        
+        if (CameraRoomController.Instance != null)
         {
-            LevelManager.Instance.ApplyLevel();
+            CameraRoomController.Instance.ShakeCamera();
         }
+        if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
+        StartCoroutine(DeathRoutine());
+        SoundManager.PlaySFX(SoundManager.instance.dieSound);
+    }
+    private IEnumerator DeathRoutine()
+    {
+        canMove = false;
+        moveInput = 0;
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null) sr.enabled = false;
+
+        rb.linearVelocity = Vector2.zero;
+        yield return new WaitForSeconds(0.21f);
+
+        ResetPosition();
+        if (sr != null) sr.enabled = true;
+
+        canMove = true;
     }
 
     public void ResetPosition()
@@ -208,12 +235,20 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
+
         // Diğer sistemleri sıfırla
         CameraRoomController.Instance.ResetCamera();
         LevelManager.Instance.ResetAllMechanics();
-    }
+        if (CameraRoomController.Instance != null) CameraRoomController.Instance.ResetCamera();
 
-   
+        ResetSpeed();
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.ResetAllMechanics();
+            LevelManager.Instance.ApplyLevel(); 
+        }
+    }
 
     public void Move(float dir)
     {
@@ -232,12 +267,18 @@ public class PlayerController : MonoBehaviour
     {
         // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
         // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
-       rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-    rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
+        SoundManager.PlaySFX(SoundManager.instance.jumpSound);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
+       
     }
     public void StartJump()
     {
         jumpBufferCounter = jumpBufferTime;
         isHoldingJump = true;
+    }
+    public void ResetSpeed()
+    {
+        moveSpeed = defaultSpeed;
     }
 }

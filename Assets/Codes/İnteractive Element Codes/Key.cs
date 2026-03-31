@@ -20,7 +20,7 @@ public class Key : MonoBehaviour
                 GateController.Instance.RegisterKeyCollected();
             }
 
-
+            SoundManager.PlaySFX(SoundManager.instance.keySound);
             gameObject.SetActive(false);
 
             Debug.Log("Key collected, gate is opening!");

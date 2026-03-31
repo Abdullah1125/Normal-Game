@@ -6,17 +6,17 @@ public class TiringJumpRule : MonoBehaviour
     public static TiringJumpRule Instance { get; private set; }
     public string targetTilemapName = "Temporary_Platform";
 
-    [Header("Zıplama Ayarları")]
+    [Header("Jump Settings")]
     public float startingForce = 15f;
     public float fatigueAmount = 1.5f;
     public float minimumForce = 4f;
 
-    [Header("Düşüş Desteği")]
+    [Header("Fall Support")]
     public float fallBoostMultiplier = 2.5f;
     public float maxForce = 20f;
     public float minFallDistance = 0.8f;
 
-    [Header("Otomatik Zıplama")]
+    [Header("Auto Jump")]
     public float jumpCooldown = 0.1f;
 
     [Header("Debug")]

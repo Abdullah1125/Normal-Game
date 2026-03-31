@@ -29,7 +29,11 @@ public class GateController : MonoBehaviour
         // MoveTowards her iki yön için de otomatik çalýþýr
         transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
     }
-    public void OpenGate() => isOpening = true;
+    public void OpenGate()
+    {
+        isOpening = true;
+        SoundManager.PlaySFX(SoundManager.instance.slidingDoorSound);
+    } 
     public void CloseGate() => isOpening = false;
        
     // Kapýyý baþlangýç durumuna döndüren metot
