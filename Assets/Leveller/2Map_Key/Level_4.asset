@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 9
-  levelName: Normals
-  isUnlocked: 1
+  levelName: "Sa\u011F\u0131r,K\xF6r,Dilsiz"
+  isUnlocked: 0
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isActive: 1
+  isActive: 0
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
-  levelHint: 
+  - {fileID: 3992729786646427472, guid: da6ee25d506e6d542aee6fa006334071, type: 3}
+  levelHint: "Sa\u011F\u0131r,K\xF6r,Dilszi"

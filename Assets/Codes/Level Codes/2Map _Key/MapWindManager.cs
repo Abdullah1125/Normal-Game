@@ -9,7 +9,7 @@ public class MapWindManager : MonoBehaviour
     public bool isWindActive = true;
 
     [Header("Speed Settings")]
-    public float windSpeed = 4f;    // Rüzgar varkenki hýzý (Normali 10 ise bu 4 olsun)
+    public float windSpeed = 35f;    // Rüzgar varkenki hýzý (Normali 10 ise bu 4 olsun)
     private float normalSpeed;          // Karakterin orijinal hýzý (Otomatik kaydedilir)
 
     private PlayerController playerScript;

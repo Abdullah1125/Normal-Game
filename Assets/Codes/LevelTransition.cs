@@ -98,7 +98,7 @@ public class LevelTransition : MonoBehaviour
         // Ekraný kapatýrken yazýyý da göster
         yield return FadeRoutine(0f, 1f, null, true);
 
-        // Ortadaki iþi yap (Level deðiþimi vb.)
+       
         middleAction?.Invoke();
 
         // Yazýnýn okunmasý için minik bir ekstra bekleme

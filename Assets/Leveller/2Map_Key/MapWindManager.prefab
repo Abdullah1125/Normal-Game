@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapWindManager
   windForce: {x: -500, y: 0}
   isWindActive: 1
-  ruzgarliHiz: 30.35
+  windSpeed: 37.8

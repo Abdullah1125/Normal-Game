@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &67349467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3252758355779320932, guid: a032ed38de827c247a8841474b3fbfc9, type: 3}
+  m_PrefabInstance: {fileID: 651601490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &128206762
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,6 +695,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77fc3039bef332f409a3ed1fa85011f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraRoomController
+  shakeDuration: 0.1
+  shakeMagnitude: 0.1
   transitionSpeed: 5
 --- !u!1 &519995484
 GameObject:
@@ -978,11 +985,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8653004489620645952, guid: a032ed38de827c247a8841474b3fbfc9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -878
+      value: -870
       objectReference: {fileID: 0}
     - target: {fileID: 8653004489620645952, guid: a032ed38de827c247a8841474b3fbfc9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 399
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 8653004489620645952, guid: a032ed38de827c247a8841474b3fbfc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2376,6 +2383,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pause Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 1381622390513904583, guid: 9dabc728af36897498806497779fd709, type: 3}
+      propertyPath: hudPauseButton
+      value: 
+      objectReference: {fileID: 67349467}
     - target: {fileID: 3809874964297335342, guid: 9dabc728af36897498806497779fd709, type: 3}
       propertyPath: m_Pivot.x
       value: 0
