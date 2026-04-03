@@ -23,4 +23,4 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 917639485641154654, guid: 8c35ac05a84837a4c8f1e186fb86d54f, type: 3}
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
-  levelHint: "Haf\u0131zan Yerinde mi?"
+  levelHint: hint_level_3

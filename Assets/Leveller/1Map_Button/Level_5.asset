@@ -22,4 +22,4 @@ MonoBehaviour:
   isActive: 1
   specialMechanics:
   - {fileID: 5969259166198355378, guid: ca4f209a6712f594d8f66cd6b697e5ef, type: 3}
-  levelHint: "Ba\u015F A\u015Fa\u011F\u0131 Buton "
+  levelHint: hint_level_4

@@ -15,11 +15,11 @@ MonoBehaviour:
   levelID: 0
   levelName: Normal
   isUnlocked: 1
-  isCompleted: 0
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
   specialMechanics:
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
-  levelHint: 
+  levelHint: hint_level_0

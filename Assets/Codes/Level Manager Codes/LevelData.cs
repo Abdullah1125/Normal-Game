@@ -21,6 +21,5 @@ public class LevelData : ScriptableObject
     public List<GameObject> specialMechanics; // Buraya istediğin kadar mekanik sürükle!
 
     [Header("Hint System(İpucu Sistemi)")]
-    [TextArea(3, 10)]
     public string levelHint;
 }

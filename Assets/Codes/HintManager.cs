@@ -9,20 +9,37 @@ public class HintManager : MonoBehaviour
 
     void Awake() => Instance = this;
 
-    // Seviye her yüklendiðinde veya oyuncu her öldüðünde çaðrýlýr
     public void UpdateLevelHint()
     {
         if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
         {
-            string text = LevelManager.Instance.activeLevel.levelHint;
+            // 1. LevelData içindeki anahtarý (hintKey) alýyoruz
+            string currentKey = LevelManager.Instance.activeLevel.levelHint;
 
-            if (!string.IsNullOrEmpty(text))
+            // 2. Eðer anahtar boþ deðilse dile göre metni çekiyoruz
+            if (!string.IsNullOrEmpty(currentKey))
             {
-                hintText.text = text;
-                hintPanel.SetActive(true);
+                // LocalizationManager üzerinden çeviriyi alýyoruz
+                // Not: LocalizedText scriptindeki mantýðý burada direkt kullanýyoruz
+                string translatedText = (string)typeof(LanguageData)
+                    .GetField(currentKey)
+                    ?.GetValue(LocalizationManager.Instance.currentData);
+
+                if (!string.IsNullOrEmpty(translatedText))
+                {
+                    hintText.text = translatedText;
+                    hintPanel.SetActive(true);
+                }
+                else
+                {
+                    // Anahtar JSON'da bulunamadýysa paneli kapat veya hata bas
+                    hintPanel.SetActive(false);
+                    Debug.LogWarning(currentKey + " anahtarý JSON dosyasýnda bulunamadý!");
+                }
             }
             else
             {
+                // Eðer seviyede ipucu yoksa (boþ býrakýldýysa) paneli gizle
                 hintPanel.SetActive(false);
             }
         }

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 1
   levelName: "Geri D\xF6n\xFC\u015F Yok"
-  isUnlocked: 0
-  isCompleted: 0
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 1
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
   specialMechanics:
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
-  levelHint: "Geri D\xF6n\xFC\u015F Yok"
+  levelHint: hint_level_1

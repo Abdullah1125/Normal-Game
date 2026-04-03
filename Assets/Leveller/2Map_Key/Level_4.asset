@@ -23,4 +23,4 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
   - {fileID: 3992729786646427472, guid: da6ee25d506e6d542aee6fa006334071, type: 3}
-  levelHint: "Sa\u011F\u0131r,K\xF6r,Dilszi"
+  levelHint: hint_level_9

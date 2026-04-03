@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Level_6
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 11
-  levelName: Normalsss
+  levelName: "Tu\u015Flar\u0131 Bo\u015Fver"
   isUnlocked: 0
   isCompleted: 0
-  isLeftForbidden: 0
-  isRightForbidden: 0
-  isJumpForbidden: 0
+  isLeftForbidden: 1
+  isRightForbidden: 1
+  isJumpForbidden: 1
   isActive: 1
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
-  levelHint: 
+  - {fileID: 3461225615517227208, guid: 5310b26cbaf629f4c99badc0425bd4ac, type: 3}
+  levelHint: hint_level_11

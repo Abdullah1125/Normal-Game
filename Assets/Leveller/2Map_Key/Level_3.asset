@@ -23,4 +23,4 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 6202465503894509472, guid: 9d5645ec0262e6b4bbe829ecb4a2d9b2, type: 3}
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
-  levelHint: Bii! Elamet Geldi Vuuuuuuuuuuuuuuuuuuuu
+  levelHint: hint_level_8

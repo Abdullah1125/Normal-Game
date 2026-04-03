@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 10
   levelName: "Yorulan Z\u0131plama"
-  isUnlocked: 1
-  isCompleted: 1
+  isUnlocked: 0
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 1
@@ -23,4 +23,4 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
   - {fileID: 8084022533016421062, guid: 618df04b7bbc6c44f81887617d168ddf, type: 3}
-  levelHint: "Z\u0131p Z\u0131p"
+  levelHint: hint_level_10

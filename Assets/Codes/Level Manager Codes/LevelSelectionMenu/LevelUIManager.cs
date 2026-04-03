@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using TMPro;     
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;     
+using UnityEngine.SceneManagement;
 public class LevelUIManager : MonoBehaviour
 {
     public List<LevelData> allGameLevels;
@@ -77,15 +78,41 @@ public class LevelUIManager : MonoBehaviour
     }
     void UpdateTexts()
     {
-        if (Level1 != null && currentPage < Level1.Count)
+        // 1. Güvenlik Kontrolü
+        if (LocalizationManager.Instance == null || LocalizationManager.Instance.currentData == null) return;
+
+        var data = LocalizationManager.Instance.currentData;
+
+        // Eðer listede veri yoksa iþlem yapma
+        if (data.page_titles == null) return;
+
+        // --- FORMÜL: Her sayfa 2 veri kaplar ---
+        int baseIndex = currentPage * 2;
+
+        // --- LEVEL 1 TEXT (Sýradaki ilk veri) ---
+        if (baseIndex < data.page_titles.Length)
         {
-            Level1Text.text = Level1[currentPage];
+            Level1Text.text = data.page_titles[baseIndex];
         }
-        if (Level2 != null && currentPage < Level2.Count)
+        else
         {
-            Level2Text.text = Level2[currentPage];
+            Level1Text.text = "CHAPTER " + (currentPage + 1);
         }
-        
+
+        // --- LEVEL 2 TEXT (Sýradaki ikinci veri) ---
+        if (Level2Text != null)
+        {
+            // baseIndex + 1 diyerek listedeki bir sonraki elemaný alýyoruz
+            if (baseIndex + 1 < data.page_titles.Length)
+            {
+                Level2Text.text = data.page_titles[baseIndex + 1];
+            }
+            else
+            {
+                // Eðer listede karþýlýðý yoksa boþ býrak veya Coming Soon yaz
+                Level2Text.text = "";
+            }
+        }
     }
     public void RefreshPage()
     {
@@ -149,11 +176,8 @@ public class LevelUIManager : MonoBehaviour
         RefreshPage();
     }
 
-    public void ResetProgress()
+    public void MainMenu()
     {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-        currentPage = 0; // Baþa dön
-        RefreshPage();
+        SceneManager.LoadScene("MainMenu");
     }
 }

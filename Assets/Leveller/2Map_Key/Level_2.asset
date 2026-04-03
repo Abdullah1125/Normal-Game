@@ -22,4 +22,4 @@ MonoBehaviour:
   isActive: 0
   specialMechanics:
   - {fileID: 961464341912579956, guid: 9238dc5deb6866b46b78acb2ece43981, type: 3}
-  levelHint: "Yakala Bakal\u0131m"
+  levelHint: hint_level_7

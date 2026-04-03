@@ -680,6 +680,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2650206597973831568}
   - component: {fileID: 4725015728704288723}
+  - component: {fileID: 2559286314367635291}
   - component: {fileID: 8985621283117562395}
   m_Layer: 5
   m_Name: Text (TMP)
@@ -715,6 +716,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2863296884056511174}
   m_CullTransparentMesh: 1
+--- !u!114 &2559286314367635291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2863296884056511174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: level_button
 --- !u!114 &8985621283117562395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,6 +1130,7 @@ GameObject:
   - component: {fileID: 8077804330236204970}
   - component: {fileID: 6263732737391842929}
   - component: {fileID: 5585334365977017374}
+  - component: {fileID: 6747432418300016631}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1242,6 +1257,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6747432418300016631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3885745131475072269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: back_button
 --- !u!1 &3965884201205857734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1651,6 +1679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3004986053742311060}
   - component: {fileID: 1932735355380411766}
+  - component: {fileID: 9044163195662717400}
   - component: {fileID: 8726325334685732745}
   m_Layer: 5
   m_Name: Text (TMP)
@@ -1686,6 +1715,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6470116057832148409}
   m_CullTransparentMesh: 1
+--- !u!114 &9044163195662717400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6470116057832148409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: resume_button
 --- !u!114 &8726325334685732745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2861,6 +2903,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5591532809212193351}
   - component: {fileID: 3554363290521990363}
+  - component: {fileID: 5859938104146814368}
   - component: {fileID: 3726655885767947051}
   m_Layer: 5
   m_Name: Settings Text
@@ -2896,6 +2939,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9018149241883810993}
   m_CullTransparentMesh: 1
+--- !u!114 &5859938104146814368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9018149241883810993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: settings_button
 --- !u!114 &3726655885767947051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2998,6 +3054,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061384747466529472}
   - component: {fileID: 1465371166945214852}
+  - component: {fileID: 3720088830101919618}
   - component: {fileID: 4436497758190827228}
   m_Layer: 5
   m_Name: Text (TMP)
@@ -3033,6 +3090,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9106002736153409848}
   m_CullTransparentMesh: 1
+--- !u!114 &3720088830101919618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106002736153409848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: settings_button
 --- !u!114 &4436497758190827228
 MonoBehaviour:
   m_ObjectHideFlags: 0
