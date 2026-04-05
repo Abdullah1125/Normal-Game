@@ -3,7 +3,7 @@ using TMPro;
 
 public class LocalizedText : MonoBehaviour
 {
-    [Tooltip("JSON'daki anahtar kelime (Örn: play_button)")]
+    [Tooltip("JSON'daki anahtar kelime ")]
     public string key;
 
     void OnEnable()

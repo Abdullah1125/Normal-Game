@@ -7,7 +7,7 @@
     "back_button": "BACK",
     "coming": "COMMING SOON",
     "reset_level": "RESET",
- "page_titles": [
+    "page_titles": [
         "BUTTON MAP",
         "KEY MAP",
         "BOX MAP",
@@ -19,6 +19,10 @@
         "BUTTON MAP",
         "BOX MAP"
     ],
+    "reset_title": "ARE YOU SURE?",
+    "reset_desc": "All progress will be permanently deleted!",
+    "yes_button": "YES",
+    "no_button": "NO",
     "hint_level_0": "",
     "hint_level_1": "No Return",
     "hint_level_2": "Secret Passage",
@@ -27,7 +31,7 @@
     "hint_level_5": "We are ready to fly",
     "hint_level_6": "",
     "hint_level_7": "Let's catch it",
-    "hint_level_8": "Bii! The Omen Has Come", 
+    "hint_level_8": "Bii! The Omen Has Come",
     "hint_level_9": "Deaf, Blind, Mute",
     "hint_level_10": "Pogo stick",
     "hint_level_11": "Alternative control scheme"

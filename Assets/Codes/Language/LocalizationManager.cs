@@ -10,8 +10,8 @@ public class LocalizationManager : MonoBehaviour
         if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
         else { Destroy(gameObject); }
 
-        // Daha önce seçilen dili yükle, yoksa Türkçe baþla
-        LoadLanguage(PlayerPrefs.GetString("SelectedLang", "Turkish"));
+        // Daha önce seçilen dili yükle, yoksa Ýngilizce baþla
+        LoadLanguage(PlayerPrefs.GetString("SelectedLang", "English"));
     }
 
     public void LoadLanguage(string langName)

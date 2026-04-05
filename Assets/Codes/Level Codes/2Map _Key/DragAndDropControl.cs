@@ -5,6 +5,9 @@ public class DragAndDropControl : MonoBehaviour
     private Rigidbody2D rb;
     private bool isDragging = false;
     private Vector3 offset;
+    [Header("Settings")]
+    public float grabRadius = 20;
+    public LayerMask playerLayer;
 
  
     public string playerTag = "Player"; 
@@ -16,12 +19,12 @@ public class DragAndDropControl : MonoBehaviour
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            Collider2D hitCollider = Physics2D.OverlapCircle(mousePos, grabRadius , playerLayer);
 
-            if (hit.collider != null && hit.collider.CompareTag(playerTag))
+            if (hitCollider != null && hitCollider.CompareTag(playerTag))
             {
                
-                rb = hit.collider.GetComponent<Rigidbody2D>();
+                rb = hitCollider.GetComponent<Rigidbody2D>();
 
                 if (rb != null)
                 {

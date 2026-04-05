@@ -11,7 +11,8 @@ public class AudioSettings : MonoBehaviour
     public Slider sfxSlider;   
     private bool isMusicMuted = false;
     private bool isSFXMuted = false;
-
+    private float lastMusicVolume = 0.75f; 
+    private float lastSFXVolume = 0.75f;
     void Start()
     { 
         float savedMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
@@ -28,13 +29,14 @@ public class AudioSettings : MonoBehaviour
 
         if (isMusicMuted)
         {
-            mainMixer.SetFloat("MusicVol", -80f); 
+            lastMusicVolume = musicSlider.value;
+            SetMusicVolume(0.0001f);
             musicSlider.value = 0.0001f;         
         }
         else
         {
-            mainMixer.SetFloat("MusicVol", 0f); 
-            musicSlider.value = 1f;              
+            SetMusicVolume(lastMusicVolume);    
+            musicSlider.value = lastMusicVolume;
         }
     }
 
@@ -45,27 +47,29 @@ public class AudioSettings : MonoBehaviour
 
         if (isSFXMuted)
         {
-            mainMixer.SetFloat("SFXVol", -80f);
+            lastSFXVolume = sfxSlider.value;   
+            SetSFXVolume(0.0001f);
             sfxSlider.value = 0.0001f;
         }
         else
         {
-            mainMixer.SetFloat("SFXVol", 0f);
-            sfxSlider.value = 1f;
+            SetSFXVolume(lastSFXVolume);        
+            sfxSlider.value = lastSFXVolume;
         }
     }
 
-    
+
     public void SetMusicVolume(float value)
     {
-        mainMixer.SetFloat("MusicVol", Mathf.Log10(value) * 20);
+       
+        mainMixer.SetFloat("MusicVol", Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20);
         PlayerPrefs.SetFloat("MusicVolume", value);
         if (value > 0.01f) isMusicMuted = false;
     }
 
     public void SetSFXVolume(float value)
     {
-        mainMixer.SetFloat("SFXVol", Mathf.Log10(value) * 20);
+        mainMixer.SetFloat("SFXVol", Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20);
         PlayerPrefs.SetFloat("SFXVolume", value);
         if (value > 0.01f) isSFXMuted = false;
     }

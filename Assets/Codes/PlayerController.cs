@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
+    private SpriteRenderer sr;
 
     [Header("Movement Settings")]
     public float moveSpeed = 14f;       // Yatay hareket hızı
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         rb.freezeRotation = true;       // Karakterin devrilmesini engelle
         rb.gravityScale = 6f;           // Yerçekimi ağırlığı
         moveSpeed = defaultSpeed;
@@ -82,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
         // Klavye girdilerini al
         float keyboardInput = Input.GetAxisRaw("Horizontal");
+
+
         if (keyboardInput != 0) moveInput = keyboardInput;
         else if (Input.GetButtonUp("Horizontal")) moveInput = 0;
 
@@ -130,10 +134,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonUp("Jump")) StopJump();
 
-        // Karakterin yüzünü hareket yönüne çevir
-        if (moveInput > 0) transform.localScale = new Vector3(1, 1, 1);
-        else if (moveInput < 0) transform.localScale = new Vector3(-1, 1, 1);
-
+      
         //Karakteri Ters Çevir
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
@@ -151,6 +152,22 @@ public class PlayerController : MonoBehaviour
         {
             walkSound.Stop();
         }
+
+        UpdateVisuals();
+    }
+    private void UpdateVisuals()
+    {
+        // 1. Karakterin Yüzünü Çevir (Flip)
+        if (Mathf.Abs(moveInput) > 0.1f)
+        {
+            // Yer çekimi yukarıysa (baş aşağıysak) flip mantığını ters işle
+            if (moveInput > 0.1f) sr.flipX = (gravityDir > 0);
+            else if (moveInput < -0.1f) sr.flipX = !(gravityDir > 0);
+        }
+
+        // 2. Karakterin Gövdesini Ters Çevir (Rotation)
+        if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
+        else transform.eulerAngles = Vector3.zero;
     }
 
     void FixedUpdate()
@@ -254,6 +271,7 @@ public class PlayerController : MonoBehaviour
     {
         // Seviye kurallarına göre (sol/sağ yasak) hareketi engelle
         LevelData data = LevelManager.Instance.activeLevel;
+        
         if (data != null)
         {
             if (data.isLeftForbidden && dir < 0) { moveInput = 0; return; }
