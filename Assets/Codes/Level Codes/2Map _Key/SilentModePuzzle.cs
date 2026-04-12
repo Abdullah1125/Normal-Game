@@ -6,14 +6,17 @@ public class SilentModePuzzle : MonoBehaviour
 
     void Update()
     {
-        // 1. Senin AudioSettings'te kullandığın anahtar isimleriyle veriyi çekiyoruz
-        // Eğer kayıt yoksa varsayılan 0.75f (Senin Start'taki değerin)
-        float currentMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float currentSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        // 1. Fiziksel Ses (Telefonun yan tuşları)
+        float systemVolume = AudioListener.volume;
 
-        // 2. Senin sliderların minimum değeri 0.0001f civarı olacağı için 
-        // 0.01'den küçükse "sessiz" kabul ediyoruz.
-        if (currentMusic <= 0.01f && currentSFX <= 0.01f)
+        // 2. Ayarlar Menüsü (Senin slider verilerin)
+        // Eğer sliderların PlayerPrefs'e "MusicVolume" ve "SFXVolume" diye kaydediliyorsa:
+        float menuMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        float menuSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+
+        // MANTIĞIMIZ: 
+        // EĞER (Sistem sesi kapalıysa) VEYA (Ayarlardan hem müzik hem SFX kısıldıysa)
+        if (systemVolume <= 0.01f || (menuMusic <= 0.01f && menuSFX <= 0.01f))
         {
             if (!isSolved)
             {
@@ -23,7 +26,7 @@ public class SilentModePuzzle : MonoBehaviour
         }
         else
         {
-            
+            // Eğer herhangi biri tekrar açılırsa kapıyı kapat
             if (isSolved)
             {
                 CloseTheGate();
@@ -37,7 +40,7 @@ public class SilentModePuzzle : MonoBehaviour
         if (GateController.Instance != null)
         {
             GateController.Instance.OpenGate();
-            Debug.Log("🔇 Sessizlik algılandı: Kapı Açıldı!");
+            Debug.Log("🔇 Tam sessizlik sağlandı: Kapı Açıldı!");
         }
     }
 
@@ -46,7 +49,7 @@ public class SilentModePuzzle : MonoBehaviour
         if (GateController.Instance != null)
         {
             GateController.Instance.CloseGate();
-            Debug.Log("🔊 Ses açıldı: Kapı Kapatıldı!");
+            Debug.Log("🔊 Ses geri geldi: Kapı Kapatıldı!");
         }
     }
 }

@@ -966,6 +966,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 924478253}
+  - component: {fileID: 924478259}
   - component: {fileID: 924478258}
   - component: {fileID: 924478257}
   - component: {fileID: 924478256}
@@ -1501,6 +1502,18 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &924478259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924478252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7388a3af92d18d84abc298c6a8b20825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LayerAdvancedController
 --- !u!1 &1092393296
 GameObject:
   m_ObjectHideFlags: 0
@@ -3702,7 +3715,11 @@ MonoBehaviour:
   currentLevelIndex: 0
   allLevels:
   - {fileID: 11400000, guid: b25978c31abe415499bdf87b4c511840, type: 2}
+  - {fileID: 11400000, guid: b02881a014cd7504193f6f7c06c14a23, type: 2}
+  - {fileID: 11400000, guid: b360eb0719ce3604eb743da6f8c848f4, type: 2}
+  - {fileID: 11400000, guid: 472a2a12ebd7fb74c8b02c5573117507, type: 2}
   - {fileID: 11400000, guid: 3e0d5d2d85833f94db510c95e865af11, type: 2}
+  - {fileID: 11400000, guid: 76e4e04fb6d5f35438af00d6570b0dca, type: 2}
   activeLevel: {fileID: 0}
 --- !u!4 &1821301912
 Transform:

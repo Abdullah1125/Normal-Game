@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 public class TiringJumpRule : MonoBehaviour
 {
     public static TiringJumpRule Instance { get; private set; }
-    public string targetTilemapName = "Temporary_Platform";
+   
 
     [Header("Jump Settings")]
     public float startingForce = 15f;
@@ -23,7 +23,7 @@ public class TiringJumpRule : MonoBehaviour
     public bool showDebugLogs = true;
 
     private float currentForce;
-    private float lastGroundY;          // Son yere basılan Y pozisyonu
+    private float lastGroundY;         
     private float lastJumpTime;
     private bool wasGrounded = false;
 
@@ -37,16 +37,9 @@ public class TiringJumpRule : MonoBehaviour
 
     void Start()
     {
-        GameObject targetObject = GameObject.Find(targetTilemapName);
+       
 
-        if (targetObject != null)
-        {
-            // Optional: Check if it actually has a Tilemap component before destroying
-            if (targetObject.GetComponent<Tilemap>() != null)
-            {
-                Destroy(targetObject);
-            }
-        }
+       
             currentForce = startingForce;
         FindPlayer();
     }
@@ -70,13 +63,12 @@ public class TiringJumpRule : MonoBehaviour
             return;
         }
 
-        // Yere değdiği an
         if (player.isGrounded && !wasGrounded)
         {
             OnLanded();
         }
 
-        // Yerdeyken otomatik zıpla
+       
         if (player.isGrounded && Time.time > lastJumpTime + jumpCooldown)
         {
             AutoJump();
@@ -88,11 +80,11 @@ public class TiringJumpRule : MonoBehaviour
     void OnLanded()
     {
         float currentY = player.transform.position.y;
-        float heightDifference = lastGroundY - currentY;  // Pozitif = aşağı düştü
+        float heightDifference = lastGroundY - currentY;  
 
         if (heightDifference > minFallDistance)
         {
-            // AŞAĞI DÜŞTÜ = GÜÇ KAZAN
+           
             float gainedForce = heightDifference * fallBoostMultiplier;
             currentForce += gainedForce;
 
@@ -101,17 +93,17 @@ public class TiringJumpRule : MonoBehaviour
         }
         else
         {
-            // AYNI SEVİYE VEYA YUKARI = YORULMA
+         
             currentForce -= fatigueAmount;
 
             if (showDebugLogs)
                 Debug.Log($"↓ Yorulma | -{fatigueAmount:F1} güç | Kalan: {currentForce:F1}");
         }
 
-        // Sınırları uygula
+        
         currentForce = Mathf.Clamp(currentForce, minimumForce, maxForce);
 
-        // Son yer pozisyonunu güncelle
+       
         lastGroundY = currentY;
     }
 

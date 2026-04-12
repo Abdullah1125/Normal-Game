@@ -113,6 +113,14 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log("Aktif Seviye: " + activeLevel.levelName);
         PlayerController.Instance.ResetSpeed();
+
+        Physics2D.gravity = new Vector2(0, -9.81f);
+
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.UpdateGravityDirection();
+        }
+
     }
 
     // Ölünce mekanikleri sýfýrla (silmeden)
@@ -135,6 +143,11 @@ public class LevelManager : MonoBehaviour
 
             BoxButton boxbutton = obj.GetComponentInChildren<BoxButton>();
             if (boxbutton != null) boxbutton.ResetButton();
+
+            if (PlayerController.Instance != null)
+            {
+                PlayerController.Instance.UpdateGravityDirection();
+            }
         }
     }
     void GoToLevelSelect()

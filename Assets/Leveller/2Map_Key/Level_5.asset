@@ -20,6 +20,8 @@ MonoBehaviour:
   isRightForbidden: 0
   isJumpForbidden: 1
   isActive: 1
+  showLayer: 0
+  colliderLeyer: 0
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
   - {fileID: 8084022533016421062, guid: 618df04b7bbc6c44f81887617d168ddf, type: 3}

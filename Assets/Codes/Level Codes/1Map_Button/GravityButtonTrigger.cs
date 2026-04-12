@@ -10,5 +10,10 @@ public class GravityButtonTrigger : MonoBehaviour
         float newDirection = -currentDirection;
         Physics2D.gravity = new Vector2(0, newDirection * customForce);
         Debug.Log("Buton yer çekimini çevirdi.");
+
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.UpdateGravityDirection();
+        }
     }
 }

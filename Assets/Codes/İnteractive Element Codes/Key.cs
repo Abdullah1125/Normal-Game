@@ -2,32 +2,30 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-      
         if (other.CompareTag("Player"))
         {
-            if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
-            {
-               
-                return;
-            }
-
+            // Kapý koduna ulaþmaya çalýþýyoruz
             if (GateController.Instance != null)
             {
                 GateController.Instance.RegisterKeyCollected();
+
+                // Ses çal
+                if (SoundManager.instance != null)
+                    SoundManager.PlaySFX(SoundManager.instance.keySound);
+
+                // Anahtarý gizle
+                gameObject.SetActive(false);
+                Debug.Log("Anahtar baþarýyla toplandý!");
             }
-
-            SoundManager.PlaySFX(SoundManager.instance.keySound);
-            gameObject.SetActive(false);
-
-            Debug.Log("Key collected, gate is opening!");
+            else
+            {
+                Debug.LogError("Hata: Sahnede GateController bulunamadý! Kapý objesine scripti attýðýndan emin ol.");
+            }
         }
     }
 
-    // Seviye yeniden baþladýðýnda anahtarý tekrar görünür yapmak için kullanýlýr
     public void ResetKey()
     {
         gameObject.SetActive(true);

@@ -11,37 +11,35 @@ public class HintManager : MonoBehaviour
 
     public void UpdateLevelHint()
     {
-        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        if (LevelManager.Instance?.activeLevel == null) return;
+        if (LocalizationManager.Instance?.currentData == null) return;
+
+        string currentKey = LevelManager.Instance.activeLevel.levelHint;
+
+        if (string.IsNullOrEmpty(currentKey))
         {
-            // 1. LevelData içindeki anahtarý (hintKey) alýyoruz
-            string currentKey = LevelManager.Instance.activeLevel.levelHint;
+            hintPanel.SetActive(false);
+            return;
+        }
 
-            // 2. Eðer anahtar boþ deðilse dile göre metni çekiyoruz
-            if (!string.IsNullOrEmpty(currentKey))
-            {
-                // LocalizationManager üzerinden çeviriyi alýyoruz
-                // Not: LocalizedText scriptindeki mantýðý burada direkt kullanýyoruz
-                string translatedText = (string)typeof(LanguageData)
-                    .GetField(currentKey)
-                    ?.GetValue(LocalizationManager.Instance.currentData);
+        var field = typeof(LanguageData).GetField(currentKey);
+        if (field == null)
+        {
+            Debug.LogWarning($"Hint key '{currentKey}' bulunamadý!");
+            hintPanel.SetActive(false);
+            return;
+        }
 
-                if (!string.IsNullOrEmpty(translatedText))
-                {
-                    hintText.text = translatedText;
-                    hintPanel.SetActive(true);
-                }
-                else
-                {
-                    // Anahtar JSON'da bulunamadýysa paneli kapat veya hata bas
-                    hintPanel.SetActive(false);
-                    Debug.LogWarning(currentKey + " anahtarý JSON dosyasýnda bulunamadý!");
-                }
-            }
-            else
-            {
-                // Eðer seviyede ipucu yoksa (boþ býrakýldýysa) paneli gizle
-                hintPanel.SetActive(false);
-            }
+        string translatedText = (string)field.GetValue(LocalizationManager.Instance.currentData);
+
+        if (!string.IsNullOrEmpty(translatedText))
+        {
+            hintText.text = translatedText;
+            hintPanel.SetActive(true);
+        }
+        else
+        {
+            hintPanel.SetActive(false);
         }
     }
 }

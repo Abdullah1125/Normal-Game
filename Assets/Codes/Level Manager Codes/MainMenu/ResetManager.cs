@@ -17,15 +17,31 @@ public class ResetManager : MonoBehaviour
         resetConfirmationPanel.SetActive(false);
     }
 
-    
+
     public void ConfirmReset()
     {
-      
-        Debug.Log("Tüm ilerleme sýfýrlandý!");
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Ayarlarý yedekle
+        float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        string lang = PlayerPrefs.GetString("SelectedLang", "English");
 
-       
+        // Seviyeleri sil (0-99 arasý)
+        for (int i = 0; i < 60; i++)
+        {
+            PlayerPrefs.DeleteKey("LevelUnlocked_" + i);
+            PlayerPrefs.DeleteKey("LevelComplete_" + i);
+        }
+
+        // Ayarlarý geri yükle
+        PlayerPrefs.SetFloat("MusicVolume", music);
+        PlayerPrefs.SetFloat("SFXVolume", sfx);
+        PlayerPrefs.SetString("SelectedLang", lang);
+
+        // Ýlk leveli aç
+        
+        PlayerPrefs.Save();
+
+        Debug.Log("? Seviyeler sýfýrlandý, ayarlar korundu!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

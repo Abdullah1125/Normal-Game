@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 7
   levelName: "Ka\xE7ak Anahtar"
-  isUnlocked: 0
-  isCompleted: 0
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
-  isActive: 0
+  isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 961464341912579956, guid: 9238dc5deb6866b46b78acb2ece43981, type: 3}
   levelHint: hint_level_7

@@ -17,6 +17,10 @@ public class LevelData : ScriptableObject
     [Header("Interactive Element Settings (Etkileşim Ayarları)")]
     public bool isActive = true; // Buton ve Anahtar etkileşime açık 
 
+    [Header("Layer Advanced Settings")]
+    public bool showLayer = true;    // Tile görünsün mü?
+    public bool colliderLeyer = true; // Collider çalışsın mı?
+
     [Header("Special Mechanical Prefabs(Özel Mekanik Prefabları)")]
     public List<GameObject> specialMechanics; // Buraya istediğin kadar mekanik sürükle!
 

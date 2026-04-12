@@ -75,13 +75,12 @@ public class PlayerController : MonoBehaviour
         rb.freezeRotation = true;       // Karakterin devrilmesini engelle
         rb.gravityScale = 6f;           // Yerçekimi ağırlığı
         moveSpeed = defaultSpeed;
+        UpdateGravityDirection();
     }
     
     void Update()
     {
-        // Yer çekimi yönünü belirle (-1 aşağı, 1 yukarı)
-        gravityDir = Mathf.Sign(Physics2D.gravity.y);
-
+       
         // Klavye girdilerini al
         float keyboardInput = Input.GetAxisRaw("Horizontal");
 
@@ -220,7 +219,7 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         if (!canMove) return;
-        
+       
         if (CameraRoomController.Instance != null)
         {
             CameraRoomController.Instance.ShakeCamera();
@@ -228,6 +227,7 @@ public class PlayerController : MonoBehaviour
         if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
         StartCoroutine(DeathRoutine());
         SoundManager.PlaySFX(SoundManager.instance.dieSound);
+       
     }
     private IEnumerator DeathRoutine()
     {
@@ -252,6 +252,9 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
+
+        Physics2D.gravity = new Vector2(0, -9.81f); 
+        UpdateGravityDirection();
 
         // Diğer sistemleri sıfırla
         CameraRoomController.Instance.ResetCamera();
@@ -299,4 +302,9 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed = defaultSpeed;
     }
+    public void UpdateGravityDirection()
+    {
+        gravityDir = Mathf.Sign(Physics2D.gravity.y);
+    }
+
 }

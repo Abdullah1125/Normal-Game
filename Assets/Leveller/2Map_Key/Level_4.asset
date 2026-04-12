@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 9
   levelName: "Sa\u011F\u0131r,K\xF6r,Dilsiz"
-  isUnlocked: 0
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 0
+  showLayer: 0
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
-  - {fileID: 3992729786646427472, guid: da6ee25d506e6d542aee6fa006334071, type: 3}
+  - {fileID: 8039959892136918975, guid: da6ee25d506e6d542aee6fa006334071, type: 3}
   levelHint: hint_level_9
