@@ -26,6 +26,10 @@ public class LevelManager : MonoBehaviour
             level.isUnlocked = PlayerPrefs.GetInt("LevelUnlocked_" + level.levelID, level.levelID == 0 ? 1 : 0) == 1;
             level.isCompleted = PlayerPrefs.GetInt("LevelComplete_" + level.levelID, 0) == 1;
         }
+        Screen.fullScreen = true;
+
+        // Android/iOS için tam ekran modunu zorla
+        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
     }
     void Start()
     {

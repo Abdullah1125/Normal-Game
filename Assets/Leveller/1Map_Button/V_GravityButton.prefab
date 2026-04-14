@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_Name
-      value: GravityButton Variant
+      value: V_GravityButton
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.04
+      value: -4.673
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.z

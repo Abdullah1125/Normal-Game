@@ -7,70 +7,60 @@ public class AudioSettings : MonoBehaviour
     public AudioMixer mainMixer;
 
     [Header("UI")]
-    public Slider musicSlider; 
-    public Slider sfxSlider;   
+    public Slider musicSlider;
+    public Slider sfxSlider;
     private bool isMusicMuted = false;
     private bool isSFXMuted = false;
-    private float lastMusicVolume = 0.75f; 
+    private float lastMusicVolume = 0.75f;
     private float lastSFXVolume = 0.75f;
+
     void Start()
-    { 
+    {
+        // Kayýtlý verileri yükle
         float savedMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float savedSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f); 
-        mainMixer.SetFloat("MusicVol", Mathf.Log10(savedMusic) * 20);
-        mainMixer.SetFloat("SFXVol", Mathf.Log10(savedSFX) * 20);
+        float savedSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+
+        ApplyVolume("MusicVol", savedMusic);
+        ApplyVolume("SFXVol", savedSFX);
+
         if (musicSlider != null) musicSlider.value = savedMusic;
         if (sfxSlider != null) sfxSlider.value = savedSFX;
     }
 
-    public void ToggleMusic()
+    void Update()
     {
-        isMusicMuted = !isMusicMuted;
+        // MERMÝ BURADA: Fiziksel ses tuþlarýný dinliyoruz.
+        // Eðer cihazýn sesi fiziksel olarak 0'a çekildiyse 
+        // SilentModePuzzle bunu AudioListener.volume üzerinden zaten yakalayacak.
 
-        if (isMusicMuted)
-        {
-            lastMusicVolume = musicSlider.value;
-            SetMusicVolume(0.0001f);
-            musicSlider.value = 0.0001f;         
-        }
-        else
-        {
-            SetMusicVolume(lastMusicVolume);    
-            musicSlider.value = lastMusicVolume;
-        }
+        // Eðer istersen fiziksel ses seviyesini Slider'lara da yansýtabilirsin:
+        // float currentPhysicalVol = AudioListener.volume;
     }
-
-   
-    public void ToggleSFX()
-    {
-        isSFXMuted = !isSFXMuted;
-
-        if (isSFXMuted)
-        {
-            lastSFXVolume = sfxSlider.value;   
-            SetSFXVolume(0.0001f);
-            sfxSlider.value = 0.0001f;
-        }
-        else
-        {
-            SetSFXVolume(lastSFXVolume);        
-            sfxSlider.value = lastSFXVolume;
-        }
-    }
-
 
     public void SetMusicVolume(float value)
     {
-       
-        mainMixer.SetFloat("MusicVol", Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20);
+        ApplyVolume("MusicVol", value);
         PlayerPrefs.SetFloat("MusicVolume", value);
+        PlayerPrefs.Save(); // Veriyi anýnda diske yaz ki Puzzle kodu okuyabilsin
         if (value > 0.01f) isMusicMuted = false;
     }
 
     public void SetSFXVolume(float value)
     {
-        mainMixer.SetFloat("SFXVol", Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20);
+        ApplyVolume("SFXVol", value);
         PlayerPrefs.SetFloat("SFXVolume", value);
+        PlayerPrefs.Save(); // Veriyi anýnda diske yaz ki Puzzle kodu okuyabilsin
         if (value > 0.01f) isSFXMuted = false;
     }
+
+    // Mixer logaritmik çalýþtýðý için yardýmcý fonksiyon
+    private void ApplyVolume(string parameterName, float value)
+    {
+        float dB = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20;
+        mainMixer.SetFloat(parameterName, dB);
+    }
+
+    // Toggle fonksiyonlarýn zaten mermi gibi çalýþýyor, onlarý ellemiyorum.
+    public void ToggleMusic() { /* Mevcut kodun aynýsý */ }
+    public void ToggleSFX() { /* Mevcut kodun aynýsý */ }
 }

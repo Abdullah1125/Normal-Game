@@ -20,6 +20,10 @@ public class GateController : MonoBehaviour
         startPos = transform.position;
         targetPos = startPos + moveOffset;
         if (Instance == null) Instance = this;
+       
+    }
+    private void Start()
+    {
         UpdateKeyUI();
     }
 

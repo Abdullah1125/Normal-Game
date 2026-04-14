@@ -253,8 +253,6 @@ public class PlayerController : MonoBehaviour
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
 
-        Physics2D.gravity = new Vector2(0, -9.81f); 
-        UpdateGravityDirection();
 
         // Diğer sistemleri sıfırla
         CameraRoomController.Instance.ResetCamera();
