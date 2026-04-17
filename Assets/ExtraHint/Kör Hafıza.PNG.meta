@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f94122b0e50a88d49bd45a633799ce20
+guid: 6fc0156771547a44f98809927a147eab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4396103187042185274
-    second: "Ads\u0131z_0"
+      213: 4192168388588934298
+    second: "Ekran Asssl\u0131nt\u0131s\u0131_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "Ads\u0131z_0"
+      name: "Ekran Asssl\u0131nt\u0131s\u0131_0"
       rect:
         serializedVersion: 2
-        x: 1966
-        y: 747
-        width: 756
-        height: 1538
+        x: 0
+        y: 0
+        width: 185
+        height: 311
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a30bc9b9e88120d30800000000000000
-      internalID: 4396103187042185274
+      spriteID: a94177830f29d2a30800000000000000
+      internalID: 4192168388588934298
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "Ads\u0131z_0": 4396103187042185274
+      "Ekran Asssl\u0131nt\u0131s\u0131_0": 4192168388588934298
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

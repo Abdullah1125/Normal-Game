@@ -25,6 +25,9 @@ public class LevelUIManager : MonoBehaviour
     public TMP_Text Level1Text;
     public TMP_Text Level2Text;
 
+    [Header("Warning Settings(Uyarý Ayarlarý)")]
+    public CanvasGroup warningPanelCG;
+
     private List<Image> spawnedDots = new List<Image>();
 
     // JSON'dan dolacak listeler
@@ -36,6 +39,39 @@ public class LevelUIManager : MonoBehaviour
         PrepareButtons();
         CreatePaginationDots();
         RefreshPage();
+    }
+    public void ShowWarningPanel()
+    {
+        if (warningPanelCG == null) return;
+        StopAllCoroutines();
+        StartCoroutine(FadeWarningPanelRoutine());
+    }
+
+    private System.Collections.IEnumerator FadeWarningPanelRoutine()
+    {
+        warningPanelCG.gameObject.SetActive(true);
+
+        // 0.4 saniyede belir
+        float t = 0;
+        while (t < 0.4f)
+        {
+            t += Time.deltaTime;
+            warningPanelCG.alpha = t / 0.4f;
+            yield return null;
+        }
+
+        // 1.2 saniye bekle
+        yield return new WaitForSeconds(1.2f);
+
+        // 0.4 saniyede kaybol
+        while (t > 0)
+        {
+            t -= Time.deltaTime;
+            warningPanelCG.alpha = t / 0.4f;
+            yield return null;
+        }
+
+        warningPanelCG.gameObject.SetActive(false);
     }
 
     void PrepareButtons()

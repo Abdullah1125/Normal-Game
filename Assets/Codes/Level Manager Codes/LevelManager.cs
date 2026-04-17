@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     public int currentLevelIndex = 0;
     public List<LevelData> allLevels;
     [HideInInspector] public LevelData activeLevel;
+    public static System.Action OnLevelStarted;
 
     // Oluþturulan mekanikleri takip eden liste
     private List<GameObject> activeMechanics = new List<GameObject>();
@@ -125,6 +126,7 @@ public class LevelManager : MonoBehaviour
             PlayerController.Instance.UpdateGravityDirection();
         }
 
+        OnLevelStarted?.Invoke();
     }
 
     // Ölünce mekanikleri sýfýrla (silmeden)
@@ -153,6 +155,7 @@ public class LevelManager : MonoBehaviour
                 PlayerController.Instance.UpdateGravityDirection();
             }
         }
+        OnLevelStarted?.Invoke();
     }
     void GoToLevelSelect()
     {

@@ -11,6 +11,8 @@
     "reset_desc": "Tüm ilerlemen kalıcı olarak silinecek!",
     "yes_button": "EVET",
     "no_button": "HAYIR",
+    "hint_text": "İPUCU",
+    "warning_panel": "Map bitmeden geri dönemezsin!",
     "total_death": "Ölüm Sayacı:",
     "total_time": "Süre Sayacı:",
     "hints": [
@@ -22,16 +24,24 @@
         "Uçuşa hazırız",
         "",
         "Yakala Bakalım",
-        "Bii! Elamet Geldi ",
-        "Sağır,Kör,Dilszi",
+        "Sert Rüzgar",
+        "Sağır,Kör,Dilsiz",
         "Zıp Zıp",
-        "Alternatif kontrol düzeni"
+        "Alternatif kontrol"
     ],
     "extra_hints": [
         "Kuantum fiziği çözmüyoruz. O kocaman butona bas ve açılan kapıdan geç. Eğer bunda bile ipucu istiyorsan, ileride çok canımız yanacak...",
         "Hayatta bazen geriye dönüş yoktur... Tıpkı bu bölümde olduğu gibi. Geri vitesi unut, butonu hallet ve yoluna devam et.",
         "Odak noktanı daha yukarılara taşı, çıkış oralarda bir yerlerde şekilleniyor.  ",
-        "Elimizdeki tek istihbarat bu ufak harita parçası. Nerede zıplaman gerektiğini gösteren bu kesite iyi çalış. Haritanın geri kalanı tamamen senin reflekslerine ve ezberine kalmış"
+        "Elimizdeki tek istihbarat bu ufak harita parçası. Nerede zıplaman gerektiğini gösteren bu kesite iyi çalış. Haritanın geri kalanı tamamen senin reflekslerine ve ezberine kalmış",
+        "Karşındaki bu rota tek gerçeğin değil, sadece odaklandığın ilk seçenek. Yerçekimi büküldüğünde sakın duraklama... Yön değişirken ivmen boşlukta çoktan şekillenmiş olmalı.",
+        "Gerçek dünyanın sinyalleri bu odanın kapısını kilitliyor. Çözüm sahnede değil... Dışarıyla olan tüm iletişimini kes ve cihazına nasıl uçulacağını hatırlat.",
+        "Çıkışa ulaşmak için önce o yeşil anahtarı alman gerekiyor. Yukarı tırmanıp anahtarı kap, ardından tek yapman gereken kapının önüne gelmek , anahtar senin için kapıyı açacak.",
+        "Bu anahtar kolay teslim olmayı sevmiyor. Senden kaçtığında bir hata yaptığını sanıp pes etme; seninle ufak bir kovalambaç oynuyor. İzini sürmeye devam et, eninde sonunda yorulacak ve pes edecek.",
+        "En geriye sıçrayıp oradan aşağı inerek engellerden geçmek  sana sunulan yollardan sadece biri. Kendi riskini kendin seç ama unutma: Hayatta kalmak istiyorsan, o çift zıplamayı rastgele değil, kusursuz bir zamanlamayla yapmalısın.",
+        "Kör karanlığa boyun eğdi, dilsiz ise sükunete... Geçidi açmak için üçlemeyi tamamlamak sana düşüyor. Tüm yankıları sıfırla ve bu sahnede sağırlığı kucakla.",
+        "Sürekli zıplamak bedeni tüketir; düzlükte attığın her adım seni daha da alçaltır. Gücünü şarj etmenin tek yolu, yukarıdan aşağıya doğru düşmektir.  Kapının yanındaki ufak boşluk mu? Orası sadece kapıya zahmetsizce ulaşman için bırakıldı.",
+        "Tuşların hükmü buraya kadar. Bazen aracılara güvenmek yerine kaderi doğrudan kendi ellerine alman gerekir."
     ],
     "page_titles": [
         "BUTON MAPİ",

@@ -13,6 +13,8 @@ public class LanguageData
     public string reset_desc;
     public string yes_button;
     public string no_button;
+    public string hint_text;
+    public string warning_panel;
     public string total_death;
     public string total_time;
 
