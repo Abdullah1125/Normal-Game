@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 10
-  levelName: "Yorulan Z\u0131plama"
-  isUnlocked: 0
-  isCompleted: 0
+  levelName: "Z\u0131p Z\u0131p"
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 1

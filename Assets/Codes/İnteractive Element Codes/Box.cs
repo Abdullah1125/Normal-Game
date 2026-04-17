@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Box : MonoBehaviour
 {
-    [Header("Friction Settings")]
+    [Header("Friction Settings(Sürtünme Ayarlarý)")]
     public float slidingDamping = 0.5f;   // Sürüklenirkenki sürtünme (Düþük = Daha kaygan)
     public float stoppingDamping = 3.0f;  // Býrakýldýðýnda durma direnci (Yüksek = Hýzlý durur)
     public float stopThreshold = 0.1f;    // Hýz bu deðerin altýna düþerse zýnk diye durdur

@@ -2,9 +2,9 @@
 
 public class AirplaneModeMechanic : MonoBehaviour
 {
-    public float checkInterval = 1.0f; // Saniyede 1 kontrol yeterlidir, işlemciyi yormaz.
+    public float checkInterval = 1.0f;
     private float timer;
-    private bool triggered = false;
+    private bool isGateOpen = false;
 
 #if UNITY_EDITOR
     [Header("Editor Test")]
@@ -13,28 +13,46 @@ public class AirplaneModeMechanic : MonoBehaviour
 
     void Update()
     {
-        if (triggered) return;
-
+       
         timer += Time.deltaTime;
         if (timer >= checkInterval)
         {
             timer = 0f;
-            if (IsAirplaneModeEnabled())
+            bool isAirplaneOn = IsAirplaneModeEnabled();
+
+            
+            if (isAirplaneOn && !isGateOpen)
             {
-                TriggerGate();
+                OpenTheGate();
+            }
+           
+            else if (!isAirplaneOn && isGateOpen)
+            {
+                CloseTheGate();
             }
         }
     }
 
-    private void TriggerGate()
+    private void OpenTheGate()
     {
-        triggered = true;
-        Debug.Log("✈️ Uçak modu algılandı! Kapı açılıyor.");
+        isGateOpen = true;
+        Debug.Log(" Uçak modu algılandı! Kapı açılıyor.");
 
-        // Statik referans kullanarak kapıyı bul ve aç
         if (GateController.Instance != null)
         {
             GateController.Instance.OpenGate();
+        }
+    }
+
+    private void CloseTheGate()
+    {
+        isGateOpen = false;
+        Debug.Log(" Bağlantı geri geldi! Kapı kapanıyor.");
+
+        if (GateController.Instance != null)
+        {
+           
+            GateController.Instance.CloseGate();
         }
     }
 

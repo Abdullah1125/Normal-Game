@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class GateButton : MonoBehaviour
 {
-    [Header("Sprites")]
-    [Tooltip("Boþ býrakýrsanýz Sprite Renderer'daki mevcut görseli alýr.")]
+    [Header("Sprites(Görseller)")]
+   
     public Sprite normalSprite;
     public Sprite pressedSprite;
 
-    [Header("Colors (Opsiyonel)")]
+    [Header("Colors(Renkeler)")]
     public Color disabledColor = new Color(0.3f, 0.3f, 0.3f);
 
     private bool isPressed = false;

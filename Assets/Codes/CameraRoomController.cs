@@ -5,12 +5,12 @@ public class CameraRoomController : MonoBehaviour
 {
     public static CameraRoomController Instance;
 
-    [Header("Shake Settings")]
+    [Header("Shake Settings(Sallama Ayarlarý")]
     public float shakeDuration = 0.1f;   // Sarsýntý süresi
     public float shakeMagnitude = 0.1f;  // Sarsýntý þiddeti
     private Vector3 shakeOffset;         // Sarsýntýdan kaynaklanan kayma miktarý
 
-    [Header("Transition Settings")]
+    [Header("Transition Settings(Geçiþ Ayarlarý)")]
     public float transitionSpeed = 5f;
     private Vector3 mainRoomPos;
     private Vector3 targetPos;

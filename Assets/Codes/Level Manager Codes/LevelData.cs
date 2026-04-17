@@ -26,4 +26,7 @@ public class LevelData : ScriptableObject
 
     [Header("Hint System(İpucu Sistemi)")]
     public string levelHint;
+
+    [Header("Extra Tip Image(Ekstra İpucu Görseli)")]
+    public Sprite hintVisualMap;
 }

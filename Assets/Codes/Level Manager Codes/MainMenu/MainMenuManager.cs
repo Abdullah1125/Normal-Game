@@ -6,7 +6,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject settingsPanel;
     public GameObject scorePanel;
 
-    public void PlayGame() { SceneManager.LoadScene("Levels"); } 
+    public void PlayGame() { LevelTransition.Instance.SlideUpToScene("Levels"); } 
     public void QuitGame() { Application.Quit(); }
 
     // Panel Kontrolleri

@@ -11,13 +11,13 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer sr;
 
-    [Header("Movement Settings")]
+    [Header("Movement Settings(Hareket Ayarları)")]
     public float moveSpeed = 14f;       // Yatay hareket hızı
     public float defaultSpeed = 14f;
     public float airAcceleration = 25f; // Havada hızlanma katsayısı
     public bool canMove = true;
 
-    [Header("Jump Settings")]
+    [Header("Jump Settings(Zıplama Ayarları)")]
     public float firstJumpForce = 13f;  // İlk zıplama gücü
     public float doubleJumpForce = 10f; // Çift zıplama gücü
     public float fallMultiplier = 10f;  // Düşüş hızı çarpanı
@@ -29,11 +29,11 @@ public class PlayerController : MonoBehaviour
     public float deceleration = 50f;      // Yerde durma hızı
     public float airDeceleration = 10f;    // Havada süzülme (Düşük olursa momentum korunur)
 
-    [Header("Jump Boost")]
+    [Header("Jump Boost(Zıplama Desteği)")]
     public float extraBoostAmount = 2f; // Zirve noktasındaki ekstra itiş
     public float boostSmoothness = 3f;  // İtişin yumuşaklığı
 
-    [Header("Mobile Jump Assist")]
+    [Header("Mobile Jump Assist(Mobil Zıplama Yardımı)")]
     public float coyotoTime = 0.2f;
     public float jumpBufferTime = 0.2f;
     private float coyoteTimeCounter;
@@ -45,19 +45,27 @@ public class PlayerController : MonoBehaviour
     private bool isHoldingJump;         // Zıplama tuşuna basılı tutuluyor mu?
     private float gravityDir;
 
-    [Header("Sensors")]
+    [Header("Sensors(Sensörler)")]
     public Transform groundCheck;       // Yer kontrol objesi
     public float checkRadius = 0.25f;   // Kontrol dairesi yarıçapı
     public LayerMask groundLayer;       // Yer olarak sayılacak katman
 
-    [Header("Death Settings")]
+    [Header("Death Settings(Ölüm Ayarları)")]
     private Vector2 startPos;           // Başlangıç noktası
     public GameObject soulPrefab;       // Ölünce çıkacak ruh objesi
 
-    [Header("Sounds")]
+    [Header("Sounds(Sesler)")]
     public AudioSource walkSound;
 
-    void Start() => startPos = transform.position;
+    void Start() 
+    { 
+        startPos = transform.position;
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.StartTimer();
+        }
+    }
 
     void Awake()
     {
@@ -219,11 +227,17 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         if (!canMove) return;
-       
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddDeath();
+        }
+
         if (CameraRoomController.Instance != null)
         {
             CameraRoomController.Instance.ShakeCamera();
         }
+
         if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
         StartCoroutine(DeathRoutine());
         SoundManager.PlaySFX(SoundManager.instance.dieSound);
@@ -238,7 +252,7 @@ public class PlayerController : MonoBehaviour
         if (sr != null) sr.enabled = false;
 
         rb.linearVelocity = Vector2.zero;
-        yield return new WaitForSeconds(0.21f);
+        yield return new WaitForSeconds(0.32f);
 
         ResetPosition();
         if (sr != null) sr.enabled = true;
@@ -304,5 +318,11 @@ public class PlayerController : MonoBehaviour
     {
         gravityDir = Mathf.Sign(Physics2D.gravity.y);
     }
-
+    private void OnDestroy()
+    {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.StopTimer();
+        }
+    }
 }

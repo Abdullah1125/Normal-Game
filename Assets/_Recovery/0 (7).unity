@@ -1512,10 +1512,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.01111111
-    width: 1
-    height: 0.9777778
+    x: -1.5
+    y: -1.1
+    width: 3
+    height: 2.2
   near clip plane: 0.5
   far clip plane: 1000
   field of view: 34
@@ -4166,6 +4166,7 @@ MonoBehaviour:
     total_death: 
     total_time: 
     hints: []
+    extra_hints: []
     page_titles: []
     Level1: []
 --- !u!114 &11174188545749944

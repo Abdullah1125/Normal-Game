@@ -3,11 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    [Header("Paneller ve Butonlar")]
+    [Header("Panels and Buttons(Paneller ve Butonlar)")]
     public GameObject pauseMenuUI;        
     public GameObject settingsPanelUI;   
-    public GameObject hudPauseButton;      
-
+    public GameObject hudPauseButton;
+    public GameObject extraHintButton;
     public static bool isPaused = false;
 
     void Update()
@@ -36,8 +36,9 @@ public class PauseManager : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         settingsPanelUI.SetActive(false);
+        extraHintButton.SetActive(true);
 
-    
+
         if (hudPauseButton != null) hudPauseButton.SetActive(true);
 
         Time.timeScale = 1f;
@@ -51,8 +52,8 @@ public class PauseManager : MonoBehaviour
     {
         pauseMenuUI.SetActive(true);
         settingsPanelUI.SetActive(false);
+        extraHintButton.SetActive(false);
 
-       
         if (hudPauseButton != null) hudPauseButton.SetActive(false);
 
         Time.timeScale = 0f;
@@ -76,7 +77,26 @@ public class PauseManager : MonoBehaviour
 
     public void GoToLevels()
     {
+       
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Levels");
+        isPaused = false; 
+
+       
+        pauseMenuUI.SetActive(false);
+        settingsPanelUI.SetActive(false);
+
+        if (LevelTransition.Instance != null)
+        {
+          
+            LevelTransition.Instance.FadeOut(() =>
+            {
+               
+                SceneManager.LoadScene("Levels");
+            });
+        }
+        else
+        {
+            SceneManager.LoadScene("Levels");
+        }
     }
 }

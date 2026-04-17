@@ -979,6 +979,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pause Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 434645089991843657, guid: 9dabc728af36897498806497779fd709, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1381622390513904583, guid: 9dabc728af36897498806497779fd709, type: 3}
       propertyPath: hudPauseButton
       value: 

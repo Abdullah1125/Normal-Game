@@ -7,9 +7,12 @@ public class LevelMenuButton : MonoBehaviour
 {
     public Image buttonImage;
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI levelNameText;
+
     private int globalIndex;
     private bool comingSoonMode;
-    public void Setup(int index, LevelData data, bool isComingSoon)
+
+    public void Setup(int index, LevelData data, bool isComingSoon, string locName)
     {
         globalIndex = index;
         levelText.text = (index + 1).ToString();
@@ -20,7 +23,21 @@ public class LevelMenuButton : MonoBehaviour
         else if (data.isUnlocked) buttonImage.color = Color.white;
         else buttonImage.color = Color.gray;
 
-        btn.interactable = data.isUnlocked; // Sadece açık olanlara basılabilir
+        btn.interactable = data.isUnlocked;
+
+        if (levelNameText != null)
+        {
+            if (data.isCompleted)
+            {
+                // UIManager'dan gelen dili yazdır
+                levelNameText.text = locName;
+                levelNameText.gameObject.SetActive(true);
+            }
+            else
+            {
+                levelNameText.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void OnButtonClick()
@@ -33,6 +50,17 @@ public class LevelMenuButton : MonoBehaviour
         int internalIndex = globalIndex % 6;
 
         PlayerPrefs.SetInt("SelectedInternalIndex", internalIndex);
-        SceneManager.LoadScene(mapNum + "Map");
+        if (LevelTransition.Instance != null)
+        {
+            LevelTransition.Instance.FadeOut(() =>
+            {
+                SceneManager.LoadScene(mapNum + "Map");
+            });
+        }
+        else
+        {
+            SceneManager.LoadScene(mapNum + "Map");
+        }
+
     }
 }

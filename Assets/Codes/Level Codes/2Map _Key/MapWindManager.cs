@@ -4,11 +4,11 @@ public class MapWindManager : MonoBehaviour
 {
 
 
-    [Header("Wind Power")]
+    [Header("Wind Power(Rüzgar Gücü)")]
     public Vector2 windForce = new Vector2(-20f, 0f);
     public bool isWindActive = true;
 
-    [Header("Speed Settings")]
+    [Header("Speed Settings(Hýz Ayarlarý)")]
     public float windSpeed = 35f;    // Rüzgar varkenki hýzý (Normali 10 ise bu 4 olsun)
     private float normalSpeed;          // Karakterin orijinal hýzý (Otomatik kaydedilir)
 
@@ -20,7 +20,6 @@ public class MapWindManager : MonoBehaviour
     {
         // Senin istediðin Tag kontrolü ile karakteri ve scriptini bul
     
-
         if (PlayerController.Instance != null)
         {
             playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();

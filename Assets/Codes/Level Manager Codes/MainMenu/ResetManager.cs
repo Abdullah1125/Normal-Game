@@ -41,7 +41,7 @@ public class ResetManager : MonoBehaviour
         
         PlayerPrefs.Save();
 
-        Debug.Log("? Seviyeler sýfýrlandý, ayarlar korundu!");
+        Debug.Log(" Seviyeler sýfýrlandý");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

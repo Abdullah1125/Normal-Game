@@ -6,17 +6,17 @@ public class TiringJumpRule : MonoBehaviour
     public static TiringJumpRule Instance { get; private set; }
    
 
-    [Header("Jump Settings")]
+    [Header("Jump Settings(Zıplama Ayarları)")]
     public float startingForce = 15f;
     public float fatigueAmount = 1.5f;
     public float minimumForce = 4f;
 
-    [Header("Fall Support")]
+    [Header("Fall Support(Zıplama Desteği)")]
     public float fallBoostMultiplier = 2.5f;
     public float maxForce = 20f;
     public float minFallDistance = 0.8f;
 
-    [Header("Auto Jump")]
+    [Header("Auto Jump(Otomatik Zıplama)")]
     public float jumpCooldown = 0.1f;
 
     [Header("Debug")]
@@ -115,7 +115,7 @@ public class TiringJumpRule : MonoBehaviour
         playerRb.AddForce(Vector2.up * currentForce, ForceMode2D.Impulse);
 
         if (showDebugLogs)
-            Debug.Log($"🦘 Zıplama! Güç: {currentForce:F1}");
+            Debug.Log($" Zıplama! Güç: {currentForce:F1}");
     }
 
     public void ResetJumpForce()

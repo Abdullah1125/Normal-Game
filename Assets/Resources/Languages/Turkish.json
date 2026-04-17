@@ -1,4 +1,4 @@
-﻿{
+{
     "play_button": "OYNA",
     "settings_button": "AYARLAR",
     "exit_button": "ÇIKIŞ",
@@ -7,6 +7,32 @@
     "back_button": "GERİ",
     "coming_soon": "YAKIN ZAMANDA",
     "reset_level": "SIFIRLA",
+    "reset_title": "EMİN MİSİN?",
+    "reset_desc": "Tüm ilerlemen kalıcı olarak silinecek!",
+    "yes_button": "EVET",
+    "no_button": "HAYIR",
+    "total_death": "Ölüm Sayacı:",
+    "total_time": "Süre Sayacı:",
+    "hints": [
+        "",
+        "Geri Dönüş Yok",
+        "Gizli Geçit",
+        "Hafızan Yerinde mi?",
+        "Baş Aşağı Buton ",
+        "Uçuşa hazırız",
+        "",
+        "Yakala Bakalım",
+        "Bii! Elamet Geldi ",
+        "Sağır,Kör,Dilszi",
+        "Zıp Zıp",
+        "Alternatif kontrol düzeni"
+    ],
+    "extra_hints": [
+        "Kuantum fiziği çözmüyoruz. O kocaman butona bas ve açılan kapıdan geç. Eğer bunda bile ipucu istiyorsan, ileride çok canımız yanacak...",
+        "Hayatta bazen geriye dönüş yoktur... Tıpkı bu bölümde olduğu gibi. Geri vitesi unut, butonu hallet ve yoluna devam et.",
+        "Odak noktanı daha yukarılara taşı, çıkış oralarda bir yerlerde şekilleniyor.  ",
+        "Elimizdeki tek istihbarat bu ufak harita parçası. Nerede zıplaman gerektiğini gösteren bu kesite iyi çalış. Haritanın geri kalanı tamamen senin reflekslerine ve ezberine kalmış"
+    ],
     "page_titles": [
         "BUTON MAPİ",
         "ANAHTAR MAPİ",
@@ -19,20 +45,18 @@
         "BUTON MAPİ",
         "KUTU MAPİ"
     ],
-    "reset_title": "EMİN MİSİN?",
-    "reset_desc": "Tüm ilerlemen kalıcı olarak silinecek!",
-    "yes_button": "EVET",
-    "no_button": "HAYIR",
-    "hint_level_0": "",
-    "hint_level_1": "Geri Dönüş Yok",
-    "hint_level_2": "Gizli Geçit",
-    "hint_level_3": "Hafızan Yerinde mi?",
-    "hint_level_4": "Baş Aşağı Buton ",
-    "hint_level_5": "Uçuşa hazırız",
-    "hint_level_6": "",
-    "hint_level_7": "Yakala Bakalım",
-    "hint_level_8": "Bii! Elamet Geldi ",
-    "hint_level_9": "Sağır,Kör,Dilszi",
-    "hint_level_10": "Zıp Zıp",
-    "hint_level_11": "Alternatif kontrol düzeni"
+    "Level1": [
+        "Normal",
+        "Geri Dönüş Yok",
+        "Ters Kapı",
+        "Kör Hafıza",
+        "Yerçekimi Düğme",
+        "Ucak Modu",
+        "Normal",
+        "Kaçak Anahtar",
+        "Sert Rüzgar",
+        "Sağır,Kör,Dilsiz",
+        "Zıp Zıp",
+        "Tuşları Boşver"
+    ]
 }

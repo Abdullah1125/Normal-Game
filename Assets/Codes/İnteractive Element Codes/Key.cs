@@ -21,7 +21,7 @@ public class Key : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Hata: Sahnede GateController bulunamadý! Kapý objesine scripti attýðýndan emin ol.");
+                Debug.LogError("Hata: Sahnede GateController bulunamadý!");
             }
         }
     }

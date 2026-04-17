@@ -4,10 +4,10 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
-    [Header("Speaker")]
+    [Header("Speaker(Hoparlörler)")]
     public AudioSource sfxSource; 
 
-    [Header("Audio Files")]
+    [Header("Audio Files(Ses Dosyalarý)")]
     public AudioClip jumpSound;
     public AudioClip dieSound;
     public AudioClip buttonSound;
