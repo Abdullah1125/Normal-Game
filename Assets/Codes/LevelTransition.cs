@@ -8,48 +8,51 @@ public class LevelTransition : MonoBehaviour
 {
     public static LevelTransition Instance;
 
-    [Header("Settings")]
-    public bool fadeInOnStart = true;
-    public Image fadeImage;
+    [Header("Cinematic Doors(Sinematik Kapılar)")]
+    public RectTransform topPanel;    // Üst kapı paneli
+    public RectTransform bottomPanel; // Alt kapı paneli
+    public float doorSpeed = 0.5f;
+
+    [Header("Settings(Ayarlar)")]
+    public bool openDoorsOnStart = true; // Sahne açıldığında kapılar otomatik açılsın mı?
     public TextMeshProUGUI levelText;
-    public float fadeDuration = 0.5f;
 
-    [Header("Colors")]
-    public Color fadeColor = Color.black;
-
-    private RectTransform fadeRect;
-
-  
-    public enum SlideDirection { None, Up, Down }
-    public static SlideDirection pendingSlideDirection = SlideDirection.None; 
+    // Sahne geçişini kontrol etmek için statik değişken
+    public static bool isComingFromDoorTransition = false;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
 
-        if (fadeImage != null)
-        {
-            fadeRect = fadeImage.GetComponent<RectTransform>();
+        float h = GetCanvasHeight();
+        float w = GetCanvasWidth() + 500f; // Sadece genişlikte güvenlik payı bırakıyoruz
 
-           
-            if (pendingSlideDirection != SlideDirection.None)
+        if (topPanel != null && bottomPanel != null)
+        {
+            // DÜZELTME: Yükseklikleri tam ekranın yarısı yapıyoruz (+50 sildik).
+            // Bu sayede iç içe geçme ve resimlerin aşağı/yukarı kayma sorunu çözülür.
+            topPanel.sizeDelta = new Vector2(w, h / 2f);
+            bottomPanel.sizeDelta = new Vector2(w, h / 2f);
+
+            // Eğer yeni sahneye kapı geçişiyle geldiysek veya başlangıçta kapıların açılmasını istiyorsak
+            if (isComingFromDoorTransition || openDoorsOnStart)
             {
-                fadeRect.anchoredPosition = Vector2.zero;
-                fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, 1f);
-                fadeImage.raycastTarget = true;
-            }
-           
-            else if (fadeInOnStart)
-            {
-                fadeRect.anchoredPosition = Vector2.zero;
-                fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, 1f);
-                fadeImage.raycastTarget = true;
+                // Kapıları EKRANDA ve KAPALI başlat
+                topPanel.gameObject.SetActive(true);
+                bottomPanel.gameObject.SetActive(true);
+
+                // Tam ortada (y=0 çizgisinde) jilet gibi birleşecekleri koordinatlar
+                topPanel.anchoredPosition = new Vector2(0, h / 4f);
+                bottomPanel.anchoredPosition = new Vector2(0, -h / 4f);
             }
             else
             {
-                fadeRect.anchoredPosition = Vector2.zero;
-                fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, 0f);
-                fadeImage.raycastTarget = false;
+                // Normal başlangıçsa kapılar zaten görünmez kalacak (Editor'de kapattığın gibi)
+                topPanel.anchoredPosition = new Vector2(0, h);
+                bottomPanel.anchoredPosition = new Vector2(0, -h);
+
+                topPanel.gameObject.SetActive(false);
+                bottomPanel.gameObject.SetActive(false);
             }
         }
 
@@ -58,125 +61,115 @@ public class LevelTransition : MonoBehaviour
 
     IEnumerator Start()
     {
-       
-        if (pendingSlideDirection == SlideDirection.Up)
+        // Eğer geçişten geliyorsak, sahne yüklendiğinde kapıları otomatik aç
+        if (isComingFromDoorTransition || openDoorsOnStart)
         {
-           
-            yield return SlideRoutine(Vector2.zero, new Vector2(0, GetCanvasHeight()), null, false);
-            pendingSlideDirection = SlideDirection.None;
-        }
-        else if (pendingSlideDirection == SlideDirection.Down)
-        {
-          
-            yield return SlideRoutine(Vector2.zero, new Vector2(0, -GetCanvasHeight()), null, false);
-            pendingSlideDirection = SlideDirection.None;
-        }
-        else if (fadeInOnStart)
-        {
-            yield return new WaitForSeconds(0.3f);
-            FadeIn();
+            isComingFromDoorTransition = false;
+            yield return new WaitForSeconds(0.2f); // Sahnede her şeyin yüklenmesini çok kısa bekle
+            yield return OpenDoorsRoutine();
         }
     }
 
-   
-    public void SlideUpToScene(string sceneName)
+    // SAHNELER ARASI GEÇİŞ İÇİN
+    public void FadeOut(System.Action onComplete = null)
     {
-        pendingSlideDirection = SlideDirection.Up;
-      
-        StartCoroutine(SlideRoutine(new Vector2(0, -GetCanvasHeight()), Vector2.zero, () =>
+        StartCoroutine(CloseDoorsRoutine(() =>
         {
-            SceneManager.LoadScene(sceneName);
-        }, true));
+            isComingFromDoorTransition = true;
+            onComplete?.Invoke();
+        }));
     }
 
-   
-    public void SlideDownToScene(string sceneName)
+    // AYNI SAHNE İÇİNDE BÖLÜM DEĞİŞTİRMEK İÇİN 
+    public void DoTransition(System.Action middleAction)
     {
-        pendingSlideDirection = SlideDirection.Down;
-       
-        StartCoroutine(SlideRoutine(new Vector2(0, GetCanvasHeight()), Vector2.zero, () =>
-        {
-            SceneManager.LoadScene(sceneName);
-        }, true));
+        StartCoroutine(TransitionRoutine("", middleAction));
     }
-
-    
-    private IEnumerator SlideRoutine(Vector2 startPos, Vector2 endPos, System.Action onComplete, bool isClosing)
-    {
-        if (fadeImage == null) yield break;
-
-        fadeImage.raycastTarget = true;
-        fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, 1f);
-        fadeRect.anchoredPosition = startPos;
-
-        float elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / fadeDuration;
-            t = t * t * (3f - 2f * t);
-
-            fadeRect.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
-            yield return null;
-        }
-
-        fadeRect.anchoredPosition = endPos;
-        fadeImage.raycastTarget = isClosing;
-        onComplete?.Invoke();
-    }
-
-  
-    public void FadeIn(System.Action onComplete = null) { StartCoroutine(FadeRoutine(1f, 0f, onComplete, false)); }
-    public void FadeOut(System.Action onComplete = null) { StartCoroutine(FadeRoutine(0f, 1f, onComplete, true)); }
 
     public void DoTransition(string message, System.Action middleAction)
     {
-        if (levelText != null) levelText.text = message;
-        StartCoroutine(TransitionRoutine(middleAction));
+        StartCoroutine(TransitionRoutine(message, middleAction));
     }
 
-    public void DoTransition(System.Action middleAction)
-    {
-        if (levelText != null) levelText.text = "";
-        StartCoroutine(TransitionRoutine(middleAction));
-    }
+    // ANA ANİMASYON RUTİNLERİ 
 
-    private IEnumerator FadeRoutine(float startAlpha, float endAlpha, System.Action onComplete, bool showText)
-    {
-        if (fadeImage == null) yield break;
-        fadeRect.anchoredPosition = Vector2.zero;
-        fadeImage.raycastTarget = true;
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
-            fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, alpha);
-            if (levelText != null) levelText.alpha = alpha;
-            yield return null;
-        }
-
-        fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, endAlpha);
-        if (levelText != null) levelText.alpha = endAlpha;
-        fadeImage.raycastTarget = endAlpha > 0.5f;
-        onComplete?.Invoke();
-    }
-
-    private IEnumerator TransitionRoutine(System.Action middleAction)
+    private IEnumerator TransitionRoutine(string message, System.Action middleAction)
     {
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
-        yield return FadeRoutine(0f, 1f, null, true);
+        if (levelText != null) levelText.text = message;
+
+        // 1. Kapıları Kapat
+        yield return CloseDoorsRoutine(null);
+
+        // 2. Kapılar kapalıyken arka planda yapılacakları yap
+        if (levelText != null) levelText.alpha = 1f;
         middleAction?.Invoke();
-        yield return new WaitForSeconds(0.3f);
-        yield return FadeRoutine(1f, 0f, null, false);
+        yield return new WaitForSeconds(0.4f); // Siyah ekranda kalma süresi
+
+        // 3. Yazıyı gizle ve Kapıları Aç
+        if (levelText != null) levelText.alpha = 0f;
+        yield return OpenDoorsRoutine();
+
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
     }
 
+    private IEnumerator CloseDoorsRoutine(System.Action onComplete)
+    {
+        float h = GetCanvasHeight();
+
+        // Animasyon başlamadan önce objeleri AKTİF (görünür) yap
+        if (topPanel != null) topPanel.gameObject.SetActive(true);
+        if (bottomPanel != null) bottomPanel.gameObject.SetActive(true);
+
+        // Açık (h, -h) pozisyonundan -> Kapalı (h/4, -h/4) pozisyonuna hareket
+        yield return MoveDoors(new Vector2(0, h), new Vector2(0, h / 4f),
+                               new Vector2(0, -h), new Vector2(0, -h / 4f));
+        onComplete?.Invoke();
+    }
+
+    private IEnumerator OpenDoorsRoutine()
+    {
+        float h = GetCanvasHeight();
+
+        // Kapalı (h/4, -h/4) pozisyonundan -> Açık (h, -h) pozisyonuna hareket
+        yield return MoveDoors(new Vector2(0, h / 4f), new Vector2(0, h),
+                               new Vector2(0, -h / 4f), new Vector2(0, -h));
+
+        // Kapılar tamamen açıldıktan sonra GÖRÜNMEZ YAP (Tıklamaları engellemesin)
+        if (topPanel != null) topPanel.gameObject.SetActive(false);
+        if (bottomPanel != null) bottomPanel.gameObject.SetActive(false);
+    }
+
+    private IEnumerator MoveDoors(Vector2 tStart, Vector2 tEnd, Vector2 bStart, Vector2 bEnd)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < doorSpeed)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / doorSpeed;
+            t = t * t * (3f - 2f * t); // SmoothStep: Animasyonun başı ve sonu yumuşak olur
+
+            if (topPanel != null) topPanel.anchoredPosition = Vector2.Lerp(tStart, tEnd, t);
+            if (bottomPanel != null) bottomPanel.anchoredPosition = Vector2.Lerp(bStart, bEnd, t);
+
+            yield return null;
+        }
+
+        if (topPanel != null) topPanel.anchoredPosition = tEnd;
+        if (bottomPanel != null) bottomPanel.anchoredPosition = bEnd;
+    }
+
+    // Yardımcı Matematik Fonksiyonları
     private float GetCanvasHeight()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas != null) return canvas.GetComponent<RectTransform>().rect.height;
-        return Screen.height;
+        return canvas != null ? canvas.GetComponent<RectTransform>().rect.height : Screen.height;
+    }
+
+    private float GetCanvasWidth()
+    {
+        Canvas canvas = GetComponentInParent<Canvas>();
+        return canvas != null ? canvas.GetComponent<RectTransform>().rect.width : Screen.width;
     }
 }

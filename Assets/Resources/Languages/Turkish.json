@@ -13,6 +13,8 @@
     "no_button": "HAYIR",
     "hint_text": "İPUCU",
     "warning_panel": "Map bitmeden geri dönemezsin!",
+    "music_vol": "Müzik Ses Düzeyi",
+    "sfx_vol": "Efekt Ses Düzeyi",
     "total_death": "Ölüm Sayacı:",
     "total_time": "Süre Sayacı:",
     "hints": [

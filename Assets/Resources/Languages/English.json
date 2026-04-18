@@ -13,6 +13,8 @@
     "no_button": "NO",
     "hint_text": "HİNT",
     "warning_panel": "You can't go back before the map is finished!",
+    "music_vol": "Music Volume",
+    "sfx_vol": "SFX Volume",
     "total_death": "Death Counter:",
     "total_time": "Time Counter:",
     "hints": [

@@ -15,6 +15,8 @@ public class LanguageData
     public string no_button;
     public string hint_text;
     public string warning_panel;
+    public string music_vol;
+    public string sfx_vol;
     public string total_death;
     public string total_time;
 

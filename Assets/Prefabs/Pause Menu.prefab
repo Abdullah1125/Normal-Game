@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 528651344672573205}
   - component: {fileID: 5168821541419874778}
   - component: {fileID: 6772125011865569812}
+  - component: {fileID: 1323549579888479136}
   m_Layer: 5
   m_Name: 'SFX Volume Text '
   m_TagString: Untagged
@@ -137,6 +138,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1323549579888479136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91175282426490469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: sfx_vol
 --- !u!1 &434645089991843657
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +231,9 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 4272307601963456219}
   settingsPanelUI: {fileID: 622863994974009376}
   hudPauseButton: {fileID: 0}
+  extraHintButton: {fileID: 0}
+  pauseAnimator: {fileID: 8476935770774133044}
+  settingsAnimator: {fileID: 5687679958780836182}
 --- !u!114 &8445334927578585771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,6 +299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4453048337818675726}
   - component: {fileID: 1839122037254302679}
+  - component: {fileID: 5687679958780836182}
   - component: {fileID: 8002571882385755215}
   m_Layer: 5
   m_Name: Settings Menu
@@ -326,6 +344,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622863994974009376}
   m_CullTransparentMesh: 1
+--- !u!114 &5687679958780836182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622863994974009376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 0
+  openDelay: 0.1
+  closeDelay: 0.1
+  openDuration: 0.4
+  openOvershoot: 2
+  closeDuration: 0.3
+  closeAnticipation: 2
+  startYOffset: -1500
 --- !u!114 &8002571882385755215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,6 +582,7 @@ GameObject:
   - component: {fileID: 1783038147831017448}
   - component: {fileID: 7926585683621993512}
   - component: {fileID: 6760869304218097138}
+  - component: {fileID: 3801350227141272119}
   m_Layer: 5
   m_Name: Music Volume Text
   m_TagString: Untagged
@@ -670,6 +709,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3801350227141272119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2538454963712506183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: music_vol
 --- !u!1 &2863296884056511174
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1683,7 @@ GameObject:
   - component: {fileID: 4368617759092483765}
   - component: {fileID: 1618840090598206613}
   - component: {fileID: 6976051811313692118}
+  - component: {fileID: 8476935770774133044}
   m_Layer: 5
   m_Name: Pause Panel
   m_TagString: Untagged
@@ -1716,6 +1769,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8476935770774133044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4272307601963456219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 1
+  openDelay: 0.01
+  closeDelay: 0.15
+  openDuration: 0.4
+  openOvershoot: 1.5
+  closeDuration: 0.3
+  closeAnticipation: 1.5
+  startYOffset: -1500
 --- !u!1 &4607070924505939520
 GameObject:
   m_ObjectHideFlags: 0

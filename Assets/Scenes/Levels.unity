@@ -177,7 +177,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 160, y: 15}
-  m_Spacing: {x: 160, y: 420}
+  m_Spacing: {x: 160, y: 450}
   m_Constraint: 1
   m_ConstraintCount: 6
 --- !u!114 &150784877
@@ -1112,7 +1112,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &917920798
 RectTransform:

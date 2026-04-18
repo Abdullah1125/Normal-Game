@@ -612,6 +612,7 @@ GameObject:
   - component: {fileID: 328446789}
   - component: {fileID: 328446790}
   - component: {fileID: 328446788}
+  - component: {fileID: 328446791}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -694,6 +695,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreUI
   totalDeathText: {fileID: 199148752}
   totalTimeText: {fileID: 1610123519}
+--- !u!114 &328446791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328446786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 1
+  openDelay: 0
+  closeDelay: 0
+  openDuration: 0.4
+  openOvershoot: 1.5
+  closeDuration: 0.3
+  closeAnticipation: 1.5
+  startYOffset: -1500
 --- !u!1 &396880179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,6 +1277,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   settingsPanel: {fileID: 7461815763754780631}
   scorePanel: {fileID: 0}
+  settingsAnimator: {fileID: 0}
+  scoreAnimator: {fileID: 0}
 --- !u!224 &445041617
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2252,7 +2275,7 @@ GameObject:
   - component: {fileID: 794315812}
   - component: {fileID: 794315814}
   - component: {fileID: 794315813}
-  - component: {fileID: 794315815}
+  - component: {fileID: 794315816}
   m_Layer: 5
   m_Name: Reset Panel
   m_TagString: Untagged
@@ -2321,7 +2344,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794315811}
   m_CullTransparentMesh: 1
---- !u!114 &794315815
+--- !u!114 &794315816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2330,10 +2353,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 794315811}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a73defd4c9c26a4baee93d8563f0772, type: 3}
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ResetManager
-  resetConfirmationPanel: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 0
+  openDelay: 0
+  closeDelay: 0
+  openDuration: 0.4
+  openOvershoot: 1.5
+  closeDuration: 0.3
+  closeAnticipation: 1.5
+  startYOffset: -1500
 --- !u!1 &805653574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3692,9 +3722,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4613906986369648967, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4613906986369648967, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -210
+      objectReference: {fileID: 0}
     - target: {fileID: 5102370355676040780, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_Name
       value: FadePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6150430560901290860, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6150430560901290860, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 7298751609461867168, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_Camera
@@ -3782,6 +3828,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: fadeInOnStart
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: openDoorsOnStart
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3872,10 +3922,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 328446786}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 328446791}
+        m_TargetAssemblyTypeName: MenuBounceAnimator, Assembly-CSharp
+        m_MethodName: CloseMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4163,9 +4213,14 @@ MonoBehaviour:
     reset_desc: 
     yes_button: 
     no_button: 
+    hint_text: 
+    warning_panel: 
+    music_vol: 
+    sfx_vol: 
     total_death: 
     total_time: 
     hints: []
+    extra_hints: []
     page_titles: []
     Level1: []
 --- !u!114 &11174188545749944
@@ -5447,6 +5502,7 @@ GameObject:
   - component: {fileID: 8617626721664749599}
   - component: {fileID: 83749566346798047}
   - component: {fileID: 3673253565726386693}
+  - component: {fileID: 8617626721664749600}
   m_Layer: 5
   m_Name: Music Volume Text
   m_TagString: Untagged
@@ -5880,6 +5936,7 @@ GameObject:
   - component: {fileID: 5973195570987046393}
   - component: {fileID: 8551409733682025504}
   - component: {fileID: 11174188545749944}
+  - component: {fileID: 8551409733682025505}
   m_Layer: 5
   m_Name: Settings Penel
   m_TagString: Untagged
@@ -5931,9 +5988,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 445041616}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: CloseSettings
+      - m_Target: {fileID: 8551409733682025505}
+        m_TargetAssemblyTypeName: MenuBounceAnimator, Assembly-CSharp
+        m_MethodName: CloseMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6073,6 +6130,7 @@ GameObject:
   - component: {fileID: 7529825059040409826}
   - component: {fileID: 2923466907035764269}
   - component: {fileID: 3661991331070539235}
+  - component: {fileID: 7956313564952547731}
   m_Layer: 5
   m_Name: 'SFX Volume Text '
   m_TagString: Untagged
@@ -6080,6 +6138,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7956313564952547731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7956313564952547730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: sfx_vol
 --- !u!224 &8116812374199558458
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6130,6 +6201,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResetManager
   resetConfirmationPanel: {fileID: 794315811}
+  resetAnimator: {fileID: 794315816}
+  settingsAnimator: {fileID: 8551409733682025505}
 --- !u!222 &8551409733682025504
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6138,6 +6211,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7461815763754780631}
   m_CullTransparentMesh: 1
+--- !u!114 &8551409733682025505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7461815763754780631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 1
+  openDelay: 0
+  closeDelay: 0
+  openDuration: 0.4
+  openOvershoot: 1.5
+  closeDuration: 0.3
+  closeAnticipation: 1.5
+  startYOffset: -1500
 --- !u!114 &8611680622792910234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6220,6 +6313,19 @@ RectTransform:
   m_AnchoredPosition: {x: -361, y: 118}
   m_SizeDelta: {x: 900, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8617626721664749600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5481739674867517104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b5c837aea7991448f245fb83a75eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  key: music_vol
 --- !u!222 &8663942074080889697
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -224,7 +224,11 @@ public class LevelUIManager : MonoBehaviour
     {
         if (LevelTransition.Instance != null)
         {
-            LevelTransition.Instance.SlideDownToScene("MainMenu");
+          
+            LevelTransition.Instance.FadeOut(() =>
+            {
+                SceneManager.LoadScene("MainMenu");
+            });
         }
         else
         {
