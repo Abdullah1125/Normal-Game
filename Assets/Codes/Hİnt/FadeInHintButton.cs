@@ -80,7 +80,7 @@ public class FadeInHintButton : MonoBehaviour
                 canvasGroup.alpha = 1f;
                 canvasGroup.interactable = true;
                 canvasGroup.blocksRaycasts = true;
-                isFadedIn = true; // Görev bitti, buton ekrana kazýndý!
+                isFadedIn = true; 
             }
         }
     }

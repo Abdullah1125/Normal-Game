@@ -15,6 +15,10 @@
     "warning_panel": "Map bitmeden geri dönemezsin!",
     "music_vol": "Müzik Ses Düzeyi",
     "sfx_vol": "Efekt Ses Düzeyi",
+    "jump": "Zıplama",
+    "double_jump": "Çift Zıplama",
+    "left": "Sola",
+    "right": "Sağa",
     "total_death": "Ölüm Sayacı:",
     "total_time": "Süre Sayacı:",
     "hints": [

@@ -17,6 +17,10 @@ public class LanguageData
     public string warning_panel;
     public string music_vol;
     public string sfx_vol;
+    public string jump;
+    public string double_jump;
+    public string left;
+    public string right;
     public string total_death;
     public string total_time;
 

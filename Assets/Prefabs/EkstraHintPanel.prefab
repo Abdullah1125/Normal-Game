@@ -612,6 +612,7 @@ GameObject:
   - component: {fileID: 8393863718893504253}
   - component: {fileID: 5374839516831873619}
   - component: {fileID: 3343125812439844905}
+  - component: {fileID: 6705848299035847291}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -700,6 +701,27 @@ MonoBehaviour:
   leftMargin: 50
   textWidthWithoutImage: 900
   textWidthWithImage: 500
+  hintAnimator: {fileID: 6705848299035847291}
+--- !u!114 &6705848299035847291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7403708465414015006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a71e982b7e49e459f2e1bb039e102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
+  slideFromBottom: 0
+  openDelay: 0
+  closeDelay: 0
+  openDuration: 0.4
+  openOvershoot: 1.5
+  closeDuration: 0.3
+  closeAnticipation: 1.5
+  startYOffset: -1500
 --- !u!1 &8773782474021996181
 GameObject:
   m_ObjectHideFlags: 0

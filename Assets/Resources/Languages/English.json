@@ -15,6 +15,10 @@
     "warning_panel": "You can't go back before the map is finished!",
     "music_vol": "Music Volume",
     "sfx_vol": "SFX Volume",
+    "jump": "Jump",
+    "double_jump": "Double Jump",
+    "left": "Left",
+    "right": "Right",
     "total_death": "Death Counter:",
     "total_time": "Time Counter:",
     "hints": [

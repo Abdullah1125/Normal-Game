@@ -16,9 +16,11 @@ public class ExtraHintUI : MonoBehaviour
     public RectTransform textRect; 
     public float leftMargin = 50f; 
     public float textWidthWithoutImage = 800f; 
-    public float textWidthWithImage = 450f;    
+    public float textWidthWithImage = 450f;
 
- 
+    [Header("Animators(Animatörler)")]
+    public MenuBounceAnimator hintAnimator;
+
     public void ShowExtraHint()
     {
         LevelData currentLevelData = LevelManager.Instance.activeLevel;
@@ -66,12 +68,15 @@ public class ExtraHintUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
- 
     public void CloseExtraHint()
     {
+        // Butonlarý ve zamaný geri getir
         if (pauseButton != null) pauseButton.SetActive(true);
         if (extraHintButton != null) extraHintButton.SetActive(true);
         Time.timeScale = 1f;
-        gameObject.SetActive(false);
+
+        // Direkt kapatmak yerine animasyonu tetikle
+        if (hintAnimator != null) hintAnimator.CloseMenu();
+        else gameObject.SetActive(false);
     }
 }

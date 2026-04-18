@@ -24,22 +24,7 @@ MonoBehaviour:
   colliderLeyer: 1
   specialMechanics:
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
+  - {fileID: 5271311735171538128, guid: 94298d798eb99a14a82a237ed54558d8, type: 3}
+  - {fileID: 49370371799710718, guid: f3fcb84a09a6b7e4aa46bb0e584cae51, type: 3}
   levelHint: hint_level_0
-  hintSprites:
-  - {fileID: -8049738596340491021, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1064644307, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1645473237, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 854756651, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: -585963134, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1008790328, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 906419213, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 431962341, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 13170867, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 330046616, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1160731669, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1015661762, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: -1494255191, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1185106797, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: -2020441809, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  - {fileID: 1267565744, guid: fc5ed0c8fd1a21c4f98b4e73c2221dbe, type: 3}
-  frameDuration: 0.1
+  hintVisualMap: {fileID: 0}
