@@ -52,6 +52,7 @@ public class ExtraHintUI : MonoBehaviour
         }
         else
         {
+            hintImage.sprite = null;
             hintImage.gameObject.SetActive(false);
 
             if (textRect != null) textRect.sizeDelta = new Vector2(textWidthWithoutImage, textRect.sizeDelta.y);

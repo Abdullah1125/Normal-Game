@@ -6,7 +6,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject settingsPanel; // Ayarlar paneli objesi
     public GameObject scorePanel;    // Skor paneli objesi
 
-    [Header("Animatörler")]
+    [Header("Animators(Animatörler)")]
     public MenuBounceAnimator settingsAnimator; // Ayarlar animasyon scripti
     public MenuBounceAnimator scoreAnimator;    // Skor animasyon scripti
 

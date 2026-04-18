@@ -361,7 +361,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -370,7 +374,7 @@ PrefabInstance:
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1239421943}
+      objectReference: {fileID: 51461529}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -381,7 +385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowButtonAgain
+      value: CloseExtraHint
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -389,11 +393,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: FadeInHintButton, Assembly-CSharp
+      value: ExtraHintUI, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -409,6 +417,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1665058154150547208, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
   m_PrefabInstance: {fileID: 51461527}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &51461529 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3343125812439844905, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
+  m_PrefabInstance: {fileID: 51461527}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617789777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d310b6a09b42a804d8fd5484aed16ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtraHintUI
 --- !u!1 &128206762
 GameObject:
   m_ObjectHideFlags: 0
@@ -2946,39 +2965,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1239421943}
+      objectReference: {fileID: 51461529}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1617789777}
+      objectReference: {fileID: 51461529}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnButtonClick
+      value: ShowExtraHint
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: SetActive
+      value: ShowExtraHint
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: FadeInHintButton, Assembly-CSharp
+      value: ExtraHintUI, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: ExtraHintUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1363742160320785011, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
@@ -3091,17 +3114,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2904244189832427574, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
   m_PrefabInstance: {fileID: 1239421940}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1239421943 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1007777429800651220, guid: 31cabc9b30155f04cb64afae27742086, type: 3}
-  m_PrefabInstance: {fileID: 1239421940}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239421941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8eff1348c3e01c46b82b4e5396877d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FadeInHintButton
 --- !u!1 &1383220963
 GameObject:
   m_ObjectHideFlags: 0
@@ -10083,6 +10095,10 @@ PrefabInstance:
       propertyPath: hudPauseButton
       value: 
       objectReference: {fileID: 24431797}
+    - target: {fileID: 1381622390513904583, guid: 9dabc728af36897498806497779fd709, type: 3}
+      propertyPath: extraHintButton
+      value: 
+      objectReference: {fileID: 1239421941}
     - target: {fileID: 3809874964297335342, guid: 9dabc728af36897498806497779fd709, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -10261,7 +10277,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &2078004743
 RectTransform:
