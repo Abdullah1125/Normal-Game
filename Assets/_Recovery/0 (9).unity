@@ -1535,10 +1535,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.01111111
-    width: 1
-    height: 0.9777778
+    x: -1.5
+    y: -1.1
+    width: 3
+    height: 2.2
   near clip plane: 0.5
   far clip plane: 1000
   field of view: 34
@@ -1612,8 +1612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraRoomController
   shakeDuration: 0.1
   shakeMagnitude: 0.1
-  shakeSpeed: 45
-  hitStopDuration: 0.05
+  shakeSpeed: 25
   transitionSpeed: 5
 --- !u!1 &551570284
 GameObject:
@@ -2363,8 +2362,8 @@ MonoBehaviour:
   closeDelay: 0
   openDuration: 0.4
   openOvershoot: 1.5
-  closeDuration: 0.2
-  closeAnticipation: 1
+  closeDuration: 0.3
+  closeAnticipation: 1.5
   startYOffset: -1500
 --- !u!1 &805653574
 GameObject:
@@ -6235,7 +6234,7 @@ MonoBehaviour:
   openDuration: 0.4
   openOvershoot: 1.5
   closeDuration: 0.3
-  closeAnticipation: 2
+  closeAnticipation: 1.5
   startYOffset: -1500
 --- !u!114 &8611680622792910234
 MonoBehaviour:

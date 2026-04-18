@@ -357,12 +357,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
   slideFromBottom: 0
-  openDelay: 0.1
+  openDelay: 0.2
   closeDelay: 0.1
   openDuration: 0.4
-  openOvershoot: 2
-  closeDuration: 0.3
-  closeAnticipation: 2
+  openOvershoot: 1.5
+  closeDuration: 0.4
+  closeAnticipation: 1.5
   startYOffset: -1500
 --- !u!114 &8002571882385755215
 MonoBehaviour:
@@ -1782,7 +1782,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuBounceAnimator
   slideFromBottom: 1
-  openDelay: 0.01
+  openDelay: 0.1
   closeDelay: 0.15
   openDuration: 0.4
   openOvershoot: 1.5

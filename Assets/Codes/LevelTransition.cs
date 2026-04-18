@@ -2,75 +2,80 @@
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class LevelTransition : MonoBehaviour
 {
     public static LevelTransition Instance;
 
-    [Header("Cinematic Doors(Sinematik Kapılar)")]
+    [Header("Cinematic Doors (Sinematik Kapılar)")]
     public RectTransform topPanel;    // Üst kapı paneli
     public RectTransform bottomPanel; // Alt kapı paneli
     public float doorSpeed = 0.5f;
 
-    [Header("Settings(Ayarlar)")]
-    public bool openDoorsOnStart = true; // Sahne açıldığında kapılar otomatik açılsın mı?
+    [Header("Settings (Ayarlar)")]
+    public bool openDoorsOnStart = true;
     public TextMeshProUGUI levelText;
 
-    // Sahne geçişini kontrol etmek için statik değişken
     public static bool isComingFromDoorTransition = false;
+
+    // Kapıların kapalıyken duracağı koordinatlar (Tam merkez değil, biraz üst üste binmeli)
+    private float closedYOffset = 0f;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
 
-        float h = GetCanvasHeight();
-        float w = GetCanvasWidth() + 500f; // Sadece genişlikte güvenlik payı bırakıyoruz
-
-        if (topPanel != null && bottomPanel != null)
-        {
-            // DÜZELTME: Yükseklikleri tam ekranın yarısı yapıyoruz (+50 sildik).
-            // Bu sayede iç içe geçme ve resimlerin aşağı/yukarı kayma sorunu çözülür.
-            topPanel.sizeDelta = new Vector2(w, h / 2f);
-            bottomPanel.sizeDelta = new Vector2(w, h / 2f);
-
-            // Eğer yeni sahneye kapı geçişiyle geldiysek veya başlangıçta kapıların açılmasını istiyorsak
-            if (isComingFromDoorTransition || openDoorsOnStart)
-            {
-                // Kapıları EKRANDA ve KAPALI başlat
-                topPanel.gameObject.SetActive(true);
-                bottomPanel.gameObject.SetActive(true);
-
-                // Tam ortada (y=0 çizgisinde) jilet gibi birleşecekleri koordinatlar
-                topPanel.anchoredPosition = new Vector2(0, h / 4f);
-                bottomPanel.anchoredPosition = new Vector2(0, -h / 4f);
-            }
-            else
-            {
-                // Normal başlangıçsa kapılar zaten görünmez kalacak (Editor'de kapattığın gibi)
-                topPanel.anchoredPosition = new Vector2(0, h);
-                bottomPanel.anchoredPosition = new Vector2(0, -h);
-
-                topPanel.gameObject.SetActive(false);
-                bottomPanel.gameObject.SetActive(false);
-            }
-        }
-
+        SetupDoors(); // Kapıların boyutunu ve başlangıç pozisyonunu ayarla
         if (levelText != null) levelText.alpha = 0f;
+    }
+
+    private void SetupDoors()
+    {
+        if (topPanel == null || bottomPanel == null) return;
+
+        float h = GetCanvasHeight();
+        float w = GetCanvasWidth() + 500f; // Genişlikte güvenlik payı
+
+        // DÜZELTME 1: Kapıların YÜKSEKLİĞİNİ ekranın %60'ı yapıyoruz. (h * 0.6f)
+        // Böylece ekran ne kadar uzun olursa olsun kapılar kapandığında ortada mutlaka birleşirler.
+        float doorHeight = h * 0.6f;
+        topPanel.sizeDelta = new Vector2(w, doorHeight);
+        bottomPanel.sizeDelta = new Vector2(w, doorHeight);
+
+        // Kapıların tam kapalı pozisyonu: Sıfır noktası yerine merkezde biraz iç içe geçmelerini sağlıyoruz
+        closedYOffset = doorHeight / 2f;
+
+        if (isComingFromDoorTransition || openDoorsOnStart)
+        {
+            // EKRANDA VE KAPALI BAŞLAT
+            topPanel.gameObject.SetActive(true);
+            bottomPanel.gameObject.SetActive(true);
+
+            topPanel.anchoredPosition = new Vector2(0, closedYOffset);
+            bottomPanel.anchoredPosition = new Vector2(0, -closedYOffset);
+        }
+        else
+        {
+            // GÖRÜNMEZ BAŞLAT
+            topPanel.gameObject.SetActive(false);
+            bottomPanel.gameObject.SetActive(false);
+
+            // Açık (Ekran dışı) pozisyonlar
+            topPanel.anchoredPosition = new Vector2(0, h + closedYOffset);
+            bottomPanel.anchoredPosition = new Vector2(0, -(h + closedYOffset));
+        }
     }
 
     IEnumerator Start()
     {
-        // Eğer geçişten geliyorsak, sahne yüklendiğinde kapıları otomatik aç
         if (isComingFromDoorTransition || openDoorsOnStart)
         {
             isComingFromDoorTransition = false;
-            yield return new WaitForSeconds(0.2f); // Sahnede her şeyin yüklenmesini çok kısa bekle
+            yield return new WaitForSeconds(0.2f);
             yield return OpenDoorsRoutine();
         }
     }
 
-    // SAHNELER ARASI GEÇİŞ İÇİN
     public void FadeOut(System.Action onComplete = null)
     {
         StartCoroutine(CloseDoorsRoutine(() =>
@@ -80,7 +85,6 @@ public class LevelTransition : MonoBehaviour
         }));
     }
 
-    // AYNI SAHNE İÇİNDE BÖLÜM DEĞİŞTİRMEK İÇİN 
     public void DoTransition(System.Action middleAction)
     {
         StartCoroutine(TransitionRoutine("", middleAction));
@@ -91,22 +95,17 @@ public class LevelTransition : MonoBehaviour
         StartCoroutine(TransitionRoutine(message, middleAction));
     }
 
-    // ANA ANİMASYON RUTİNLERİ 
-
     private IEnumerator TransitionRoutine(string message, System.Action middleAction)
     {
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
         if (levelText != null) levelText.text = message;
 
-        // 1. Kapıları Kapat
         yield return CloseDoorsRoutine(null);
 
-        // 2. Kapılar kapalıyken arka planda yapılacakları yap
         if (levelText != null) levelText.alpha = 1f;
         middleAction?.Invoke();
-        yield return new WaitForSeconds(0.4f); // Siyah ekranda kalma süresi
+        yield return new WaitForSeconds(0.4f);
 
-        // 3. Yazıyı gizle ve Kapıları Aç
         if (levelText != null) levelText.alpha = 0f;
         yield return OpenDoorsRoutine();
 
@@ -117,13 +116,16 @@ public class LevelTransition : MonoBehaviour
     {
         float h = GetCanvasHeight();
 
-        // Animasyon başlamadan önce objeleri AKTİF (görünür) yap
         if (topPanel != null) topPanel.gameObject.SetActive(true);
         if (bottomPanel != null) bottomPanel.gameObject.SetActive(true);
 
-        // Açık (h, -h) pozisyonundan -> Kapalı (h/4, -h/4) pozisyonuna hareket
-        yield return MoveDoors(new Vector2(0, h), new Vector2(0, h / 4f),
-                               new Vector2(0, -h), new Vector2(0, -h / 4f));
+        // Açık -> Kapalı
+        Vector2 tStart = new Vector2(0, h + closedYOffset);
+        Vector2 tEnd = new Vector2(0, closedYOffset);
+        Vector2 bStart = new Vector2(0, -(h + closedYOffset));
+        Vector2 bEnd = new Vector2(0, -closedYOffset);
+
+        yield return MoveDoors(tStart, tEnd, bStart, bEnd);
         onComplete?.Invoke();
     }
 
@@ -131,11 +133,14 @@ public class LevelTransition : MonoBehaviour
     {
         float h = GetCanvasHeight();
 
-        // Kapalı (h/4, -h/4) pozisyonundan -> Açık (h, -h) pozisyonuna hareket
-        yield return MoveDoors(new Vector2(0, h / 4f), new Vector2(0, h),
-                               new Vector2(0, -h / 4f), new Vector2(0, -h));
+        // Kapalı -> Açık
+        Vector2 tStart = new Vector2(0, closedYOffset);
+        Vector2 tEnd = new Vector2(0, h + closedYOffset);
+        Vector2 bStart = new Vector2(0, -closedYOffset);
+        Vector2 bEnd = new Vector2(0, -(h + closedYOffset));
 
-        // Kapılar tamamen açıldıktan sonra GÖRÜNMEZ YAP (Tıklamaları engellemesin)
+        yield return MoveDoors(tStart, tEnd, bStart, bEnd);
+
         if (topPanel != null) topPanel.gameObject.SetActive(false);
         if (bottomPanel != null) bottomPanel.gameObject.SetActive(false);
     }
@@ -146,9 +151,11 @@ public class LevelTransition : MonoBehaviour
 
         while (elapsed < doorSpeed)
         {
-            elapsed += Time.deltaTime;
+            // Time.unscaledDeltaTime kullanarak oyun dursa bile kapı animasyonunun çalışmasını sağla
+            elapsed += Time.unscaledDeltaTime;
             float t = elapsed / doorSpeed;
-            t = t * t * (3f - 2f * t); // SmoothStep: Animasyonun başı ve sonu yumuşak olur
+            t = Mathf.Clamp01(t);
+            t = t * t * (3f - 2f * t); // SmoothStep
 
             if (topPanel != null) topPanel.anchoredPosition = Vector2.Lerp(tStart, tEnd, t);
             if (bottomPanel != null) bottomPanel.anchoredPosition = Vector2.Lerp(bStart, bEnd, t);
@@ -160,7 +167,6 @@ public class LevelTransition : MonoBehaviour
         if (bottomPanel != null) bottomPanel.anchoredPosition = bEnd;
     }
 
-    // Yardımcı Matematik Fonksiyonları
     private float GetCanvasHeight()
     {
         Canvas canvas = GetComponentInParent<Canvas>();

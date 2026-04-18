@@ -54,10 +54,10 @@ public class PauseManager : MonoBehaviour
     {
         // SetActive(true) olduðu an Bounce efekti otomatik tetiklenir
         pauseMenuUI.SetActive(true);
-        settingsPanelUI.SetActive(false);
-        extraHintButton.SetActive(false);
+        HideWithFold(extraHintButton);
+        HideWithFold(hudPauseButton);
 
-        if (hudPauseButton != null) hudPauseButton.SetActive(false);
+       
 
         Time.timeScale = 0f;
         isPaused = true;
@@ -72,6 +72,22 @@ public class PauseManager : MonoBehaviour
         else pauseMenuUI.SetActive(false);
 
         settingsPanelUI.SetActive(true);
+    }
+    
+    private void HideWithFold(GameObject buttonObj)
+    {
+        if (buttonObj == null) return;
+
+        ButtonFoldAnimator foldAnim = buttonObj.GetComponent<ButtonFoldAnimator>();
+
+        if (foldAnim != null && buttonObj.activeInHierarchy)
+        {
+            foldAnim.HideButton();
+        }
+        else
+        {
+            buttonObj.SetActive(false);
+        }
     }
 
     public void CloseSettings()

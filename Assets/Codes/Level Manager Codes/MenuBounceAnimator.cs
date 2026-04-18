@@ -52,6 +52,9 @@ public class MenuBounceAnimator : MonoBehaviour
         // Kayarak geliyorsa yarý boyuttan baþla, pop-up ise 0'dan (görünmezden) baþla
         rectTransform.localScale = slideFromBottom ? originalScale * 0.5f : Vector3.zero;
 
+        // 1 karelik parlama hatasýný engellemek için
+        Canvas.ForceUpdateCanvases();
+
         // Önceki animasyonlarý durdur ve açýlma iþlemini baþlat
         StopAllCoroutines();
         StartCoroutine(BounceRoutine(true));
@@ -72,7 +75,7 @@ public class MenuBounceAnimator : MonoBehaviour
         float delay = isOpening ? openDelay : closeDelay;
         if (delay > 0f)
         {
-            // Pause menüsünde zaman durduðu (Time.timeScale = 0) için Realtime (gerçek zaman) bekletiyoruz
+            // Pause menüsünde zaman durduðu için Realtime bekletiyoruz
             yield return new WaitForSecondsRealtime(delay);
         }
 
@@ -89,40 +92,47 @@ public class MenuBounceAnimator : MonoBehaviour
         Vector3 startScl = isOpening ? minScale : originalScale;
         Vector3 endScl = isOpening ? originalScale : minScale;
 
-        // Belirlenen süre (duration) bitene kadar döngüyü çalýþtýr
+        // Belirlenen süre bitene kadar döngüyü çalýþtýr
         while (elapsed < duration)
         {
-            // Zaman dursa bile animasyonun akmasý için unscaledDeltaTime kullanýyoruz
+            // Zaman dursa bile animasyonun akmasý için unscaledDeltaTime
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration; // %0 ile %100 arasý ilerleme
-            float curve;
+
+            float scaleCurve;
+            float posCurve;
 
             if (isOpening)
             {
-                // AÇILMA MATEMATÝÐÝ (Ease Out Back): Hedefi aþýp (þiþip) geri döner
+                // AÇILMA MATEMATÝÐÝ (Ease Out Back): Hedefi aþýp geri döner
                 float s = openOvershoot;
                 float tempT = t - 1.0f;
-                curve = tempT * tempT * ((s + 1) * tempT + s) + 1.0f;
+                scaleCurve = tempT * tempT * ((s + 1) * tempT + s) + 1.0f;
+
+                // Yukarý kayarken zýplamamasý için fren
+                posCurve = 1f - Mathf.Pow(1f - t, 3f);
             }
             else
             {
-                // KAPANMA MATEMATÝÐÝ (Ease In Back): Önce þiþer (veya 0 ise þiþmez), sonra küçülür/düþer
+                // KAPANMA MATEMATÝÐÝ (Ease In Back): Önce þiþer, sonra küçülür
                 float s = closeAnticipation;
-                curve = t * t * ((s + 1) * t - s);
+                scaleCurve = t * t * ((s + 1) * t - s);
+
+                posCurve = t * t * t;
             }
 
-            // LerpUnclamped ile 1.0 sýnýrýný aþýp zýplama/þiþme efektini uygula
-            rectTransform.anchoredPosition = Vector2.LerpUnclamped(startPos, endPos, curve);
-            rectTransform.localScale = Vector3.LerpUnclamped(startScl, endScl, curve);
+            // LerpUnclamped ile efektleri uygula
+            rectTransform.anchoredPosition = Vector2.LerpUnclamped(startPos, endPos, posCurve);
+            rectTransform.localScale = Vector3.LerpUnclamped(startScl, endScl, scaleCurve);
 
             yield return null; // Bir sonraki frame'e kadar bekle
         }
 
-        // Animasyon bittiðinde hiçbir kayma olmasýn diye deðerleri asýl hedefe sabitle
+        // Animasyon bittiðinde asýl hedefe sabitle
         rectTransform.anchoredPosition = endPos;
         rectTransform.localScale = endScl;
 
-        // Eðer bu bir kapanma iþlemiyse, iþi bittiðinde objeyi tamamen gizle
+        // Kapanma iþlemiyse objeyi tamamen gizle
         if (!isOpening) gameObject.SetActive(false);
     }
 }

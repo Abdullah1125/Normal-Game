@@ -61,13 +61,28 @@ public class ExtraHintUI : MonoBehaviour
         }
 
         // 4. BUTONLARI GÝZLE VE ZAMANI DONDUR
-        if (pauseButton != null) pauseButton.SetActive(false);
-        if (extraHintButton != null) extraHintButton.SetActive(false);
+        HideWithFold(pauseButton);
+        HideWithFold(extraHintButton);
         Time.timeScale = 0f;
 
         gameObject.SetActive(true);
     }
+    // YENÝ EKLENDÝ: Butonlarý ezerek (katlayarak) kapatan yardýmcý motor
+    private void HideWithFold(GameObject buttonObj)
+    {
+        if (buttonObj == null) return;
 
+        ButtonFoldAnimator foldAnim = buttonObj.GetComponent<ButtonFoldAnimator>();
+
+        if (foldAnim != null && buttonObj.activeInHierarchy)
+        {
+            foldAnim.HideButton();
+        }
+        else
+        {
+            buttonObj.SetActive(false);
+        }
+    }
     public void CloseExtraHint()
     {
         // Butonlarý ve zamaný geri getir
