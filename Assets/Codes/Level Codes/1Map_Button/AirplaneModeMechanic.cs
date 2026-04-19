@@ -32,7 +32,17 @@ public class AirplaneModeMechanic : MonoBehaviour
             }
         }
     }
+    // 1. Karakter her dirildiğinde bu kulak LevelManager'ı duyar
+    private void OnEnable()
+    {
+        LevelManager.OnLevelStarted += ResetMechanic;
+    }
 
+    // 2. Obje yok olursa dinlemeyi bırakır (Hafıza sızıntısını önler)
+    private void OnDisable()
+    {
+        LevelManager.OnLevelStarted -= ResetMechanic;
+    }
     private void OpenTheGate()
     {
         isGateOpen = true;
@@ -80,5 +90,14 @@ public class AirplaneModeMechanic : MonoBehaviour
 #else
         return testAirplaneMode;
 #endif
+    }
+    private void ResetMechanic()
+    {
+        // Eğer bu mekanik o anki haritada aktifse sıfırlama işlemini yap
+        if (this.gameObject.activeInHierarchy)
+        {
+            isGateOpen = false; // Hafızayı sıfırla ("kapı kapalı" moduna geç)
+            timer = checkInterval; // Adam doğduğu salise beklemeden anında uçak modunu kontrol etsin diye süreyi fulle!
+        }
     }
 }

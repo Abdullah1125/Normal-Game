@@ -29,6 +29,10 @@ public class ScoreManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
 
     private void Update()
     {

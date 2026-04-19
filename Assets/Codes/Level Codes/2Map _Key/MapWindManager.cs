@@ -3,7 +3,6 @@ using UnityEngine;
 public class MapWindManager : MonoBehaviour
 {
 
-
     [Header("Wind Power(Rüzgar Gücü)")]
     public Vector2 windForce = new Vector2(-20f, 0f);
     public bool isWindActive = true;
@@ -15,11 +14,27 @@ public class MapWindManager : MonoBehaviour
     private PlayerController playerScript;
     private Rigidbody2D playerRb;
 
+    // Anons sistemine kayýt ol (Karakter her dirildiðinde burasý dinler)
+    private void OnEnable()
+    {
+        LevelManager.OnLevelStarted += ReApplyWindEffect;
+    }
+
+  
+    private void OnDisable()
+    {
+        LevelManager.OnLevelStarted -= ReApplyWindEffect;
+
+        if (playerScript != null)
+        {
+            playerScript.moveSpeed = normalSpeed;
+        }
+    }
 
     void Start()
     {
         // Senin istediðin Tag kontrolü ile karakteri ve scriptini bul
-    
+
         if (PlayerController.Instance != null)
         {
             playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();
@@ -53,5 +68,14 @@ public class MapWindManager : MonoBehaviour
         else
             playerScript.moveSpeed = normalSpeed;   // Eski haline getir
     }
-   
+
+    
+    private void ReApplyWindEffect()
+    {
+        // Eðer bu rüzgar objesi hala o anki sahnede aktifse rüzgarý tekrar ver
+        if (this.gameObject.activeInHierarchy)
+        {
+            ApplyWindEffect();
+        }
+    }
 }

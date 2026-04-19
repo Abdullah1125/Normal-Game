@@ -51,24 +51,24 @@ public class LevelMenuButton : MonoBehaviour
         bool isChapterFinished = PlayerPrefs.GetInt("LevelComplete_" + chapterLastLevelIndex, 0) == 1;
 
         // Eðer bu chapter henüz bitmemiþse...
-        if (!isChapterFinished)
-        {
-            // ...ve oyuncu bu chapter içindeki bitirdiði bir level'a geri dönmeye çalýþýyorsa
-            // (Þu anki açýk olan level'dan daha küçük bir index'e basýyorsa)
-            int highestUnlockedInThisChapter = 0;
-            for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
-            {
-                if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
-            }
+        /*if (!isChapterFinished)
+          {
+              // ...ve oyuncu bu chapter içindeki bitirdiði bir level'a geri dönmeye çalýþýyorsa
+              // (Þu anki açýk olan level'dan daha küçük bir index'e basýyorsa)
+              int highestUnlockedInThisChapter = 0;
+              for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
+              {
+                  if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
+              }
 
-            if (globalIndex < highestUnlockedInThisChapter)
-            {
-                // LevelUIManager üzerinden uyarý panelini tetikle
-                LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
-                if (uiManager != null) uiManager.ShowWarningPanel();
-                return;
-            }
-        }
+              if (globalIndex < highestUnlockedInThisChapter)
+              {
+                  // LevelUIManager üzerinden uyarý panelini tetikle
+                  LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
+                  if (uiManager != null) uiManager.ShowWarningPanel();
+                  return;
+              }
+          }*/
 
         // Hangi map sahnesine gidecek? (0-5 -> 1Map, 6-11 -> 2Map)
         int mapNum = (globalIndex / 6) + 1;

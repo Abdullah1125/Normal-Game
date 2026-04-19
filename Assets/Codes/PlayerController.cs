@@ -238,7 +238,13 @@ public class PlayerController : MonoBehaviour
             CameraRoomController.Instance.ShakeCamera();
         }
 
-        if (soulPrefab != null) Instantiate(soulPrefab, transform.position, Quaternion.Euler(0, 0, 90f));
+        GameObject soul = SoulPool.Instance.GetSoul();
+        if (soul != null)
+        {
+            soul.transform.position = transform.position; // Karakterin öldüğü yere ışınla
+            soul.SetActive(true); // Ruh uyanıp kendi kodunu çalıştırmaya başlar
+        }
+
         StartCoroutine(DeathRoutine());
         SoundManager.PlaySFX(SoundManager.instance.dieSound);
        
@@ -264,21 +270,22 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = startPos;
         rb.linearVelocity = Vector2.zero;
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        canMove = true;
+
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
 
-
-        // Diğer sistemleri sıfırla
-        CameraRoomController.Instance.ResetCamera();
-        LevelManager.Instance.ResetAllMechanics();
-        if (CameraRoomController.Instance != null) CameraRoomController.Instance.ResetCamera();
-
         ResetSpeed();
+
+        // Her şeyi sadece 1 KERE çağırıyoruz!
+        if (CameraRoomController.Instance != null)
+            CameraRoomController.Instance.ResetCamera();
 
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.ResetAllMechanics();
-            LevelManager.Instance.ApplyLevel(); 
         }
     }
 

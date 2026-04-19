@@ -6,7 +6,7 @@ public class EscapeKey : MonoBehaviour
     public Vector2 firstEscapeOffset = new Vector2(5, 2);
     public Vector2 secondEscapeOffset = new Vector2(10, 0);
 
-    [Header("Settings(Ayarlar")]
+    [Header("Settings(Ayarlar)")]
     public float triggerDistance = 3.5f;
     public float moveSpeed = 10f;
 
@@ -15,13 +15,11 @@ public class EscapeKey : MonoBehaviour
     private int escapePhase = 0;
     private Collider2D myCollider; // Kendi collider'ımız
 
-    void Start()
+    void Awake()
     {
         startPos = transform.position;
         targetPos = startPos;
         myCollider = GetComponent<Collider2D>();
-
-       
     }
 
     void Update()

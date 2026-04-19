@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SoulEffect : MonoBehaviour
 {
@@ -8,28 +9,46 @@ public class SoulEffect : MonoBehaviour
     public float stopThreshold = 0.5f;
 
     private Rigidbody2D rb;
-    private bool timerStarted = false;
     private bool isSettled = false;
     private bool isTouchingGround = false;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
+    }
 
-        // Havada süzülmesin diye düşük direnç
+    // OBJE HER HAVUZDAN ÇIKTIĞINDA ÇALIŞIR
+    void OnEnable()
+    {
+        // Hafızayı sıfırla
+        isSettled = false;
+        isTouchingGround = false;
+
+        // Rigidbody'yi canlandır
+        rb.constraints = RigidbodyConstraints2D.None;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
         rb.linearDamping = 0.05f;
         rb.angularDamping = 0.5f;
+
+        // Yaşam süresi bitince kendini yok etmek yerine "havuza geri dön"
+        StopAllCoroutines();
+        StartCoroutine(ReturnToPoolAfterTime());
+    }
+
+    private IEnumerator ReturnToPoolAfterTime()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        gameObject.SetActive(false); // Depoya geri dön!
     }
 
     void FixedUpdate()
     {
         if (!isSettled)
         {
-            // Mermi gibi aşağı it
             rb.AddForce(Vector2.down * soulGravity, ForceMode2D.Impulse);
 
-            // Yuvarlanması bittiyse (hızı kesildiyse) dondur
             if (isTouchingGround && rb.linearVelocity.magnitude < stopThreshold)
             {
                 FreezeSoul();
@@ -43,22 +62,12 @@ public class SoulEffect : MonoBehaviour
         {
             isTouchingGround = true;
 
-            if (!timerStarted)
-            {
-                timerStarted = true;
-                Destroy(gameObject, lifeTime);
-            }
-
-            //  DÜZ ZEMİN RADARI: Çarptığımız yerin açısını ölçüyoruz
             if (collision.contactCount > 0)
             {
-                // Çarptığımız noktanın "Normal" açısı (Yüzeyin nereye baktığı)
                 Vector2 contactNormal = collision.GetContact(0).normal;
-
-                // Eğer yüzeyin açısı düzse (y > 0.8 demek yukarı bakıyor, yani zemin düz demektir)
                 if (contactNormal.y > 0.8f)
                 {
-                    FreezeSoul(); // Dümdüz asfalta düştü, anında kilitle!
+                    FreezeSoul();
                 }
             }
         }
@@ -66,7 +75,6 @@ public class SoulEffect : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // Eğer ruh köşeden yuvarlanıp sonra düzlüğe çıkarsa anında dondurmak için:
         if (!isSettled && IsGround(collision.gameObject) && collision.contactCount > 0)
         {
             if (collision.GetContact(0).normal.y > 0.8f)
@@ -89,20 +97,15 @@ public class SoulEffect : MonoBehaviour
         return obj.CompareTag("Ground") || obj.layer == LayerMask.NameToLayer("Ground");
     }
 
-    // Objeyi tam anlamıyla donduran ve dönmesini yasaklayan fonksiyon
     private void FreezeSoul()
     {
         if (isSettled) return;
         isSettled = true;
 
-        // Hızı ve dönüşü tamamen sıfırla
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         rb.linearDamping = 20f;
         rb.angularDamping = 20f;
-
-        
-      
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 }

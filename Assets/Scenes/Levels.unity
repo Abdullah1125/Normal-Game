@@ -2544,7 +2544,7 @@ MonoBehaviour:
   gridCanvasGroup: {fileID: 1689561161}
   gridRect: {fileID: 150784875}
   slideDistance: 1920
-  slideDuration: 1
+  slideDuration: 0.7
   comingSoonFadeDuration: 0.6
   dotPrefab: {fileID: 276013070784306302, guid: 21c262c4f174dfd47a71e439c75ef24a, type: 3}
   dotsParent: {fileID: 743736158}

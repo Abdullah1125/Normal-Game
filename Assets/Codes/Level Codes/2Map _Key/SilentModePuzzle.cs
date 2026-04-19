@@ -15,6 +15,17 @@ public class SilentModePuzzle : MonoBehaviour
 
         CheckSilenceStatus();
     }
+    // 1. Karakter her dirildiğinde bu kulak LevelManager'ı duyar
+    private void OnEnable()
+    {
+        LevelManager.OnLevelStarted += ResetPuzzle;
+    }
+
+    // 2. Obje yok olursa dinlemeyi bırakır (Hafıza sızıntısını önler)
+    private void OnDisable()
+    {
+        LevelManager.OnLevelStarted -= ResetPuzzle;
+    }
 
     void CheckSilenceStatus()
     {
@@ -61,6 +72,17 @@ public class SilentModePuzzle : MonoBehaviour
         {
             GateController.Instance.CloseGate();
             Debug.Log(" Ses geri geldi: Kapı Kapatıldı!");
+        }
+    }
+    
+    private void ResetPuzzle()
+    {
+        // Eğer bu mekanik o anki haritada aktifse sıfırlama işlemini yap
+        if (this.gameObject.activeInHierarchy)
+        {
+            isSolved = false;
+            checkTimer = 0f;
+            CloseTheGate(); // Kapıyı varsayılan haline (kapalı) döndür
         }
     }
 }
