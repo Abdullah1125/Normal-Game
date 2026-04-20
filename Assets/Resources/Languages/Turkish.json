@@ -19,6 +19,8 @@
     "double_jump": "Çift Zıplama",
     "left": "Sola",
     "right": "Sağa",
+    "air_warning": "Uçak Modunu Kapamadan Nereye Gidiyorusun?",
+    "ads_panel": "Reklam Yükleniyor",
     "total_death": "Ölüm Sayacı:",
     "total_time": "Süre Sayacı:",
     "hints": [

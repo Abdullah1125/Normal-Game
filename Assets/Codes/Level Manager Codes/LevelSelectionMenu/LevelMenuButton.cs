@@ -44,38 +44,63 @@ public class LevelMenuButton : MonoBehaviour
     {
         if (comingSoonMode) return;
 
-        int currentChapter = (globalIndex / 6); // 0-5 için 0, 6-11 için 1...
-        int chapterLastLevelIndex = (currentChapter * 6) + 5; // Chapter'ýn son levelinin ID'si (5, 11, 17...)
-
-        // Bu chapter'ýn son leveli bitti mi?
+       
+        int currentChapter = (globalIndex / 6);
+        int chapterLastLevelIndex = (currentChapter * 6) + 5;
         bool isChapterFinished = PlayerPrefs.GetInt("LevelComplete_" + chapterLastLevelIndex, 0) == 1;
+        /* if (!isChapterFinished)
+        {
+            int highestUnlockedInThisChapter = 0;
+            for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
+            {
+                if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
+            }
 
-        // Eðer bu chapter henüz bitmemiþse...
-        /*if (!isChapterFinished)
-          {
-              // ...ve oyuncu bu chapter içindeki bitirdiði bir level'a geri dönmeye çalýþýyorsa
-              // (Þu anki açýk olan level'dan daha küçük bir index'e basýyorsa)
-              int highestUnlockedInThisChapter = 0;
-              for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
-              {
-                  if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
-              }
+            if (globalIndex < highestUnlockedInThisChapter)
+            {
+                LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
+                if (uiManager != null) uiManager.ShowWarningPanel();
+                return;
+            }
+        }*/
 
-              if (globalIndex < highestUnlockedInThisChapter)
-              {
-                  // LevelUIManager üzerinden uyarý panelini tetikle
-                  LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
-                  if (uiManager != null) uiManager.ShowWarningPanel();
-                  return;
-              }
-          }*/
 
-        // Hangi map sahnesine gidecek? (0-5 -> 1Map, 6-11 -> 2Map)
+
+        if (globalIndex > 0 && globalIndex % 6 == 0)
+        {
+            LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
+
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                if (uiManager != null) uiManager.StartFakeLoading(7.0f, () => { LoadMapScene(); });
+                return;
+            }
+
+            if (AdMobInterstitialManager.Instance != null)
+            {
+                bool isAdShowing = AdMobInterstitialManager.Instance.ShowInterstitialAd(() => { LoadMapScene(); });
+
+                if (!isAdShowing)
+                {
+                    if (uiManager != null) uiManager.StartFakeLoading(3.0f, () => { LoadMapScene(); });
+                    else LoadMapScene();
+                }
+                return;
+            }
+        }
+
+        ExtraHintUI.lastUnlockedLevelID = -1;
+        LoadMapScene();
+    }
+
+    // Sahne geçiþini yöneten yardýmcý fonksiyon
+    private void LoadMapScene()
+    {
         int mapNum = (globalIndex / 6) + 1;
-        // Map içindeki index ne? (0,1,2,3,4,5)
         int internalIndex = globalIndex % 6;
 
         PlayerPrefs.SetInt("SelectedInternalIndex", internalIndex);
+
         if (LevelTransition.Instance != null)
         {
             LevelTransition.Instance.FadeOut(() =>
@@ -87,6 +112,5 @@ public class LevelMenuButton : MonoBehaviour
         {
             SceneManager.LoadScene(mapNum + "Map");
         }
-
     }
 }

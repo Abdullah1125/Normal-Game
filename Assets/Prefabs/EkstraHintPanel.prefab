@@ -101,7 +101,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 4395410393995967949}
   - component: {fileID: 7253995716337936313}
   - component: {fileID: 8334693433790628393}
+  - component: {fileID: 6321658697960192660}
   m_Layer: 0
   m_Name: EkstraHintPanel
   m_TagString: Untagged
@@ -316,6 +317,30 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6321658697960192660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189402307210392358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d310b6a09b42a804d8fd5484aed16ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtraHintUI
+  hintText: {fileID: 4174560841656632918}
+  hintImage: {fileID: 1550439382166996079}
+  mainHintPanel: {fileID: 7403708465414015006}
+  loadingPanel: {fileID: 0}
+  loadingText: {fileID: 0}
+  pauseButton: {fileID: 0}
+  extraHintButton: {fileID: 0}
+  textRect: {fileID: 7202715536843562176}
+  leftMargin: 50
+  textWidthWithoutImage: 900
+  textWidthWithImage: 500
+  hintAnimator: {fileID: 6705848299035847291}
 --- !u!1 &6841698791935394648
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,7 +462,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3343125812439844905}
+      - m_Target: {fileID: 6321658697960192660}
         m_TargetAssemblyTypeName: ExtraHintUI, Assembly-CSharp
         m_MethodName: CloseExtraHint
         m_Mode: 1
@@ -611,7 +636,6 @@ GameObject:
   - component: {fileID: 5205445165591034280}
   - component: {fileID: 8393863718893504253}
   - component: {fileID: 5374839516831873619}
-  - component: {fileID: 3343125812439844905}
   - component: {fileID: 6705848299035847291}
   m_Layer: 0
   m_Name: Panel
@@ -681,27 +705,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3343125812439844905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7403708465414015006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d310b6a09b42a804d8fd5484aed16ab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExtraHintUI
-  hintText: {fileID: 4174560841656632918}
-  hintImage: {fileID: 1550439382166996079}
-  pauseButton: {fileID: 0}
-  extraHintButton: {fileID: 0}
-  textRect: {fileID: 7202715536843562176}
-  leftMargin: 50
-  textWidthWithoutImage: 900
-  textWidthWithImage: 500
-  hintAnimator: {fileID: 6705848299035847291}
 --- !u!114 &6705848299035847291
 MonoBehaviour:
   m_ObjectHideFlags: 0

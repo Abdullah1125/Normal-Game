@@ -19,6 +19,8 @@
     "double_jump": "Double Jump",
     "left": "Left",
     "right": "Right",
+    "air_warning": "Where Are You Going Without Turning Off Airplane Mode?",
+    "ads_panel": "Ad Loading",
     "total_death": "Death Counter:",
     "total_time": "Time Counter:",
     "hints": [

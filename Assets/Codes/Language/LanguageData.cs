@@ -21,6 +21,8 @@ public class LanguageData
     public string double_jump;
     public string left;
     public string right;
+    public string air_warning;
+    public string ads_panel;
     public string total_death;
     public string total_time;
 

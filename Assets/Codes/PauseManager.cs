@@ -35,7 +35,7 @@ public class PauseManager : MonoBehaviour
 
     public void Resume()
     {
-        // Anýnda yok etmek yerine kapanma animasyonunu çalýþtýr
+       
         if (pauseAnimator != null) pauseAnimator.CloseMenu();
         else pauseMenuUI.SetActive(false);
 
@@ -48,6 +48,20 @@ public class PauseManager : MonoBehaviour
         isPaused = false;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
+
+        
+
+        StartCoroutine(WaitAndShowTutorial(0.3f));
+    }
+
+    
+    private System.Collections.IEnumerator WaitAndShowTutorial(float delay)
+    {
+      
+        yield return new WaitForSeconds(delay);
+
+        
+        TutorialTrigger.OnPauseToggled?.Invoke(false);
     }
 
     public void Pause()
@@ -57,7 +71,7 @@ public class PauseManager : MonoBehaviour
         HideWithFold(extraHintButton);
         HideWithFold(hudPauseButton);
 
-       
+        TutorialTrigger.OnPauseToggled?.Invoke(true);
 
         Time.timeScale = 0f;
         isPaused = true;

@@ -1,97 +1,187 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using System.Collections;
 
 public class ExtraHintUI : MonoBehaviour
 {
-    [Header("UI")]
+    [Header("Hint UI (Ä°pucu EkranÄ±)")]
     public TextMeshProUGUI hintText;
     public Image hintImage;
+    public GameObject mainHintPanel;
 
-    [Header("Buttons to Hide(Gizlenecek Butonlar)")]
+    [Header("Loading UI (Darlama Paneli)")]
+    public GameObject loadingPanel;
+    public TextMeshProUGUI loadingText;
+
+    [Header("Buttons to Hide")]
     public GameObject pauseButton;
     public GameObject extraHintButton;
 
-    [Header("Text Width (X) and Margin Settings(Yazý Geniþlik (X) ve Marj Ayarlarý)")]
-    public RectTransform textRect; 
-    public float leftMargin = 50f; 
-    public float textWidthWithoutImage = 800f; 
+    [Header("Settings")]
+    public RectTransform textRect;
+    public float leftMargin = 50f;
+    public float textWidthWithoutImage = 800f;
     public float textWidthWithImage = 450f;
-
-    [Header("Animators(Animatörler)")]
     public MenuBounceAnimator hintAnimator;
 
-    public void ShowExtraHint()
+   
+    private static bool isHintUnlocked = false;
+    public static int lastUnlockedLevelID = -1;
+
+    private Coroutine _dotsCoroutine;
+
+    void Start()
+    {
+        // Sahne her aÃ§Ä±ldÄ±ÄŸÄ±nda kontrol et: "Ben bu levelin reklamÄ±nÄ± az Ã¶nce izledim mi?"
+        CheckLevelStatus();
+    }
+
+    private void CheckLevelStatus()
+    {
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        {
+            // EÄŸer ÅŸu anki level ID'si, hafÄ±zadaki ile aynÄ±ysa kilidi aÃ§Ä±k tut (Ã–LÃœNCE BURASI Ã‡ALIÅžIR)
+            if (LevelManager.Instance.activeLevel.levelID == lastUnlockedLevelID)
+            {
+                isHintUnlocked = true;
+            }
+            else
+            {
+                isHintUnlocked = false;
+            }
+        }
+    }
+
+    public void OnHintButtonClick()
+    {
+        if (isHintUnlocked)
+        {
+            ShowExtraHint();
+            return;
+        }
+
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            StartCoroutine(LocalFakeLoading(10.0f));
+            return;
+        }
+
+        if (AdMobRewardedManager.Instance != null)
+        {
+            bool isAdShowing = AdMobRewardedManager.Instance.ShowRewardedAd(() => {
+                UnlockHint();
+                ShowExtraHint();
+            });
+
+            if (!isAdShowing) StartCoroutine(LocalFakeLoading(3.0f));
+        }
+        else
+        {
+            StartCoroutine(LocalFakeLoading(3.0f));
+        }
+    }
+
+    private void UnlockHint()
+    {
+        isHintUnlocked = true;
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        {
+            lastUnlockedLevelID = LevelManager.Instance.activeLevel.levelID;
+        }
+    }
+
+    private IEnumerator LocalFakeLoading(float duration)
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        _dotsCoroutine = StartCoroutine(AnimateDots());
+        yield return new WaitForSeconds(duration);
+        if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+
+        UnlockHint();
+        ShowExtraHint();
+    }
+
+    private void ShowExtraHint()
     {
         LevelData currentLevelData = LevelManager.Instance.activeLevel;
         if (currentLevelData == null) return;
 
-        // 1. YAZIYI ÇEK VE BAS 
+        // YazÄ±larÄ± Ã§ek
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
-            int levelIndex = currentLevelData.levelID;
             string[] allHints = LocalizationManager.Instance.currentData.extra_hints;
-            if (allHints != null && levelIndex < allHints.Length) hintText.text = allHints[levelIndex];
+            if (allHints != null && currentLevelData.levelID < allHints.Length)
+                hintText.text = allHints[currentLevelData.levelID];
         }
 
-        //  2. DÝNAMÝK YAZI SABÝTLEME VE DARALTMA 
-        if (textRect != null)
-        {
-            
-            textRect.pivot = new Vector2(0f, 0.5f); 
-            textRect.anchorMax = new Vector2(0f, 0.5f);
-
-            textRect.anchoredPosition = new Vector2(leftMargin, textRect.anchoredPosition.y);
-        }
-
-        // 3. FOTOÐRAF VE YAZI GENÝÞLÝÐÝ 
+        // GÃ¶rseli ayarla
         if (currentLevelData.hintVisualMap != null)
         {
             hintImage.sprite = currentLevelData.hintVisualMap;
             hintImage.gameObject.SetActive(true);
-
-            if (textRect != null) textRect.sizeDelta = new Vector2(textWidthWithImage, textRect.sizeDelta.y);
+            textRect.sizeDelta = new Vector2(textWidthWithImage, textRect.sizeDelta.y);
         }
         else
         {
-            hintImage.sprite = null;
             hintImage.gameObject.SetActive(false);
-
-            if (textRect != null) textRect.sizeDelta = new Vector2(textWidthWithoutImage, textRect.sizeDelta.y);
+            textRect.sizeDelta = new Vector2(textWidthWithoutImage, textRect.sizeDelta.y);
         }
 
-        // 4. BUTONLARI GÝZLE VE ZAMANI DONDUR
+        Time.timeScale = 0f;
+        if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
+        mainHintPanel.SetActive(true);
         HideWithFold(pauseButton);
         HideWithFold(extraHintButton);
-        Time.timeScale = 0f;
-
-        gameObject.SetActive(true);
     }
-    // YENÝ EKLENDÝ: Butonlarý ezerek (katlayarak) kapatan yardýmcý motor
+
+    public void CloseExtraHint()
+    {
+        Time.timeScale = 1f;
+        if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
+        if (pauseButton != null) pauseButton.SetActive(true);
+        if (extraHintButton != null) extraHintButton.SetActive(true);
+
+        if (hintAnimator != null) hintAnimator.CloseMenu();
+        else mainHintPanel.SetActive(false);
+    }
+
+    private void OnEnable() { LevelManager.OnLevelStarted += ResetHintLock; }
+    private void OnDisable() { LevelManager.OnLevelStarted -= ResetHintLock; }
+
+    private void ResetHintLock()
+    {
+       
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        {
+            if (LevelManager.Instance.activeLevel.levelID != lastUnlockedLevelID)
+            {
+                isHintUnlocked = false;
+                lastUnlockedLevelID = -1; // FarklÄ± levele geÃ§ince hafÄ±zayÄ± sil
+                Debug.Log("Yeni Level: HafÄ±za silindi.");
+            }
+        }
+    }
+
     private void HideWithFold(GameObject buttonObj)
     {
         if (buttonObj == null) return;
-
         ButtonFoldAnimator foldAnim = buttonObj.GetComponent<ButtonFoldAnimator>();
-
-        if (foldAnim != null && buttonObj.activeInHierarchy)
-        {
-            foldAnim.HideButton();
-        }
-        else
-        {
-            buttonObj.SetActive(false);
-        }
+        if (foldAnim != null && buttonObj.activeInHierarchy) foldAnim.HideButton();
+        else buttonObj.SetActive(false);
     }
-    public void CloseExtraHint()
-    {
-        // Butonlarý ve zamaný geri getir
-        if (pauseButton != null) pauseButton.SetActive(true);
-        if (extraHintButton != null) extraHintButton.SetActive(true);
-        Time.timeScale = 1f;
 
-        // Direkt kapatmak yerine animasyonu tetikle
-        if (hintAnimator != null) hintAnimator.CloseMenu();
-        else gameObject.SetActive(false);
+    private IEnumerator AnimateDots()
+    {
+        while (true)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                loadingText.text = "Reklam YÃ¼kleniyor" + new string('.', i);
+                yield return new WaitForSeconds(0.4f);
+            }
+        }
     }
 }

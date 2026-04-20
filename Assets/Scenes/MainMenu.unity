@@ -3730,7 +3730,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4613906986369648967, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -210
+      value: -260
       objectReference: {fileID: 0}
     - target: {fileID: 5102370355676040780, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_Name
@@ -3742,7 +3742,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6150430560901290860, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 180
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758506776276203732, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7298751609461867168, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_Camera
@@ -4223,6 +4227,7 @@ MonoBehaviour:
     double_jump: 
     left: 
     right: 
+    air_warning: 
     total_death: 
     total_time: 
     hints: []
@@ -5777,8 +5782,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
