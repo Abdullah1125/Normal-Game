@@ -64,22 +64,31 @@ public class ExtraHintUI : MonoBehaviour
 
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            StartCoroutine(LocalFakeLoading(10.0f));
+            if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
+            StartCoroutine(SmartAdLoader(3.0f));
             return;
         }
 
         if (AdMobRewardedManager.Instance != null)
         {
-            bool isAdShowing = AdMobRewardedManager.Instance.ShowRewardedAd(() => {
-                UnlockHint();
-                ShowExtraHint();
-            });
-
-            if (!isAdShowing) StartCoroutine(LocalFakeLoading(3.0f));
+            //  Reklam hazırsa şak diye aç, değilse5  saniye süre ver
+            if (AdMobRewardedManager.Instance.IsAdReady())
+            {
+                AdMobRewardedManager.Instance.ShowRewardedAd(() => {
+                    UnlockHint();
+                    ShowExtraHint();
+                });
+            }
+            else
+            {
+                if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
+                AdMobRewardedManager.Instance.LoadRewardedAd();
+                StartCoroutine(SmartAdLoader(5.0f));
+            }
         }
         else
         {
-            StartCoroutine(LocalFakeLoading(3.0f));
+            StartCoroutine(SmartAdLoader(5.0f));
         }
     }
 
@@ -92,18 +101,45 @@ public class ExtraHintUI : MonoBehaviour
         }
     }
 
-    private IEnumerator LocalFakeLoading(float duration)
+    private IEnumerator SmartAdLoader(float timeout)
     {
         if (loadingPanel != null) loadingPanel.SetActive(true);
         _dotsCoroutine = StartCoroutine(AnimateDots());
-        yield return new WaitForSeconds(duration);
-        if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
-        if (loadingPanel != null) loadingPanel.SetActive(false);
 
-        UnlockHint();
-        ShowExtraHint();
+        float timer = 0f;
+        bool adOpened = false;
+
+        // Belirlenen süre (5sn) boyunca her frame reklamı kontrol et
+        while (timer < timeout)
+        {
+            timer += Time.unscaledDeltaTime;
+
+            if (AdMobRewardedManager.Instance != null && AdMobRewardedManager.Instance.IsAdReady())
+            {
+                adOpened = true;
+
+                if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
+                if (loadingPanel != null) loadingPanel.SetActive(false);
+
+                AdMobRewardedManager.Instance.ShowRewardedAd(() => {
+                    UnlockHint();
+                    ShowExtraHint();
+                });
+                break;
+            }
+            yield return null;
+        }
+
+        // 5 saniye bittiğinde hala reklam yoksa bedava ipucunu ver
+        if (!adOpened)
+        {
+            if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
+            if (loadingPanel != null) loadingPanel.SetActive(false);
+
+            UnlockHint();
+            ShowExtraHint();
+        }
     }
-
     private void ShowExtraHint()
     {
         LevelData currentLevelData = LevelManager.Instance.activeLevel;
@@ -180,7 +216,8 @@ public class ExtraHintUI : MonoBehaviour
             for (int i = 0; i < 6; i++)
             {
                 loadingText.text = "Reklam Yükleniyor" + new string('.', i);
-                yield return new WaitForSeconds(0.4f);
+               
+                yield return new WaitForSecondsRealtime(0.4f);
             }
         }
     }

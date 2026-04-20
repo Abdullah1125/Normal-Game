@@ -61,6 +61,7 @@ public class LevelUIManager : MonoBehaviour
 
     [Header("Warning Settings(Uyarı Ayaları)")]
     public CanvasGroup warningPanelCG;
+    public TextMeshProUGUI warningPanelText;
 
     private List<Image> spawnedDots = new List<Image>();
 
@@ -162,13 +163,27 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
-    public void ShowWarningPanel()
+    public void ShowWarningPanel(string chapterName)
     {
-        if (warningPanelCG == null) return;
+        if (warningPanelCG == null || warningPanelText == null) return;
+
+      
+        LocalizedText locText = warningPanelText.GetComponent<LocalizedText>();
+        if (locText != null) locText.enabled = false;
+
+        
+        string baseWarning = "Haritayı bitirmeden geri dönemezsin!";
+        if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
+        {
+            baseWarning = LocalizationManager.Instance.currentData.warning_panel;
+        }
+
+       
+        warningPanelText.text = chapterName + "\n" + baseWarning;
+
         StopAllCoroutines();
         StartCoroutine(FadeWarningPanelRoutine());
     }
-
     private System.Collections.IEnumerator FadeWarningPanelRoutine()
     {
         warningPanelCG.gameObject.SetActive(true);

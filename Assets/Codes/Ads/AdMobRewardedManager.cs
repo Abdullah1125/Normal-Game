@@ -61,6 +61,10 @@ public class AdMobRewardedManager : MonoBehaviour
             };
         });
     }
+    public bool IsAdReady()
+    {
+        return _rewardedAd != null && _rewardedAd.CanShowAd();
+    }
 
     public bool ShowRewardedAd(Action onReward)
     {

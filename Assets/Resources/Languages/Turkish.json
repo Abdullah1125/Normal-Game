@@ -12,7 +12,7 @@
     "yes_button": "EVET",
     "no_button": "HAYIR",
     "hint_text": "İPUCU",
-    "warning_panel": "Map bitmeden geri dönemezsin!",
+    "warning_panel": "'ini bitmeden geri dönemezsin!",
     "music_vol": "Müzik Ses Düzeyi",
     "sfx_vol": "Efekt Ses Düzeyi",
     "jump": "Zıplama",
@@ -52,16 +52,16 @@
         "Tuşların hükmü buraya kadar. Bazen aracılara güvenmek yerine kaderi doğrudan kendi ellerine alman gerekir."
     ],
     "page_titles": [
-        "BUTON MAPİ",
-        "ANAHTAR MAPİ",
-        "KUTU MAPİ",
-        "BUTON MAPİ",
-        "ANAHTAR MAPİ",
-        "BUTON MAPİ",
-        "KUTU MAPİ",
-        "ANAHTAR MAPİ",
-        "BUTON MAPİ",
-        "KUTU MAPİ"
+        "BUTON MAP",
+        "ANAHTAR MAP",
+        "KUTU MAP",
+        "BUTON MAP",
+        "ANAHTAR MAP",
+        "BUTON MAP",
+        "KUTU MAP",
+        "ANAHTAR MAP",
+        "BUTON MAP",
+        "KUTU MAP"
     ],
     "Level1": [
         "Normal",

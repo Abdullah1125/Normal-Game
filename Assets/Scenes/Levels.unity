@@ -2578,6 +2578,7 @@ MonoBehaviour:
   Level1Text: {fileID: 2072503305}
   Level2Text: {fileID: 753136869}
   warningPanelCG: {fileID: 1005836216}
+  warningPanelText: {fileID: 1606006480}
   Level1: []
   Level2: []
   loadingAdPanel: {fileID: 534679708}

@@ -408,7 +408,7 @@ PrefabInstance:
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1618350968}
     - target: {fileID: 7651822983371732134, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -3659,6 +3659,18 @@ PrefabInstance:
     - target: {fileID: 3840532776519914082, guid: 3bb84f86d0d05664894ed5fbcc5b7f8d, type: 3}
       propertyPath: m_Name
       value: Ads Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694554315310902207, guid: 3bb84f86d0d05664894ed5fbcc5b7f8d, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694554315310902207, guid: 3bb84f86d0d05664894ed5fbcc5b7f8d, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694554315310902207, guid: 3bb84f86d0d05664894ed5fbcc5b7f8d, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

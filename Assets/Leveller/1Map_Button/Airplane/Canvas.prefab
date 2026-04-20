@@ -205,7 +205,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirplaneTrollUI
   fadeInSpeed: 5
-  fadeOutSpeed: 3
+  fadeOutSpeed: 3.04
+  delayAfterPause: 0.35
 --- !u!223 &9113275246061918505
 Canvas:
   m_ObjectHideFlags: 0
@@ -316,8 +317,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 82}
-  m_SizeDelta: {x: -911.3789, y: -684.3226}
+  m_AnchoredPosition: {x: -12.2404785, y: 59.559113}
+  m_SizeDelta: {x: -968.5012, y: -729.2043}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2427016659095575993
 CanvasRenderer:
