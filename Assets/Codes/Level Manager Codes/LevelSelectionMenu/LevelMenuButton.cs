@@ -43,7 +43,7 @@ public class LevelMenuButton : MonoBehaviour
         int chapterLastLevelIndex = (currentChapter * 6) + 5;
         bool isChapterFinished = PlayerPrefs.GetInt("LevelComplete_" + chapterLastLevelIndex, 0) == 1;
 
-        /*if (!isChapterFinished)
+        if (!isChapterFinished)
           {
               int highestUnlockedInThisChapter = 0;
               for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
@@ -71,7 +71,7 @@ public class LevelMenuButton : MonoBehaviour
                   return;
               }
           }
-  */
+  
         //  REKLAM VE SAHNE GEÇİŞ KONTROLLERİ 
         if (globalIndex > 0 && globalIndex % 6 == 0)
         {

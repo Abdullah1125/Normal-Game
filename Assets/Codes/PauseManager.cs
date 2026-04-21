@@ -9,6 +9,7 @@ public class PauseManager : MonoBehaviour
     public GameObject hudPauseButton;
     public GameObject extraHintButton;
     public static bool isPaused = false;
+    public static bool isAdLoading = false;
 
     [Header("Animation Controller(Animasyon Kontrolcüsü)")]
     public MenuBounceAnimator pauseAnimator;    // Pause paneline attýðýmýz script
@@ -16,6 +17,8 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
+        if (isAdLoading) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -29,6 +32,8 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
+        if (isAdLoading) return;
+
         if (isPaused) Resume();
         else Pause();
     }

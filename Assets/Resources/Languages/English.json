@@ -1,7 +1,7 @@
 ﻿{
     "play_button": "PLAY",
     "settings_button": "SETTINGS",
-    "exit_button": "EXİT",
+    "exit_button": "EXIT",
     "level_button": "LEVEL MENU",
     "resume_button": "RESUME",
     "back_button": "BACK",
@@ -11,7 +11,7 @@
     "reset_desc": "All progress will be permanently deleted!",
     "yes_button": "YES",
     "no_button": "NO",
-    "hint_text": "HİNT",
+    "hint_text": "HINT",
     "warning_panel": "You can't go back before finishing {MAP_NAME}!",
     "music_vol": "Music Volume",
     "sfx_vol": "SFX Volume",

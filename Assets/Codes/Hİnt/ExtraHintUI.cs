@@ -101,45 +101,51 @@ public class ExtraHintUI : MonoBehaviour
         }
     }
 
-    private IEnumerator SmartAdLoader(float timeout)
+ private IEnumerator SmartAdLoader(float timeout)
+{
+    // 1. ŞALTERİ İNDİR: Oyuncu artık Pause'a basamaz!
+    PauseManager.isAdLoading = true;
+
+    if (loadingPanel != null) loadingPanel.SetActive(true);
+    _dotsCoroutine = StartCoroutine(AnimateDots());
+
+    float timer = 0f;
+    bool adOpened = false;
+
+    while (timer < timeout)
     {
-        if (loadingPanel != null) loadingPanel.SetActive(true);
-        _dotsCoroutine = StartCoroutine(AnimateDots());
+        timer += Time.unscaledDeltaTime;
 
-        float timer = 0f;
-        bool adOpened = false;
-
-        // Belirlenen süre (5sn) boyunca her frame reklamı kontrol et
-        while (timer < timeout)
+        if (AdMobRewardedManager.Instance != null && AdMobRewardedManager.Instance.IsAdReady())
         {
-            timer += Time.unscaledDeltaTime;
-
-            if (AdMobRewardedManager.Instance != null && AdMobRewardedManager.Instance.IsAdReady())
-            {
-                adOpened = true;
-
-                if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
-                if (loadingPanel != null) loadingPanel.SetActive(false);
-
-                AdMobRewardedManager.Instance.ShowRewardedAd(() => {
-                    UnlockHint();
-                    ShowExtraHint();
-                });
-                break;
-            }
-            yield return null;
-        }
-
-        // 5 saniye bittiğinde hala reklam yoksa bedava ipucunu ver
-        if (!adOpened)
-        {
+            adOpened = true;
             if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
             if (loadingPanel != null) loadingPanel.SetActive(false);
 
-            UnlockHint();
-            ShowExtraHint();
+            // 2. ŞALTERİ KALDIR: Yazı ekranı kapandı, kilit açıldı
+            PauseManager.isAdLoading = false;
+
+            AdMobRewardedManager.Instance.ShowRewardedAd(() => {
+                UnlockHint();
+                ShowExtraHint();
+            });
+            break;
         }
+        yield return null;
     }
+
+    if (!adOpened)
+    {
+        if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+
+        // 3. ŞALTERİ KALDIR: Yazı ekranı kapandı (reklam gelmese bile), kilit açıldı
+        PauseManager.isAdLoading = false;
+
+        UnlockHint();
+        ShowExtraHint();
+    }
+}
     private void ShowExtraHint()
     {
         LevelData currentLevelData = LevelManager.Instance.activeLevel;
