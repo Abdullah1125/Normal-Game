@@ -145,6 +145,8 @@ public class ExtraHintUI : MonoBehaviour
         LevelData currentLevelData = LevelManager.Instance.activeLevel;
         if (currentLevelData == null) return;
 
+        TutorialTrigger.OnHintToggled?.Invoke(true);
+
         // Yazıları çek
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
@@ -171,8 +173,10 @@ public class ExtraHintUI : MonoBehaviour
         mainHintPanel.SetActive(true);
         HideWithFold(pauseButton);
         HideWithFold(extraHintButton);
+
     }
 
+   
     public void CloseExtraHint()
     {
         Time.timeScale = 1f;
@@ -180,8 +184,27 @@ public class ExtraHintUI : MonoBehaviour
         if (pauseButton != null) pauseButton.SetActive(true);
         if (extraHintButton != null) extraHintButton.SetActive(true);
 
-        if (hintAnimator != null) hintAnimator.CloseMenu();
-        else mainHintPanel.SetActive(false);
+        if (hintAnimator != null)
+        {
+            hintAnimator.CloseMenu();
+            // Animasyon bitene kadar bekle, sonra hayaleti göster
+            StartCoroutine(WaitAndShowTutorial());
+        }
+        else
+        {
+            mainHintPanel.SetActive(false);
+            // Animasyon yoksa anında hayaleti geri çağır
+            TutorialTrigger.OnHintToggled?.Invoke(false);
+        }
+    }
+
+  
+    private IEnumerator WaitAndShowTutorial()
+    {
+        //  Kapanma animasyonu süresi 
+        yield return new WaitForSeconds(0.4f);
+
+        TutorialTrigger.OnHintToggled?.Invoke(false);
     }
 
     private void OnEnable() { LevelManager.OnLevelStarted += ResetHintLock; }
@@ -211,12 +234,36 @@ public class ExtraHintUI : MonoBehaviour
 
     private IEnumerator AnimateDots()
     {
+        string baseText = "Reklam Yükleniyor"; // Varsayılan yedek metin
+
+        //Objede LocalizedText varsa çeviriyi ona yaptırıyoruz!
+        if (loadingText != null)
+        {
+            LocalizedText locText = loadingText.GetComponent<LocalizedText>();
+            if (locText != null)
+            {
+                // Çeviriyi anında yapmasını emrediyoruz
+                locText.UpdateText();
+
+                // Çevrilmiş tertemiz yazıyı (Örn: "Ad Loading") alıyoruz
+                baseText = loadingText.text;
+
+                // Ne olur ne olmaz, önceden kalma noktalar varsa temizliyoruz
+                baseText = baseText.Replace(".", "");
+            }
+        }
+
+        TutorialTrigger.OnHintToggled?.Invoke(true);
+
         while (true)
         {
             for (int i = 0; i < 6; i++)
             {
-                loadingText.text = "Reklam Yükleniyor" + new string('.', i);
-               
+                if (loadingText != null)
+                {
+                    loadingText.text = baseText + new string('.', i);
+                }
+
                 yield return new WaitForSecondsRealtime(0.4f);
             }
         }

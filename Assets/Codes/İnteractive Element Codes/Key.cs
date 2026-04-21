@@ -13,7 +13,7 @@ public class Key : MonoBehaviour
 
                 // Ses çal
                 if (SoundManager.instance != null)
-                    SoundManager.PlaySFX(SoundManager.instance.keySound);
+                    SoundManager.PlayThemeSFX(SFXType.Key);
 
                 // Anahtarý gizle
                 gameObject.SetActive(false);

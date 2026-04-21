@@ -15,7 +15,7 @@ MonoBehaviour:
   levelID: 5
   levelName: "U\xE7ak Modu"
   isUnlocked: 1
-  isCompleted: 1
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
@@ -23,8 +23,7 @@ MonoBehaviour:
   showLayer: 1
   colliderLeyer: 1
   specialMechanics:
-  - {fileID: 6670381053849899211, guid: 935d9e106674a544db5eef6b6f22d184, type: 3}
+  - {fileID: 5773991139074376969, guid: f30292b017d0f30418267a0994ea9de3, type: 3}
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
-  - {fileID: 4437372898293988896, guid: 4d9abd0cf349478489ad340d521d5522, type: 3}
   levelHint: hint_level_5
   hintVisualMap: {fileID: 0}

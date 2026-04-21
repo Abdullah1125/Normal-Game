@@ -56,16 +56,20 @@ public class GateController : MonoBehaviour
         if (!isOpening)
         {
             isOpening = true;
-            SoundManager.PlaySFX(SoundManager.instance.slidingDoorSound);
+            SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
         }
     }
 
 
     public void CloseGate()
     {
-        isOpening = false;
-        SoundManager.PlaySFX(SoundManager.instance.slidingDoorSound);
-    } 
+        // Kapý zaten kapalýysa hiçbir þey yapma 
+        if (isOpening)
+        {
+            isOpening = false;
+            SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
+        }
+    }
 
     public void RegisterKeyCollected()
     {

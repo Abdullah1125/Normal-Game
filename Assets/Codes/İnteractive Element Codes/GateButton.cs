@@ -81,7 +81,7 @@ public class GateButton : MonoBehaviour
         // Ses Efekti
         if (SoundManager.instance != null)
         {
-            SoundManager.PlaySFX(SoundManager.instance.buttonSound);
+            SoundManager.PlayThemeSFX(SFXType.Button);
         }
 
         // KAPIYI AÇAN KISIM

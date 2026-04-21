@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -27,16 +27,8 @@ public class LevelMenuButton : MonoBehaviour
 
         if (levelNameText != null)
         {
-            if (data.isCompleted)
-            {
-                // UIManager'dan gelen dili yazdýr
-                levelNameText.text = locName;
-                levelNameText.gameObject.SetActive(true);
-            }
-            else
-            {
-                levelNameText.gameObject.SetActive(false);
-            }
+            levelNameText.text = locName;
+            levelNameText.gameObject.SetActive(data.isCompleted);
         }
     }
 
@@ -44,56 +36,48 @@ public class LevelMenuButton : MonoBehaviour
     {
         if (comingSoonMode) return;
 
+        //  OPTÄ°MÄ°ZASYON: TÃ¼m sahneyi 2 kere taramak yerine 1 kere tarayÄ±p hafÄ±zaya alÄ±yoruz!
+        LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
+
         int currentChapter = (globalIndex / 6);
         int chapterLastLevelIndex = (currentChapter * 6) + 5;
         bool isChapterFinished = PlayerPrefs.GetInt("LevelComplete_" + chapterLastLevelIndex, 0) == 1;
 
-        if (!isChapterFinished)
-        {
-            int highestUnlockedInThisChapter = 0;
-            for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
-            {
-                if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
-            }
+        /*if (!isChapterFinished)
+          {
+              int highestUnlockedInThisChapter = 0;
+              for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
+              {
+                  if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1) highestUnlockedInThisChapter = i;
+              }
 
-            if (globalIndex < highestUnlockedInThisChapter)
-            {
-                LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
-                if (uiManager != null)
-                {
-                    string mapName = "Map";
-
-                    if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
-                    {
-                        string[] titles = LocalizationManager.Instance.currentData.page_titles;
-                        if (titles != null && currentChapter < titles.Length)
-                        {
-                         
-                            // 1. Önce yazýnýn tamamýný küçük harfe çevir (örn: "button map")
-                            string lowerCaseTitle = titles[currentChapter].ToLower();
-
-                            // 2. Sadece kelimelerin baþ harflerini büyüt (örn: "Button Map")
-                            string titleCaseName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lowerCaseTitle);
-
-                            // 3. Numarayla birleþtir
-                            mapName = (currentChapter + 1) + ". " + titleCaseName;
-                        }
-                    }
-
-                    uiManager.ShowWarningPanel(mapName);
-                }
-                return;
-            }
-        }
-
-        //  REKLAM VE SAHNE GEÇÝÞ KONTROLLERÝ
+              if (globalIndex < highestUnlockedInThisChapter)
+              {
+                  if (uiManager != null)
+                  {
+                      string mapName = "Map";
+                      if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
+                      {
+                          string[] titles = LocalizationManager.Instance.currentData.page_titles;
+                          if (titles != null && currentChapter < titles.Length)
+                          {
+                              string lowerCaseTitle = titles[currentChapter].ToLower();
+                              string titleCaseName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lowerCaseTitle);
+                              mapName = (currentChapter + 1) + ". " + titleCaseName;
+                          }
+                      }
+                      uiManager.ShowWarningPanel(mapName);
+                  }
+                  return;
+              }
+          }
+  */
+        //  REKLAM VE SAHNE GEÃ‡Ä°Åž KONTROLLERÄ° 
         if (globalIndex > 0 && globalIndex % 6 == 0)
         {
-            LevelUIManager uiManager = FindFirstObjectByType<LevelUIManager>();
-
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
-                if (uiManager != null) uiManager.StartFakeLoading(10.0f, () => { LoadMapScene(); });
+                if (uiManager != null) uiManager.StartFakeLoading(8.0f, () => { LoadMapScene(); });
                 return;
             }
 
@@ -114,24 +98,14 @@ public class LevelMenuButton : MonoBehaviour
         LoadMapScene();
     }
 
-    // Sahne geçiþini yöneten yardýmcý fonksiyon
     private void LoadMapScene()
     {
         int mapNum = (globalIndex / 6) + 1;
-        int internalIndex = globalIndex % 6;
-
-        PlayerPrefs.SetInt("SelectedInternalIndex", internalIndex);
+        PlayerPrefs.SetInt("SelectedInternalIndex", globalIndex % 6);
 
         if (LevelTransition.Instance != null)
-        {
-            LevelTransition.Instance.FadeOut(() =>
-            {
-                SceneManager.LoadScene(mapNum + "Map");
-            });
-        }
+            LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene(mapNum + "Map"); });
         else
-        {
             SceneManager.LoadScene(mapNum + "Map");
-        }
     }
 }

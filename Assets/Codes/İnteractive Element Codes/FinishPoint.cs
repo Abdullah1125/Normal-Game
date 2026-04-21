@@ -55,7 +55,7 @@ public class FinishPoint : MonoBehaviour
         playerRb.bodyType = RigidbodyType2D.Kinematic;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
-        if (SoundManager.instance != null) SoundManager.PlaySFX(SoundManager.instance.doorPassSound);
+        if (SoundManager.instance != null) SoundManager.PlayThemeSFX(SFXType.DoorPass);
 
         LevelManager.Instance.NextLevel();
         yield return null;

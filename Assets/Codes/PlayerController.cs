@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sounds(Sesler)")]
     public AudioSource walkSound;
+    public float timeBetweenSteps = 0.35f; // İki adım sesi arasındaki süre (Saniye)
+    private float stepTimer;
 
     void Start() 
     { 
@@ -146,18 +148,29 @@ public class PlayerController : MonoBehaviour
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
 
-        if (Mathf.Abs(moveInput) > 0.1f && isGrounded)
+        if (Mathf.Abs(moveInput) > 0.1f && isGrounded && canMove)
         {
-            if (!walkSound.isPlaying)
+            stepTimer -= Time.deltaTime;
+
+            if (stepTimer <= 0)
             {
-              
-                walkSound.pitch = Random.Range(0.8f, 1.2f);
-                walkSound.Play();
+                // Sesi tazele ve rastgele pitch ile çal
+                walkSound.pitch = Random.Range(0.85f, 1.15f);
+                walkSound.PlayOneShot(walkSound.clip);
+
+                // Zamanlayıcıyı sıfırla
+                stepTimer = timeBetweenSteps;
             }
         }
         else
         {
-            walkSound.Stop();
+          
+            // Anında 0'lamak yerine zamanı akıtmaya devam ediyoruz. 
+            // Böylece 1 saliselik "havada kalma" sensör hataları çift sese yol açmıyor.
+            if (stepTimer > 0)
+            {
+                stepTimer -= Time.deltaTime;
+            }
         }
 
         UpdateVisuals();
@@ -246,8 +259,8 @@ public class PlayerController : MonoBehaviour
         }
 
         StartCoroutine(DeathRoutine());
-        SoundManager.PlaySFX(SoundManager.instance.dieSound);
-       
+        SoundManager.PlayThemeSFX(SFXType.Die);
+
     }
     private IEnumerator DeathRoutine()
     {
@@ -307,7 +320,7 @@ public class PlayerController : MonoBehaviour
     {
         // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
         // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
-        SoundManager.PlaySFX(SoundManager.instance.jumpSound);
+        SoundManager.PlayThemeSFX(SFXType.Jump);
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
        

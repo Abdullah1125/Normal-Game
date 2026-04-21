@@ -65,7 +65,7 @@ public class EscapeKey : MonoBehaviour
             if (GateController.Instance != null)
             {
                 GateController.Instance.RegisterKeyCollected();
-                if (SoundManager.instance != null) SoundManager.PlaySFX(SoundManager.instance.keySound);
+                if (SoundManager.instance != null) SoundManager.PlayThemeSFX(SFXType.Key);
                 gameObject.SetActive(false);
             }
         }

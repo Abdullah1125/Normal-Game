@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 3
   levelName: "K\xF6r Haf\u0131za"
-  isUnlocked: 0
-  isCompleted: 0
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
@@ -25,5 +25,6 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 917639485641154654, guid: 8c35ac05a84837a4c8f1e186fb86d54f, type: 3}
   - {fileID: 3273822670683174205, guid: a5482730e0796f54cbc1f3937b86ba56, type: 3}
+  - {fileID: 8587539210883887550, guid: 85475dbcd5d12cc44bbb498f957ff700, type: 3}
   levelHint: hint_level_3
   hintVisualMap: {fileID: 4192168388588934298, guid: 6fc0156771547a44f98809927a147eab, type: 3}

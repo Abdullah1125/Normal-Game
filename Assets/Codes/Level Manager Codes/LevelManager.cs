@@ -48,6 +48,8 @@ public class LevelManager : MonoBehaviour
         PlayerPrefs.SetInt("LevelUnlocked_" + nextGlobalID, 1);
         PlayerPrefs.Save();
 
+  
+
         if (currentLevelIndex + 1 >= allLevels.Count)
         {
             GoToLevelSelect();
@@ -60,14 +62,16 @@ public class LevelManager : MonoBehaviour
             {
                 currentLevelIndex++;
                 ApplyLevel();
-                PlayerController.Instance.ResetPosition(); 
+                PlayerController.Instance.ResetPosition();
+                Camera.main.transform.position = new Vector3(0f, 0f, -10f);
             });
         }
         else
         {
             currentLevelIndex++;
             ApplyLevel();
-            PlayerController.Instance.ResetPosition(); 
+            PlayerController.Instance.ResetPosition();
+            Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         }
     }
 
@@ -76,6 +80,8 @@ public class LevelManager : MonoBehaviour
         if (currentLevelIndex >= allLevels.Count) return;
 
         activeLevel = allLevels[currentLevelIndex];
+
+        SoundManager.UpdateThemeByLevelID(activeLevel.levelID);
 
         foreach (GameObject obj in activeMechanics)
         {

@@ -167,19 +167,25 @@ public class LevelUIManager : MonoBehaviour
     {
         if (warningPanelCG == null || warningPanelText == null) return;
 
-      
         LocalizedText locText = warningPanelText.GetComponent<LocalizedText>();
         if (locText != null) locText.enabled = false;
 
-        
-        string baseWarning = "Haritayı bitirmeden geri dönemezsin!";
+        string baseWarning = "";
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
             baseWarning = LocalizationManager.Instance.currentData.warning_panel;
         }
 
-       
-        warningPanelText.text = chapterName + "\n" + baseWarning;
+      
+        if (baseWarning.Contains("{MAP_NAME}"))
+        {
+            warningPanelText.text = baseWarning.Replace("{MAP_NAME}", chapterName);
+        }
+        else
+        {
+           
+            warningPanelText.text = chapterName + "\n" + baseWarning;
+        }
 
         StopAllCoroutines();
         StartCoroutine(FadeWarningPanelRoutine());
@@ -453,18 +459,37 @@ void UpdatePaginationDots()
     }
     private IEnumerator AnimateDots()
     {
-        string baseText = "Reklam Yükleniyor"; // Burayı istediğin gibi değiştir
-        int dotCount = 0;
+        string baseText = "Reklam Yükleniyor";
 
+        //Objede LocalizedText varsa çeviriyi ona yaptırıyoruz!
+        if (loadingText != null)
+        {
+            LocalizedText locText = loadingText.GetComponent<LocalizedText>();
+            if (locText != null)
+            {
+                // Çeviriyi anında yapmasını emrediyoruz
+                locText.UpdateText();
+
+                // Çevrilmiş tertemiz yazıyı (Örn: "Ad Loading") alıyoruz
+                baseText = loadingText.text;
+
+                // Ne olur ne olmaz, önceden kalma noktalar varsa temizliyoruz
+                baseText = baseText.Replace(".", "");
+            }
+        }
+
+        // Animasyon Döngüsü
         while (true)
         {
-            dotCount++;
-            if (dotCount > 5) dotCount = 0; // 5 noktadan sonra sıfırla
+            for (int i = 0; i < 6; i++)
+            {
+                if (loadingText != null)
+                {
+                    loadingText.text = baseText + new string('.', i);
+                }
 
-            if (loadingText != null)
-                loadingText.text = baseText + new string('.', dotCount);
-
-            yield return new WaitForSeconds(0.4f); // Noktaların hızı
+                yield return new WaitForSecondsRealtime(0.4f);
+            }
         }
     }
     void Update()
@@ -491,6 +516,6 @@ void UpdatePaginationDots()
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 
-        Debug.Log("🛠️ GELİŞTİRİCİ HİLESİ: Bütün bölümlerin kilidi açıldı!");
+        Debug.Log("GELİŞTİRİCİ HİLESİ: Bütün bölümlerin kilidi açıldı!");
     }
 }
