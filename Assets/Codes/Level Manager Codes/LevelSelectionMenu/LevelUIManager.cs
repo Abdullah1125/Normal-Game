@@ -77,8 +77,13 @@ public class LevelUIManager : MonoBehaviour
     public TextMeshProUGUI loadingText;
 
     private Coroutine _dotsCoroutine;
-    void Start()
+    IEnumerator Start()
     {
+        // MÜTHİŞ AMELİYAT: Oyun açılır açılmaz 1 kare (salise) bekle. 
+        // Bu sayede kapılar ekranda kapalı şekilde belirir, o ağır buton yaratma ve 
+        // kasmalar oyuncu kapalı kapılara bakarken arkada gerçekleşir!
+        yield return null;
+
         if (gridRect == null) gridRect = gridParent.GetComponent<RectTransform>();
 
         // Grid'in editördeki orijinal pozisyonunu hafızaya alır
@@ -110,7 +115,7 @@ public class LevelUIManager : MonoBehaviour
         FillGridWithPageData(currentPage, spawnedButtons);
     }
 
-    
+
     // Animasyonlarda render yükünü azaltmak için yedek tablo ve yazı kopyalarını oluşturur
     void CreateDummyPool()
     {

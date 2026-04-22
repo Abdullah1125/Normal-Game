@@ -1,92 +1,80 @@
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(RectTransform))]
 public class ButtonFoldAnimator : MonoBehaviour
 {
-    private RectTransform rectTransform;
-
     [Header("Fold Settings (Katlanma Ayarlarý)")]
-    public float foldDuration = 0.2f; // Kapanma ve açýlma hýzý
+    [Tooltip("Higher value means faster animation. (Deðer arttýkça daha hýzlý katlanýr/açýlýr.)")]
+    public float foldSpeed = 20f;
 
-    // Butonun asýl boyutu (orijinal hali)
+    private RectTransform rectTransform;
     private Vector3 originalScale;
+    private Vector3 targetScale;
+    private bool isFolding = false;
 
+    /// <summary>
+    /// Initializes components and saves the original scale.
+    /// (Bileþenleri baþlatýr ve orijinal boyutu kaydeder.)
+    /// </summary>
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         originalScale = rectTransform.localScale;
+        targetScale = originalScale;
     }
 
+    /// <summary>
+    /// Resets the animation state when the object is enabled.
+    /// (Obje aktif edildiðinde animasyon durumunu sýfýrlar.)
+    /// </summary>
     private void OnEnable()
     {
-        // Buton aktif edildiðinde (SetActive(true)) açýlma animasyonunu baþlat
-        StopAllCoroutines();
-        StartCoroutine(UnfoldRoutine());
+        targetScale = originalScale;
+        isFolding = false;
     }
 
-    // Butonun kaybolmasý gerektiðinde bu fonksiyonu çaðýr
+    /// <summary>
+    /// Forces the button to show, immune to spam clicks.
+    /// (Spam týklamalara karþý baðýþýk olarak butonu zorla gösterir.)
+    /// </summary>
+    public void ShowButton()
+    {
+        isFolding = false;
+        targetScale = originalScale;
+
+        if (!gameObject.activeInHierarchy)
+        {
+            // Eðer tamamen kapalýysa, önce Y eksenini 0 yap ki ekranda sýfýrdan büyüyerek açýlsýn
+            rectTransform.localScale = new Vector3(originalScale.x, 0f, originalScale.z);
+            gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// Forces the button to hide smoothly.
+    /// (Butonu pürüzsüz bir þekilde gizlemeye zorlar.)
+    /// </summary>
     public void HideButton()
     {
-        StopAllCoroutines();
-        StartCoroutine(FoldRoutine());
+        isFolding = true;
+        targetScale = new Vector3(originalScale.x, 0f, originalScale.z);
     }
 
-    // --- GERÝ AÇILIRKEN ÇALIÞAN MOTOR ---
-    private IEnumerator UnfoldRoutine()
+    /// <summary>
+    /// Smoothly interpolates the scale towards the target every frame.
+    /// (Boyutu her karede hedefe doðru pürüzsüzce hesaplar.)
+    /// </summary>
+    private void Update()
     {
-        float elapsed = 0f;
+        // Spam týklamaya karþý ölümsüz motor (Coroutine içermez, asla kilitlenmez)
+        // Zaman durduðunda (Time.timeScale = 0) bile çalýþmasý için unscaledDeltaTime kullanýyoruz.
+        rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, targetScale, Time.unscaledDeltaTime * foldSpeed);
 
-        // Baþlangýç: Y ekseni 0 (Tamamen ezik/katlanmýþ)
-        Vector3 startScale = new Vector3(originalScale.x, 0f, originalScale.z);
-
-        // Bitiþ: Orijinal boyut
-        Vector3 endScale = originalScale;
-
-        while (elapsed < foldDuration)
+        // Kapanma emri verildiyse ve boyutu neredeyse sýfýrlandýysa, objeyi tamamen kapat
+        if (isFolding && Mathf.Abs(rectTransform.localScale.y) <= 0.01f)
         {
-            // Zaman dursa bile animasyon çalýþsýn
-            elapsed += Time.unscaledDeltaTime;
-            float t = elapsed / foldDuration;
-
-            // "Ease Out" yumuþaklýðý (Hýzlý fýrlar, yerine otururken yavaþlar)
-            float curve = 1f - (1f - t) * (1f - t);
-
-            rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve);
-
-            yield return null;
+            rectTransform.localScale = targetScale;
+            gameObject.SetActive(false);
         }
-
-        rectTransform.localScale = endScale;
-    }
-
-    // --- KAPANIRKEN ÇALIÞAN MOTOR ---
-    private IEnumerator FoldRoutine()
-    {
-        float elapsed = 0f;
-
-        // Baþlangýç: Mevcut boyut
-        Vector3 startScale = rectTransform.localScale;
-
-        // Bitiþ: Y eksenini 0 yap (X ve Z ayný kalýyor, dikeyde eziliyor)
-        Vector3 endScale = new Vector3(originalScale.x, 0f, originalScale.z);
-
-        while (elapsed < foldDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float t = elapsed / foldDuration;
-
-            // "Ease In" yumuþaklýðý (Gittikçe hýzlanarak kapanýr)
-            float curve = t * t;
-
-            rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve);
-
-            yield return null;
-        }
-
-        rectTransform.localScale = endScale;
-
-        // Animasyon bitince butonu tamamen kapat ki sahnede boþuna beklemesin
-        gameObject.SetActive(false);
     }
 }

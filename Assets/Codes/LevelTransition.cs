@@ -17,15 +17,23 @@ public class LevelTransition : MonoBehaviour
     public TextMeshProUGUI levelText;
 
     public static bool isComingFromDoorTransition = false;
+    public static bool isTransitioning = false;
 
-    // Kapıların kapalıyken duracağı koordinatlar (Tam merkez değil, biraz üst üste binmeli)
+    // YENİ AMELİYAT: Eylem Kuyruğu (Hafıza) Değişkenleri
+    private bool isQueued = false;
+    private System.Action queuedAction = null;
+
     private float closedYOffset = 0f;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        // Önemli Düzeltme: Yeni sahne yüklendiğinde eski hafızayı ve kilidi sıfırla ki bug'da kalmasın
+        Instance = this;
+        isTransitioning = false;
+        isQueued = false;
+        queuedAction = null;
 
-        SetupDoors(); // Kapıların boyutunu ve başlangıç pozisyonunu ayarla
+        SetupDoors();
         if (levelText != null) levelText.alpha = 0f;
     }
 
@@ -34,20 +42,16 @@ public class LevelTransition : MonoBehaviour
         if (topPanel == null || bottomPanel == null) return;
 
         float h = GetCanvasHeight();
-        float w = GetCanvasWidth() + 500f; // Genişlikte güvenlik payı
+        float w = GetCanvasWidth() + 500f;
 
-        // DÜZELTME 1: Kapıların YÜKSEKLİĞİNİ ekranın %60'ı yapıyoruz. (h * 0.6f)
-        // Böylece ekran ne kadar uzun olursa olsun kapılar kapandığında ortada mutlaka birleşirler.
         float doorHeight = h * 0.6f;
         topPanel.sizeDelta = new Vector2(w, doorHeight);
         bottomPanel.sizeDelta = new Vector2(w, doorHeight);
 
-        // Kapıların tam kapalı pozisyonu: Sıfır noktası yerine merkezde biraz iç içe geçmelerini sağlıyoruz
         closedYOffset = doorHeight / 2f;
 
         if (isComingFromDoorTransition || openDoorsOnStart)
         {
-            // EKRANDA VE KAPALI BAŞLAT
             topPanel.gameObject.SetActive(true);
             bottomPanel.gameObject.SetActive(true);
 
@@ -56,11 +60,9 @@ public class LevelTransition : MonoBehaviour
         }
         else
         {
-            // GÖRÜNMEZ BAŞLAT
             topPanel.gameObject.SetActive(false);
             bottomPanel.gameObject.SetActive(false);
 
-            // Açık (Ekran dışı) pozisyonlar
             topPanel.anchoredPosition = new Vector2(0, h + closedYOffset);
             bottomPanel.anchoredPosition = new Vector2(0, -(h + closedYOffset));
         }
@@ -70,14 +72,35 @@ public class LevelTransition : MonoBehaviour
     {
         if (isComingFromDoorTransition || openDoorsOnStart)
         {
+            isTransitioning = true;
             isComingFromDoorTransition = false;
+
             yield return new WaitForSeconds(0.2f);
             yield return OpenDoorsRoutine();
+
+            isTransitioning = false;
+
+            // YENİ AMELİYAT: Kapılar tamamen açıldı! Sırada bekleyen (spamlanmış) bir emir var mı?
+            if (isQueued)
+            {
+                isQueued = false;
+                FadeOut(queuedAction); // Hafızadaki emri anında çalıştır!
+            }
         }
     }
 
     public void FadeOut(System.Action onComplete = null)
     {
+        if (isTransitioning)
+        {
+            // Adam kapı açılırken tuşa bastıysa, reddetme! Sadece hafızaya al.
+            isQueued = true;
+            queuedAction = onComplete;
+            return;
+        }
+
+        isTransitioning = true;
+
         StartCoroutine(CloseDoorsRoutine(() =>
         {
             isComingFromDoorTransition = true;
@@ -87,16 +110,20 @@ public class LevelTransition : MonoBehaviour
 
     public void DoTransition(System.Action middleAction)
     {
+        if (isTransitioning) return;
         StartCoroutine(TransitionRoutine("", middleAction));
     }
 
     public void DoTransition(string message, System.Action middleAction)
     {
+        if (isTransitioning) return;
         StartCoroutine(TransitionRoutine(message, middleAction));
     }
 
     private IEnumerator TransitionRoutine(string message, System.Action middleAction)
     {
+        isTransitioning = true;
+
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
         if (levelText != null) levelText.text = message;
 
@@ -110,6 +137,8 @@ public class LevelTransition : MonoBehaviour
         yield return OpenDoorsRoutine();
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
+
+        isTransitioning = false;
     }
 
     private IEnumerator CloseDoorsRoutine(System.Action onComplete)
@@ -119,7 +148,6 @@ public class LevelTransition : MonoBehaviour
         if (topPanel != null) topPanel.gameObject.SetActive(true);
         if (bottomPanel != null) bottomPanel.gameObject.SetActive(true);
 
-        // Açık -> Kapalı
         Vector2 tStart = new Vector2(0, h + closedYOffset);
         Vector2 tEnd = new Vector2(0, closedYOffset);
         Vector2 bStart = new Vector2(0, -(h + closedYOffset));
@@ -133,7 +161,6 @@ public class LevelTransition : MonoBehaviour
     {
         float h = GetCanvasHeight();
 
-        // Kapalı -> Açık
         Vector2 tStart = new Vector2(0, closedYOffset);
         Vector2 tEnd = new Vector2(0, h + closedYOffset);
         Vector2 bStart = new Vector2(0, -closedYOffset);
@@ -151,11 +178,13 @@ public class LevelTransition : MonoBehaviour
 
         while (elapsed < doorSpeed)
         {
-            // Time.unscaledDeltaTime kullanarak oyun dursa bile kapı animasyonunun çalışmasını sağla
-            elapsed += Time.unscaledDeltaTime;
+            float safeDeltaTime = Time.unscaledDeltaTime;
+            if (safeDeltaTime > 0.05f) safeDeltaTime = 0.05f;
+
+            elapsed += safeDeltaTime;
             float t = elapsed / doorSpeed;
             t = Mathf.Clamp01(t);
-            t = t * t * (3f - 2f * t); // SmoothStep
+            t = t * t * (3f - 2f * t);
 
             if (topPanel != null) topPanel.anchoredPosition = Vector2.Lerp(tStart, tEnd, t);
             if (bottomPanel != null) bottomPanel.anchoredPosition = Vector2.Lerp(bStart, bEnd, t);

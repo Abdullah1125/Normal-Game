@@ -91,4 +91,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 256fc1c01d59f974bada7ef932da79fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialTrigger
-  ghostPrefab: {fileID: 907785286119784139, guid: d5fa1aa71acbff64e966d9bd029c958a, type: 3}
+  ghostPrefab: {fileID: 4324172419978663097, guid: 3a099dc8b8f92b144b42029b5cb0aa5f, type: 3}
