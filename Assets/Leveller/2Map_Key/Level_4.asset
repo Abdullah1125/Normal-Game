@@ -27,4 +27,4 @@ MonoBehaviour:
   - {fileID: 8039959892136918975, guid: da6ee25d506e6d542aee6fa006334071, type: 3}
   - {fileID: 8587539210883887550, guid: 85475dbcd5d12cc44bbb498f957ff700, type: 3}
   levelHint: hint_level_9
-  hintVisualMap: {fileID: -6129168851646612280, guid: 82f03aade7190a640b304de3304440db, type: 3}
+  hintVisualMap: {fileID: 21300000, guid: b221c2228c7f664428f2122ff0ec88e1, type: 3}

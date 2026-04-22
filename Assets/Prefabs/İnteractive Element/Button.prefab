@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d22dd34f0976f24e93f11460a5948a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GateButton
-  normalSprite: {fileID: 2368256284200970901, guid: cd42330b73ba2d64aac5cf73d58a781c, type: 3}
-  pressedSprite: {fileID: 8195979990261352722, guid: ad4918bfb8d7e2447bad44aa56a78a08, type: 3}
+  normalSprite: {fileID: 21300000, guid: cd42330b73ba2d64aac5cf73d58a781c, type: 3}
+  pressedSprite: {fileID: 21300000, guid: ad4918bfb8d7e2447bad44aa56a78a08, type: 3}
   disabledColor: {r: 0.28497347, g: 0.4566037, b: 0.236917, a: 1}
 --- !u!212 &6414349542247852477
 SpriteRenderer:
@@ -98,12 +98,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2368256284200970901, guid: cd42330b73ba2d64aac5cf73d58a781c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cd42330b73ba2d64aac5cf73d58a781c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.09}
+  m_Size: {x: 1.6, y: 0.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -142,5 +142,5 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Offset: {x: -0.0073339343, y: -0.6817183}
+  m_Radius: 0.6411777

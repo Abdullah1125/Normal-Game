@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df04f101365d8f64fa691e8ae4e1a7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoFullScreenBackground
-  expandDelay: 0.2
+  expandDelay: 0
