@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 71a55b0538d48354b87afab937af74d2
+guid: b7f0c8fa0e400b146a85d7e6aa5bb523
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - BoldPixels
+  - Jersey 10
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
@@ -19,10 +19,3 @@ TrueTypeFontImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 332078
-  packageName: BoldPixels
-  packageVersion: 1.5.0
-  assetPath: Assets/BoldPixels/Assets/font/BoldPixels.ttf
-  uploadId: 785910

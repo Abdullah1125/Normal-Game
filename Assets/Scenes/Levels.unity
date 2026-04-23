@@ -2201,8 +2201,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 924.5, y: 53}
-  m_SizeDelta: {x: -103, y: 50}
+  m_AnchoredPosition: {x: 997.5, y: 69}
+  m_SizeDelta: {x: -249, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1357065070
 MonoBehaviour:
@@ -2226,8 +2226,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: COMING SOON
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
-  m_sharedMaterial: {fileID: 1260715531048141648, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 81290db2220e69048a2fe87e3813a980, type: 2}
+  m_sharedMaterial: {fileID: -1099078289296921218, guid: 81290db2220e69048a2fe87e3813a980, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2839,50 +2839,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!1 &1756604429
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1756604431}
-  - component: {fileID: 1756604430}
-  m_Layer: 0
-  m_Name: AdsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1756604430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756604429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 658543b54da4ae242872def9f29aeda5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdMobInterstitialManager
---- !u!4 &1756604431
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1756604429}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.78392, y: -1.69678, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1802337344
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3407,4 +3363,3 @@ SceneRoots:
   - {fileID: 1124530254}
   - {fileID: 1178187925}
   - {fileID: 73065615}
-  - {fileID: 1756604431}

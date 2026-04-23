@@ -2,35 +2,45 @@ using UnityEngine;
 using GoogleMobileAds.Api;
 using System;
 
+/// <summary>
+/// Manages interstitial ads and persists between scenes.
+/// (Geçiþ reklamlarýný yönetir ve sahneler arasý kalýcýlýk saðlar.)
+/// </summary>
 public class AdMobInterstitialManager : MonoBehaviour
 {
     public static AdMobInterstitialManager Instance;
 
-    [Header("Ad Unit IDs(Reklam Birimi Kimlikleri)")]
-    // Geçiþ reklamý test ID'si (Gerçek yayýnda kendi ID'ni koyacaksýn)
-    private string _adUnitId = "ca-app-pub-3940256099942544/1033173712";
-
+    private string _adUnitId = "ca-app-pub-3940256099942544/1033173712"; // Test ID
     private InterstitialAd _interstitialAd;
     private Action _onAdClosedCallback;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        // SINGLETON VE SAHNE GEÇÝÞÝ KORUMASI
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Obje sahneler arasý silinmez
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
     {
+        // REKLAMI ANA MENÜDEYKEN ÝNDÝRMEYE BAÞLA
         MobileAds.Initialize((InitializationStatus status) => { LoadInterstitialAd(); });
     }
 
+    /// <summary>
+    /// Loads a new interstitial ad from Google.
+    /// (Google'dan yeni bir geçiþ reklamý yükler.)
+    /// </summary>
     public void LoadInterstitialAd()
     {
-        if (_interstitialAd != null)
-        {
-            _interstitialAd.Destroy();
-            _interstitialAd = null;
-        }
+        if (_interstitialAd != null) _interstitialAd.Destroy();
 
         var adRequest = new AdRequest();
         InterstitialAd.Load(_adUnitId, adRequest, (InterstitialAd ad, LoadAdError error) =>
@@ -38,38 +48,34 @@ public class AdMobInterstitialManager : MonoBehaviour
             if (error != null || ad == null) return;
             _interstitialAd = ad;
 
-            // Adam reklamý kapattýðýnda (çarpýya bastýðýnda) tetiklenir
             _interstitialAd.OnAdFullScreenContentClosed += () =>
             {
-                _onAdClosedCallback?.Invoke(); // Oyuncuyu bölüme gönder
-                _onAdClosedCallback = null;    // Tetikleyiciyi temizle
-                LoadInterstitialAd();          // Arka planda yeni reklam yükle
-            };
-
-            // Reklam bir hatadan dolayý çökerse
-            _interstitialAd.OnAdFullScreenContentFailed += (AdError err) =>
-            {
-                _onAdClosedCallback?.Invoke(); // Adamý bekletme, bölüme sal
+                _onAdClosedCallback?.Invoke();
                 _onAdClosedCallback = null;
-                LoadInterstitialAd();
+                LoadInterstitialAd(); // Kapanýnca hemen yenisini indir
             };
         });
     }
 
-    // LevelMenuButton bu fonksiyonu çaðýracak
+    public bool IsAdReady() => _interstitialAd != null && _interstitialAd.CanShowAd();
+
+    /// <summary>
+    /// Shows the interstitial ad if ready and returns the status.
+    /// (Reklam hazýrsa gösterir ve durum bilgisini bool olarak döner.)
+    /// </summary>
     public bool ShowInterstitialAd(Action onClosed)
     {
-        if (_interstitialAd != null && _interstitialAd.CanShowAd())
+        if (IsAdReady())
         {
             _onAdClosedCallback = onClosed;
             _interstitialAd.Show();
-            return true; // Baþarýlý! Reklam patladý.
+            return true; // Reklam baþarýyla gösteriliyor!
         }
         else
         {
-            Debug.Log("Geçiþ reklamý henüz hazýr deðil (Yavaþ Ýnternet).");
-            LoadInterstitialAd(); // Arka planda yenisini istemeyi unutma
-            return false; // Baþarýsýz! Reklam gösterilemedi.
+            // Reklam hazýr deðilse yenisini yükle ve false dön ki fake loading baþlasýn
+            LoadInterstitialAd();
+            return false; // Reklam yok!
         }
     }
 }

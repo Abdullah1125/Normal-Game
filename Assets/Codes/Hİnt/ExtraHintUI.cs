@@ -72,7 +72,7 @@ public class ExtraHintUI : MonoBehaviour
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
-            StartCoroutine(SmartAdLoader(3.0f));
+            StartCoroutine(SmartAdLoader(10.0f));
             return;
         }
 
@@ -94,7 +94,7 @@ public class ExtraHintUI : MonoBehaviour
         }
         else
         {
-            StartCoroutine(SmartAdLoader(5.0f));
+            StartCoroutine(SmartAdLoader(10.0f));
         }
     }
 

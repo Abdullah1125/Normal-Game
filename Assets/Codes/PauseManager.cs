@@ -11,6 +11,7 @@ public class PauseManager : MonoBehaviour
     public GameObject extraHintButton;
     public static bool isPaused = false;
     public static bool isAdLoading = false;
+    private bool isToggling = false;
 
     [Header("Animation Controller (Animasyon Kontrolcüsü)")]
     public MenuBounceAnimator pauseAnimator;
@@ -22,7 +23,7 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (isAdLoading) return;
+        if (isAdLoading || isToggling) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -40,7 +41,7 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
-        if (isAdLoading) return;
+        if (isAdLoading || isToggling ) return;
 
         // TogglePause içindeki kontroller Pause() ve Resume() içinde yapýlýyor
         if (isPaused) Resume();
@@ -49,6 +50,9 @@ public class PauseManager : MonoBehaviour
 
     public void Resume()
     {
+        if (isToggling) return;
+        isToggling = true;
+
         // Sayacý güncelle
         lastToggleTime = Time.unscaledTime;
 
@@ -61,19 +65,27 @@ public class PauseManager : MonoBehaviour
         ShowWithFold(extraHintButton);
         ShowWithFold(hudPauseButton);
 
-        // 4. ÞALTERÝ KALDIR: Butonlar ekrana geri geldiði an týklanma hakkýný geri ver!
-        if (hudPauseButton != null)
-            hudPauseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-
-        if (extraHintButton != null)
-            extraHintButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+      
 
         Time.timeScale = 1f;
         isPaused = false;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
 
+        StartCoroutine(EnableButtonsAfterAnimation(0.45f));
         StartCoroutine(WaitAndShowTutorial(0.3f));
+    }
+    private System.Collections.IEnumerator EnableButtonsAfterAnimation(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay); // unscaled time ile bekle
+
+        if (hudPauseButton != null)
+            hudPauseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+
+        if (extraHintButton != null)
+            extraHintButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+
+        isToggling = false; // KÝLÝDÝ AÇ
     }
 
     private System.Collections.IEnumerator WaitAndShowTutorial(float delay)
@@ -84,6 +96,9 @@ public class PauseManager : MonoBehaviour
 
     public void Pause()
     {
+        if (isToggling) return;
+        isToggling = true;
+
         // 1. MÜTHÝÞ AMELÝYAT: Animasyon oynamadan hemen önce butonlarýn fiþini çek!
         // Artýk animasyon oynarken aradan sýzýp ikinci kez týklamak fiziksel olarak imkansýz.
         if (hudPauseButton != null)
@@ -106,6 +121,13 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
+        StartCoroutine(UnlockAfterAnimation(0.45f));
+    }
+    private System.Collections.IEnumerator UnlockAfterAnimation(float delay)
+    {
+        // Time.timeScale = 0f iken WaitForSecondsRealtime kullan
+        yield return new WaitForSecondsRealtime(delay);
+        isToggling = false;
     }
 
     public void OpenSettings()
