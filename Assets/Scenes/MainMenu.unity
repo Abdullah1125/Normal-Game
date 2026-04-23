@@ -5023,7 +5023,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7298751609461867168, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_VertexColorAlwaysGammaSpace
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7298751609461867168, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8037592756177055538, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: m_Pivot.x
@@ -5113,6 +5117,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.0080776
       objectReference: {fileID: 0}
+    - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: fadeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: dcfa5ff9a4d1d624eae3c4fc3dbdc108, type: 3}
     - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: fadeInOnStart
       value: 0

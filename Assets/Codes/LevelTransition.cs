@@ -25,6 +25,8 @@ public class LevelTransition : MonoBehaviour
 
     private float closedYOffset = 0f;
 
+    [Header("Sounds (Sesler)")]
+    public AudioClip fadeSound; // ElevenLabs'ten indirdiğin geçiş sesi
     private void Awake()
     {
         // Önemli Düzeltme: Yeni sahne yüklendiğinde eski hafızayı ve kilidi sıfırla ki bug'da kalmasın
@@ -101,6 +103,8 @@ public class LevelTransition : MonoBehaviour
 
         isTransitioning = true;
 
+        PlayFadeSound();
+
         StartCoroutine(CloseDoorsRoutine(() =>
         {
             isComingFromDoorTransition = true;
@@ -123,6 +127,8 @@ public class LevelTransition : MonoBehaviour
     private IEnumerator TransitionRoutine(string message, System.Action middleAction)
     {
         isTransitioning = true;
+
+        PlayFadeSound();
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
         if (levelText != null) levelText.text = message;
@@ -206,5 +212,18 @@ public class LevelTransition : MonoBehaviour
     {
         Canvas canvas = GetComponentInParent<Canvas>();
         return canvas != null ? canvas.GetComponent<RectTransform>().rect.width : Screen.width;
+    }
+
+    /// <summary>
+    /// Plays the transition sound at 30% volume.
+    /// (Geçiş sesini %30 seviyesinde çalar.)
+    /// </summary>
+    private void PlayFadeSound()
+    {
+        if (fadeSound != null && SoundManager.instance != null && SoundManager.instance.sfxSource != null)
+        {
+            // Sesi direkt SoundManager'ın ana hoparlöründen %30 şiddetinde çaldırıyoruz
+            SoundManager.instance.sfxSource.PlayOneShot(fadeSound, 0.3f);
+        }
     }
 }

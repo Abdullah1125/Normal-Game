@@ -15,6 +15,8 @@ public class GateController : MonoBehaviour
     public TextMeshProUGUI keyCountText;
     public static GateController Instance;
 
+    [Header("Effects (Efektler)")]
+    public ParticleSystem frictionParticles; // Sürgülü kapý sürtünme tozu
     void Awake()
     {
         startPos = transform.position;
@@ -30,7 +32,22 @@ public class GateController : MonoBehaviour
     void Update()
     {
         Vector3 currentTarget = isOpening ? targetPos : startPos;
+
+        bool isMoving = transform.position != currentTarget;
+
         transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
+
+        if (frictionParticles != null)
+        {
+            if (isMoving && !frictionParticles.isPlaying)
+            {
+                frictionParticles.Play(); // Kapý kayarken tozu baþlat
+            }
+            else if (!isMoving && frictionParticles.isPlaying)
+            {
+                frictionParticles.Stop(); // Kapý durduðunda tozu kes
+            }
+        }
     }
 
     // --- DEÐÝNCE AÇILMA VE AKTÝFLÝK KONTROLÜ ---

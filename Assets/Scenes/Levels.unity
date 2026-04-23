@@ -2070,6 +2070,10 @@ PrefabInstance:
       value: -0.0080776
       objectReference: {fileID: 0}
     - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
+      propertyPath: fadeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: dcfa5ff9a4d1d624eae3c4fc3dbdc108, type: 3}
+    - target: {fileID: 8978175905210501191, guid: 4eff5093ec6c407488c3a77c7fb1fb6d, type: 3}
       propertyPath: fadeInOnStart
       value: 0
       objectReference: {fileID: 0}

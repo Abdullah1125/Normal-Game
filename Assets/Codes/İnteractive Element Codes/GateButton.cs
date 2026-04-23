@@ -14,6 +14,8 @@ public class GateButton : MonoBehaviour
     private SpriteRenderer sr;
     private PolygonCollider2D polyCollider;
 
+    [Header("Effects(Efektler)")]
+    public ParticleSystem pressParticles;
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -62,6 +64,11 @@ public class GateButton : MonoBehaviour
     private void PressButton()
     {
         isPressed = true;
+
+        if (pressParticles != null)
+        {
+            pressParticles.Play();
+        }
 
         // Sprite Deðiþimi
         if (sr != null && pressedSprite != null)
