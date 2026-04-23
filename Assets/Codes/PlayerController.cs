@@ -59,6 +59,9 @@ public class PlayerController : MonoBehaviour
     public float timeBetweenSteps = 0.35f; // İki adım sesi arasındaki süre (Saniye)
     private float stepTimer;
 
+    [Header("Particles(Efektler)")]
+    public ParticleSystem jumpParticles; // Zıpladığında çıkacak efekt
+    public ParticleSystem walkParticles;
     void Start() 
     { 
         startPos = transform.position;
@@ -156,7 +159,9 @@ public class PlayerController : MonoBehaviour
             {
                 // Sesi tazele ve rastgele pitch ile çal
                 walkSound.pitch = Random.Range(0.85f, 1.15f);
-                walkSound.PlayOneShot(walkSound.clip);
+                walkSound.PlayOneShot(walkSound.clip,0.6f);
+
+                if (walkParticles != null) walkParticles.Play();
 
                 // Zamanlayıcıyı sıfırla
                 stepTimer = timeBetweenSteps;
@@ -320,7 +325,11 @@ public class PlayerController : MonoBehaviour
     {
         // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
         // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
-        SoundManager.PlayThemeSFX(SFXType.Jump);
+        SoundManager.PlayThemeSFX(SFXType.Jump,0.8f);
+        if (isGrounded && jumpParticles != null)
+        {
+            jumpParticles.Play();
+        }
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
        

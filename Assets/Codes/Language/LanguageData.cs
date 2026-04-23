@@ -31,4 +31,5 @@ public class LanguageData
     public string[] extra_hints;
     public string[] page_titles;
     public string[] Level1;
+    public string credit;
 }

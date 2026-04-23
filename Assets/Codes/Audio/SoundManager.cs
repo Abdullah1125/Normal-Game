@@ -42,7 +42,7 @@ public class SoundManager : MonoBehaviour
     public ThemeAudio[] themeAudios = new ThemeAudio[5];
 
     private int currentThemeIndex = 0;
-
+    private static System.Collections.Generic.Dictionary<AudioClip, float> _soundTimers = new System.Collections.Generic.Dictionary<AudioClip, float>();
     /// <summary>
     /// Sets up the singleton pattern.
     /// (Singleton yapýsýný kurar.)
@@ -68,10 +68,10 @@ public class SoundManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays a theme-specific sound effect using a temporary audio source to prevent pitch overlapping.
-    /// (Pitch çakýþmasýný önlemek için geçici bir ses kaynaðý kullanarak temaya özel ses efektini çalar.)
+    /// Plays a theme-specific sound effect. Adds a volume parameter to lower specific loud sounds.
+    /// (Belirli çok çýkan sesleri kýsmak için ses seviyesi parametresi eklendi.)
     /// </summary>
-    public static void PlayThemeSFX(SFXType type)
+    public static void PlayThemeSFX(SFXType type, float volumeMultiplier = 1f)
     {
         if (instance == null || instance.themeAudios.Length == 0) return;
 
@@ -90,47 +90,39 @@ public class SoundManager : MonoBehaviour
 
         if (clipToPlay != null)
         {
-            PlayClipWithPitch(clipToPlay);
+            PlayClipWithPitch(clipToPlay, volumeMultiplier);
         }
     }
-
-    /// <summary>
-    /// Plays an external audio clip using a temporary audio source.
-    /// (Harici bir ses dosyasýný geçici bir ses kaynaðý ile çalar.)
+    // <summary>
+    /// Creates a temporary AudioSource, adjusts volume, and prevents overlapping spam.
+    /// (Geçici bir AudioSource oluþturur, sesi ayarlar ve üst üste binme spam'ini önler.)
     /// </summary>
-    public static void PlaySFX(AudioClip clip)
+    private static void PlayClipWithPitch(AudioClip clip, float volumeMultiplier)
     {
-        if (clip != null)
+        // 1. ANTI-SPAM KONTROLÜ (Ayný ses 0.08 saniye içinde tekrar çalamaz)
+        if (_soundTimers.TryGetValue(clip, out float lastPlayedTime))
         {
-            PlayClipWithPitch(clip);
+            // Eðer son çalýnma üzerinden 0.08 saniyeden az zaman geçtiyse, iptal et!
+            if (Time.unscaledTime - lastPlayedTime < 0.08f) return;
         }
-    }
 
-    /// <summary>
-    /// Creates a temporary AudioSource to play the clip with a random pitch, then destroys it.
-    /// (Sesi rastgele bir pitch ile çalmak için geçici bir AudioSource oluþturur, sonra yok eder.)
-    /// </summary>
-    private static void PlayClipWithPitch(AudioClip clip)
-    {
-        // Geçici bir hayalet obje oluþturuyoruz
+        // Sesin son çalýnma zamanýný hafýzaya kaydet
+        _soundTimers[clip] = Time.unscaledTime;
+
+        // 2. HAYALET OBJE YARATMA (Eski kodun aynýsý)
         GameObject tempAudioObj = new GameObject("TempSFX_" + clip.name);
         AudioSource tempSource = tempAudioObj.AddComponent<AudioSource>();
 
-        // Ana hoparlördeki ayarlarý (Ses seviyesi, Mixer ayarý) kopyalýyoruz
         if (instance != null && instance.sfxSource != null)
         {
-            tempSource.volume = instance.sfxSource.volume;
+            tempSource.volume = instance.sfxSource.volume * volumeMultiplier;
             tempSource.outputAudioMixerGroup = instance.sfxSource.outputAudioMixerGroup;
         }
 
-        // Sesi ve rastgele pitch ayarýný yüklüyoruz
         tempSource.clip = clip;
-        tempSource.pitch = Random.Range(0.9f, 1.05f); // Biraz daha esneklik kattým
+        tempSource.pitch = Random.Range(0.9f, 1.05f);
 
-        // Sesi patlat
         tempSource.Play();
-
-        // Saniyesi saniyesine ses bittiði an objeyi sahneden sil (çöp biriktirme)
         Destroy(tempAudioObj, clip.length / tempSource.pitch);
     }
 }

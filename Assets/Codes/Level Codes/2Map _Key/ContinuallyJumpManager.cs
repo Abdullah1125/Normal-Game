@@ -114,7 +114,7 @@ public class TiringJumpRule : MonoBehaviour
 
         if (SoundManager.instance != null)
         {
-            SoundManager.PlayThemeSFX(SFXType.Jump);
+            SoundManager.PlayThemeSFX(SFXType.Jump,0.8f);
         }
     }
 
