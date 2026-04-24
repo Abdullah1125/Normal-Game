@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Level_6
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 5
-  levelName: "U\xE7ak Modu"
+  levelName: Slide Door
   isUnlocked: 1
-  isCompleted: 0
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0

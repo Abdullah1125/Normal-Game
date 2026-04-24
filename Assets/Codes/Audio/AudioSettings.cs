@@ -14,6 +14,16 @@ public class AudioSettings : MonoBehaviour
     private float lastMusicVolume = 0.75f;
     private float lastSFXVolume = 0.75f;
 
+    // ---Ortak Görsel (Sprite) Sistemi ---
+    [Header("UI Images (Arayüz Çerçeveleri)")]
+    public Image musicIndicatorImage; // Müzik hoparlörünün yanındaki çerçeve
+    public Image sfxIndicatorImage;   // Efekt hoparlörünün yanındaki çerçeve
+
+    [Header("Shared Volume Sprites (Ortak Görseller)")]
+    public Sprite mutedSprite; // Kapalı (X) görseli
+    public Sprite bar1Sprite;  // 1 Çizgi görseli
+    public Sprite bar2Sprite;  // 2 Çizgi görseli
+    public Sprite bar3Sprite;  // 3 Çizgi (Full) görseli
     void Start()
     {
    
@@ -31,6 +41,9 @@ public class AudioSettings : MonoBehaviour
        
         isMusicMuted = savedMusic <= 0.01f;
         isSFXMuted = savedSFX <= 0.01f;
+
+        UpdateMusicIcon(savedMusic);
+        UpdateSFXIcon(savedSFX);
     }
 
     public void ToggleMusic()
@@ -73,6 +86,7 @@ public class AudioSettings : MonoBehaviour
         PlayerPrefs.SetFloat("MusicVolume", value);
         PlayerPrefs.Save();
         isMusicMuted = value <= 0.01f;
+        UpdateMusicIcon(value);
     }
 
     public void SetSFXVolume(float value)
@@ -81,6 +95,7 @@ public class AudioSettings : MonoBehaviour
         PlayerPrefs.SetFloat("SFXVolume", value);
         PlayerPrefs.Save();
         isSFXMuted = value <= 0.01f;
+        UpdateSFXIcon(value);
     }
 
     private void ApplyVolume(string parameterName, float value)
@@ -89,8 +104,34 @@ public class AudioSettings : MonoBehaviour
         float dB = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20;
         mainMixer.SetFloat(parameterName, dB);
     }
+    /// <summary>
+    /// Swaps the indicator sprite based on music volume.
+    /// (Müzik ses seviyesine göre gösterge görselini günceller.)
+    /// </summary>
+    private void UpdateMusicIcon(float volume)
+    {
+        if (musicIndicatorImage == null) return;
 
-   
+        if (volume <= 0.01f) musicIndicatorImage.sprite = mutedSprite;
+        else if (volume <= 0.33f) musicIndicatorImage.sprite = bar1Sprite;
+        else if (volume <= 0.66f) musicIndicatorImage.sprite = bar2Sprite;
+        else musicIndicatorImage.sprite = bar3Sprite;
+    }
+
+    /// <summary>
+    /// Swaps the indicator sprite based on SFX volume.
+    /// (Efekt ses seviyesine göre gösterge görselini günceller.)
+    /// </summary>
+    private void UpdateSFXIcon(float volume)
+    {
+        if (sfxIndicatorImage == null) return;
+
+        if (volume <= 0.01f) sfxIndicatorImage.sprite = mutedSprite;
+        else if (volume <= 0.33f) sfxIndicatorImage.sprite = bar1Sprite;
+        else if (volume <= 0.66f) sfxIndicatorImage.sprite = bar2Sprite;
+        else sfxIndicatorImage.sprite = bar3Sprite;
+    }
+
     public static float GetAndroidPhysicalVolume()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR

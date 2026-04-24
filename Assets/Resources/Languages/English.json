@@ -5,7 +5,7 @@
     "level_button": "LEVEL MENU",
     "resume_button": "RESUME",
     "back_button": "BACK",
-    "coming": "COMMING SOON",
+    "coming": "COMING SOON",
     "reset_level": "RESET",
     "reset_title": "ARE YOU SURE?",
     "reset_desc": "All progress will be permanently deleted!",
@@ -29,27 +29,27 @@
         "Secret Passage",
         "Is Your Memory Clear?",
         "Upside Down Button",
-        "Sliding door",
+        "Sliding Door",
         "",
-        "Let's catch it",
+        "Catch That!",
         "Strong Wind",
         "Deaf, Blind, Mute",
-        "Pogo stick",
-        "Alternative control scheme"
+        "Pogo Stick",
+        "Alternative Control Scheme"
     ],
     "extra_hints": [
         "We're not solving quantum physics. Press that huge button and go through the opened door. If you want a clue even in this, we will be hurt a lot in the future...",
-        "Sometimes in life there is no going back... Just like in this episode. Forget about reverse gear, handle the button and move on.",
+        "What is done is done, sometimes there is no turning back in life. Just like how it is in this Level, Forget about the past, push the button and move on",
         "Move your focus higher, the exit is taking shape somewhere there.",
         "The only intelligence we have is this little piece of map. Study carefully this section that shows you where you should jump. The rest of the map is entirely up to your reflexes and memorization.",
         "This route in front of you is not your only reality, it is just the first option you focus on. Don't pause when gravity bends... Your acceleration should already be taking shape in the void as you change direction.",
-        "The game doesn't play itself, man. Instead of watching from the sidelines and waiting for the door to take pity on you, how about you reach out to the screen and drag that door open?",
-        "To reach the exit, you first need to get that green key. Climb up and grab the key, then all you have to do is come to the door and the key will open the door for you.",
-        "This key doesn't like to give in easily. When he runs away from you, don't think you've made a mistake and give up; he's playing a little game of chase and seek with you. Keep following his trail, eventually he'll get tired and give up.",
-        "Jumping all the way back and going down from there to pass through obstacles is just one of the ways offered to you. Choose your own risk, but remember: If you want to survive, you have to make that double jump with perfect timing, not randomly.",
-        "The blind has surrendered to the darkness, the mute to tranquility... It is up to you to complete the trilogy to open the passage. Reset all echoes and embrace deafness in this scene.",
+        "The game doesn't play itself, dude. Instead of watching from the sidelines and waiting for the door to take pity on you, how about you reach out to the screen and drag that door open?",
+        "To reach the exit, you first need to grab that green looking thing, it is a key. What does a key do? YES! BRILLIANT, a key opens a door! Now go open that door!",
+        "This key doesn't like to give in that easy. When it runs away from you, don't you think that you've made a mistake and give up; it's yelling 'Catch me if you can!' Now go and make sure that key knows its place, eventually it will get tired and give up... hopefully",
+        "After taking the tool that opens the doors, i guess you understand what I am talking about... And then jumping all the way back and going down from there to pass through obstacles is just one of the ways offered to you. Choose your own risk, but remember: If you want to survive, you have to make that double jump with perfect timing, not randomly",
+        "The blind has surrendered to the darkness, the mute to tranquility... It is up to you to complete the trilogy to open the passage. Reset all echoes and embrace the true deafness in this scene.",
         "Constant jumping exhausts the body; every step you take on the plain brings you lower. The only way to recharge your strength is to fall from top to bottom. The small gap next to the door? It's just left for you to reach the door effortlessly.",
-        "This is where the keys rule. Sometimes you need to take fate directly into your own hands instead of relying on intermediaries."
+        "This is as far as the keys can take you. Sometimes you need to take fat directly into your own hands, instead of relying on intermediaries."
     ],
     "page_titles": [
         "BUTTON MAP",
@@ -71,11 +71,11 @@
         "Gravity Button",
         "Sliding door",
         "Normal",
-        "Illegal Key",
+        "Catch That!",
         "Strong Wind",
         "Deaf,Blind,Mute",
-        "Pogo stick",
-        "Forget the Keys"
+        "Pogo Stick",
+        "Alternative Control"
     ],
     "credit": "Coding (Instagram) : @16celik_abdullah \nArt : Göktuğ Condal \nMusic (Instagram) : @aquilinenoselover \nSfx : ElevenLabs"
 }
