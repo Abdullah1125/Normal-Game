@@ -11,7 +11,9 @@ public enum SFXType
     Button,
     Key,
     DoorPass,
-    SlidingDoor
+    SlidingDoor,
+    MenuPop,   // Ortadan açýlan için
+    MenuSlide
 }
 
 /// <summary>
@@ -29,6 +31,10 @@ public class ThemeAudio
     public AudioClip keySound;
     public AudioClip doorPassSound;
     public AudioClip slidingDoorSound;
+    public AudioClip menuPopSound;
+    public AudioClip MenuSlide;
+
+
 }
 
 public class SoundManager : MonoBehaviour
@@ -86,6 +92,8 @@ public class SoundManager : MonoBehaviour
             case SFXType.Key: clipToPlay = currentTheme.keySound; break;
             case SFXType.DoorPass: clipToPlay = currentTheme.doorPassSound; break;
             case SFXType.SlidingDoor: clipToPlay = currentTheme.slidingDoorSound; break;
+            case SFXType.MenuPop: clipToPlay = currentTheme.menuPopSound; break;
+            case SFXType.MenuSlide: clipToPlay = currentTheme.MenuSlide; break;
         }
 
         if (clipToPlay != null)

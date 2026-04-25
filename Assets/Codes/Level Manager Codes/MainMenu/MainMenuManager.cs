@@ -121,4 +121,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (resetPanel != null) resetPanel.SetActive(true);
     }
+    public void QuitGame() => Application.Quit();
+    public void SetTurkish() => LocalizationManager.Instance.LoadLanguage("Turkish");
+    public void SetEnglish() => LocalizationManager.Instance.LoadLanguage("English");
 }

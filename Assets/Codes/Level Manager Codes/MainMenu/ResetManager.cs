@@ -38,15 +38,28 @@ public class ResetManager : MonoBehaviour
 
         if (resetConfirmationPanel != null) resetConfirmationPanel.SetActive(true);
     }
-
     /// <summary>
-    /// Closes only the reset confirmation panel.
-    /// (Sadece reset onay panelini kapatýr.)
+    /// Closes only the reset confirmation panel with strict anti-spam.
+    /// (Sadece reset onay panelini sýký spam korumasýyla kapatýr.)
     /// </summary>
     public void CloseResetPanel()
     {
+        // Eðer ana sýfýrlama iþlemi baþladýysa zaten hiçbir þey yapma
         if (isResetInProgress) return;
 
+        // 1. KÝLÝT (HAYIR SPAM KORUMASI): 
+        // Eðer panel zaten kapanma emri aldýysa (týklamalar kapalýysa) fonksiyonu durdur.
+        if (resetCanvasGroup != null)
+        {
+            // Raycast zaten kapalýysa demek ki kapanýþ baþlamýþ, defol git diyoruz.
+            if (!resetCanvasGroup.blocksRaycasts) return;
+
+            // Deðilse hemen týklamalarý dondur (Ghost click engelleme)
+            resetCanvasGroup.blocksRaycasts = false;
+            resetCanvasGroup.interactable = false;
+        }
+
+        // 2. Kapanýþ animasyonunu tetikle
         if (resetAnimator != null) resetAnimator.CloseMenu();
         else if (resetConfirmationPanel != null) resetConfirmationPanel.SetActive(false);
     }

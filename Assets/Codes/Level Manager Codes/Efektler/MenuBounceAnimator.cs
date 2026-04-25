@@ -53,12 +53,28 @@ public class MenuBounceAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// Animates the menu with bounce effect and manages global input lock.
-    /// (Menüyü zýplama efektiyle canlandýrýr ve global giriþ kilidini yönetir.)
+    /// Animates the menu and triggers sounds for both opening and closing.
+    /// (Menüyü canlandýrýr ve hem açýlýþ hem kapanýþ için sesleri tetikler.)
     /// </summary>
     private IEnumerator BounceRoutine(bool isOpening)
     {
-   
+        // Sound Logic (Ses Mantýðý)
+        if (SoundManager.instance != null)
+        {
+            if (isOpening)
+            {
+                // Açýlýþ sesi (Aþaðýdan mý ortadan mý?)
+                if (slideFromBottom)
+                    SoundManager.PlayThemeSFX(SFXType.MenuSlide, 0.2f);
+                else
+                    SoundManager.PlayThemeSFX(SFXType.MenuPop, 0.2f);
+            }
+            else
+            {
+                // Kapanýþ sesi (Burayý boþ býrakmýþtýn, ekledik!)
+                SoundManager.PlayThemeSFX(SFXType.MenuSlide, 0.1f);
+            }
+        }
 
         float delay = isOpening ? openDelay : closeDelay;
         if (delay > 0f) yield return new WaitForSecondsRealtime(delay);
@@ -102,8 +118,6 @@ public class MenuBounceAnimator : MonoBehaviour
 
         rectTransform.anchoredPosition = endPos;
         rectTransform.localScale = endScl;
-
-      
 
         if (!isOpening) gameObject.SetActive(false);
     }
