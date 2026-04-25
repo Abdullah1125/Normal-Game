@@ -77,9 +77,6 @@ public class LevelUIManager : MonoBehaviour
     public TextMeshProUGUI loadingText;
 
     private Coroutine _dotsCoroutine;
-
-    [Header("Theme Frames (Tema Çerçeveleri)")]
-    public Sprite[] themeFrames;
     IEnumerator Start()
     {
         // MÜTHİŞ AMELİYAT: Oyun açılır açılmaz 1 kare (salise) bekle. 

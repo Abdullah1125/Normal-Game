@@ -53,7 +53,6 @@ public class PauseManager : MonoBehaviour
         if (isToggling) return;
         isToggling = true;
 
-        // Sayacý güncelle
         lastToggleTime = Time.unscaledTime;
 
         if (pauseAnimator != null) pauseAnimator.CloseMenu();
@@ -61,18 +60,18 @@ public class PauseManager : MonoBehaviour
 
         settingsPanelUI.SetActive(false);
 
-        // 3. Geri gelirken de jilet gibi esneyerek açýlsýnlar
         ShowWithFold(extraHintButton);
         ShowWithFold(hudPauseButton);
 
       
+        Input.ResetInputAxes();
 
         Time.timeScale = 1f;
         isPaused = false;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
 
-        StartCoroutine(EnableButtonsAfterAnimation(0.45f));
+        StartCoroutine(EnableButtonsAfterAnimation(0.46f));
         StartCoroutine(WaitAndShowTutorial(0.3f));
     }
     private System.Collections.IEnumerator EnableButtonsAfterAnimation(float delay)
@@ -121,7 +120,7 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
-        StartCoroutine(UnlockAfterAnimation(0.45f));
+        StartCoroutine(UnlockAfterAnimation(0.46f));
     }
     private System.Collections.IEnumerator UnlockAfterAnimation(float delay)
     {

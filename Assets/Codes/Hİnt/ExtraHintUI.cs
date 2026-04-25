@@ -184,24 +184,14 @@ public class ExtraHintUI : MonoBehaviour
         HideWithFold(extraHintButton);
     }
 
-    /// <summary>
-    /// Closes the hint panel and unlocks the button.
-    /// (İpucu panelini kapatır ve butonun kilidini açar.)
-    /// </summary>
     public void CloseExtraHint()
     {
         Time.timeScale = 1f;
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
 
-        // 2. DÜZELTME: Butonları SetActive(true) yerine animasyonlu açıyoruz.
         ShowWithFold(pauseButton);
         ShowWithFold(extraHintButton);
 
-        // 3. ŞALTERİ KALDIR: İpucu paneli kapandığına göre butonun kilidini açıyoruz.
-        if (extraHintButton != null)
-        {
-            extraHintButton.GetComponent<Button>().interactable = true;
-        }
 
         if (hintAnimator != null)
         {
@@ -213,6 +203,9 @@ public class ExtraHintUI : MonoBehaviour
             mainHintPanel.SetActive(false);
             TutorialTrigger.OnHintToggled?.Invoke(false);
         }
+
+        // YENİ HAMLE: Kilidi animasyon süresi kadar bekleyip açıyoruz! (Örn: 0.45 saniye)
+        StartCoroutine(EnableHintButtonAfterAnimation(0.475f));
     }
 
     private IEnumerator WaitAndShowTutorial()
@@ -282,6 +275,16 @@ public class ExtraHintUI : MonoBehaviour
 
                 yield return new WaitForSecondsRealtime(0.4f);
             }
+        }
+    }
+    private IEnumerator EnableHintButtonAfterAnimation(float delay)
+    {
+        // Oyun duraklatılmış (TimeScale = 0) ihtimaline karşı Realtime kullanıyoruz
+        yield return new WaitForSecondsRealtime(delay);
+
+        if (extraHintButton != null)
+        {
+            extraHintButton.GetComponent<Button>().interactable = true;
         }
     }
 }

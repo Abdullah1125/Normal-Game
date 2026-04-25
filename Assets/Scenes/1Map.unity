@@ -1875,6 +1875,7 @@ MonoBehaviour:
   boostSmoothness: 4.5
   coyotoTime: 0.15
   jumpBufferTime: 0.15
+  jumpCooldownTime: 0.1
   groundCheck: {fileID: 196354818}
   checkRadius: 0.25
   groundLayer:
@@ -2034,8 +2035,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.31498504}
-  m_Size: {x: 1.4654121, y: 2.6792657}
+  m_Offset: {x: 0, y: 0.31533223}
+  m_Size: {x: 1.4654121, y: 2.678572}
   m_Direction: 0
 --- !u!95 &1092393304
 Animator:

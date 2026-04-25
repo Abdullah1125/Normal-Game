@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -11,59 +10,67 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer sr;
 
-    [Header("Movement Settings(Hareket Ayarları)")]
-    public float moveSpeed = 14f;       // Yatay hareket hızı
+    [Header("Movement Settings (Hareket Ayarları)")]
+    public float moveSpeed = 14f;
     public float defaultSpeed = 14f;
-    public float airAcceleration = 25f; // Havada hızlanma katsayısı
+    public float airAcceleration = 25f;
     public bool canMove = true;
 
-    [Header("Jump Settings(Zıplama Ayarları)")]
-    public float firstJumpForce = 13f;  // İlk zıplama gücü
-    public float doubleJumpForce = 10f; // Çift zıplama gücü
-    public float fallMultiplier = 10f;  // Düşüş hızı çarpanı
-    public int extraJumpsValue = 1;     // Toplam çift zıplama hakkı
-    private int extraJumps;             // Kalan zıplama hakkı
+    [Header("Jump Settings (Zıplama Ayarları)")]
+    public float firstJumpForce = 13f;
+    public float doubleJumpForce = 10f;
+    public float fallMultiplier = 10f;
+    public int extraJumpsValue = 1;
+    private int extraJumps;
 
-    [Header("Juicy Movement")]
-    public float acceleration = 75f;      // Yerden kalkış hızı
-    public float deceleration = 50f;      // Yerde durma hızı
-    public float airDeceleration = 10f;    // Havada süzülme (Düşük olursa momentum korunur)
+    [Header("Juicy Movement (Akıcı Hareket)")]
+    public float acceleration = 75f;
+    public float deceleration = 50f;
+    public float airDeceleration = 10f;
 
-    [Header("Jump Boost(Zıplama Desteği)")]
-    public float extraBoostAmount = 2f; // Zirve noktasındaki ekstra itiş
-    public float boostSmoothness = 3f;  // İtişin yumuşaklığı
+    [Header("Jump Boost (Zıplama Desteği)")]
+    public float extraBoostAmount = 2f;
+    public float boostSmoothness = 3f;
 
-    [Header("Mobile Jump Assist(Mobil Zıplama Yardımı)")]
+    [Header("Mobile Jump Assist (Mobil Zıplama Yardımı)")]
     public float coyotoTime = 0.2f;
     public float jumpBufferTime = 0.2f;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
+    [Header("Anti-Spam Settings (Spam Ayarları)")]
+    public float jumpCooldownTime = 0.05f;
+    private float jumpCooldownCounter;
+
     private Rigidbody2D rb;
-    private float moveInput;            // Hareket girdisi (-1, 0, 1)
-    public bool isGrounded { get; private set; }            // Yerde mi kontrolü
-    private bool isHoldingJump;         // Zıplama tuşuna basılı tutuluyor mu?
+    private float moveInput;
+    public bool isGrounded { get; private set; }
+    private bool isHoldingJump;
     private float gravityDir;
 
-    [Header("Sensors(Sensörler)")]
-    public Transform groundCheck;       // Yer kontrol objesi
-    public float checkRadius = 0.25f;   // Kontrol dairesi yarıçapı
-    public LayerMask groundLayer;       // Yer olarak sayılacak katman
+    [Header("Sensors (Sensörler)")]
+    public Transform groundCheck;
+    public float checkRadius = 0.25f;
+    public LayerMask groundLayer;
 
-    [Header("Death Settings(Ölüm Ayarları)")]
-    private Vector2 startPos;           // Başlangıç noktası
-    public GameObject soulPrefab;       // Ölünce çıkacak ruh objesi
+    [Header("Death Settings (Ölüm Ayarları)")]
+    private Vector2 startPos;
+    public GameObject soulPrefab;
 
-    [Header("Sounds(Sesler)")]
+    [Header("Sounds (Sesler)")]
     public AudioSource walkSound;
-    public float timeBetweenSteps = 0.35f; // İki adım sesi arasındaki süre (Saniye)
+    public float timeBetweenSteps = 0.35f;
     private float stepTimer;
 
-    [Header("Particles(Efektler)")]
-    public ParticleSystem jumpParticles; // Zıpladığında çıkacak efekt
+    [Header("Particles (Efektler)")]
+    public ParticleSystem jumpParticles;
     public ParticleSystem walkParticles;
-    void Start() 
-    { 
+
+    /// <summary>
+    /// Oyun başladığında başlangıç pozisyonunu kaydeder ve zamanlayıcıyı başlatır.
+    /// </summary>
+    void Start()
+    {
         startPos = transform.position;
 
         if (ScoreManager.Instance != null)
@@ -72,31 +79,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gerekli bileşenleri alır ve varsayılan değerleri atar.
+    /// </summary>
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
 
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        rb.freezeRotation = true;       // Karakterin devrilmesini engelle
-        rb.gravityScale = 6f;           // Yerçekimi ağırlığı
+        rb.freezeRotation = true;
+        rb.gravityScale = 6f;
         moveSpeed = defaultSpeed;
         UpdateGravityDirection();
     }
-    
+
+    /// <summary>
+    /// Girdi kontrollerini ve zıplama mantığını her karede işler.
+    /// </summary>
     void Update()
     {
-       
-        // Klavye girdilerini al
+        // Yatay klavye girdisini al
         float keyboardInput = Input.GetAxisRaw("Horizontal");
-
 
         if (keyboardInput != 0) moveInput = keyboardInput;
         else if (Input.GetButtonUp("Horizontal")) moveInput = 0;
@@ -107,121 +112,104 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        //Coyoto Time Sayacı
-        if (isGrounded)
+        // Yukarı yönlü hızı hesapla (Triple jump bug'ını engeller)
+        float currentUpwardVelocity = -gravityDir * rb.linearVelocity.y;
+
+        // Yerdeyken ve zıplamıyorken hakları yenile
+        if (isGrounded && currentUpwardVelocity <= 0.1f)
         {
             coyoteTimeCounter = coyotoTime;
             extraJumps = extraJumpsValue;
-        } 
+        }
         else
+        {
             coyoteTimeCounter -= Time.deltaTime;
+        }
 
-        //Jump Buffer sayacı
-        if (Input.GetButtonDown("Jump"))
-            jumpBufferCounter = jumpBufferTime;
-        else
-            jumpBufferCounter -= Time.deltaTime;
+        // Zıplama tamponu (Jump Buffer)
+        if (Input.GetButtonDown("Jump")) jumpBufferCounter = jumpBufferTime;
+        else jumpBufferCounter -= Time.deltaTime;
 
-        //Zıplama kontrolü
-        if (jumpBufferCounter > 0f)
+        // Zıplama cooldown sayacını düşür
+        if (jumpCooldownCounter > 0f) jumpCooldownCounter -= Time.deltaTime;
+
+        // Zıplama işlemini tetikle
+        if (jumpBufferCounter > 0f && jumpCooldownCounter <= 0f)
         {
             if (LevelManager.Instance.activeLevel.isJumpForbidden) return;
 
             if (coyoteTimeCounter > 0f && extraJumps == extraJumpsValue)
             {
                 ApplyJump(firstJumpForce);
-                coyoteTimeCounter = 0f;
-                jumpBufferCounter = 0f;
                 isHoldingJump = true;
             }
             else if (extraJumps > 0)
             {
                 ApplyJump(doubleJumpForce);
                 extraJumps--;
-                jumpBufferCounter = 0f;
                 isHoldingJump = true;
             }
-
         }
 
         if (Input.GetButtonUp("Jump")) StopJump();
 
-      
-        //Karakteri Ters Çevir
-        if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
-        else transform.eulerAngles = Vector3.zero;
-
+        // Adım sesi efektini yönet
         if (Mathf.Abs(moveInput) > 0.1f && isGrounded && canMove)
         {
             stepTimer -= Time.deltaTime;
 
             if (stepTimer <= 0)
             {
-                // Sesi tazele ve rastgele pitch ile çal
                 walkSound.pitch = Random.Range(0.85f, 1.15f);
-                walkSound.PlayOneShot(walkSound.clip,0.6f);
+                walkSound.PlayOneShot(walkSound.clip, 0.6f);
 
                 if (walkParticles != null) walkParticles.Play();
-
-                // Zamanlayıcıyı sıfırla
                 stepTimer = timeBetweenSteps;
             }
         }
-        else
+        else if (stepTimer > 0)
         {
-          
-            // Anında 0'lamak yerine zamanı akıtmaya devam ediyoruz. 
-            // Böylece 1 saliselik "havada kalma" sensör hataları çift sese yol açmıyor.
-            if (stepTimer > 0)
-            {
-                stepTimer -= Time.deltaTime;
-            }
+            stepTimer -= Time.deltaTime;
         }
 
         UpdateVisuals();
     }
+
+    /// <summary>
+    /// Karakterin yönünü ve yer çekimine göre rotasyonunu günceller.
+    /// </summary>
     private void UpdateVisuals()
     {
-        // 1. Karakterin Yüzünü Çevir (Flip)
+        // Yüzünü çevir
         if (Mathf.Abs(moveInput) > 0.1f)
         {
-            // Yer çekimi yukarıysa (baş aşağıysak) flip mantığını ters işle
             if (moveInput > 0.1f) sr.flipX = (gravityDir > 0);
             else if (moveInput < -0.1f) sr.flipX = !(gravityDir > 0);
         }
 
-        // 2. Karakterin Gövdesini Ters Çevir (Rotation)
+        // Gövdeyi ters çevir (Ters yerçekimi)
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
     }
 
+    /// <summary>
+    /// Fizik tabanlı hareketleri ve yer kontrolünü hesaplar.
+    /// </summary>
     void FixedUpdate()
     {
-
         float targetSpeed = moveInput * moveSpeed;
-        float accelRate;
-
-        // Yatay hareket fiziği
-        if (isGrounded)
-        {
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
-        }
-        else
-        {
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? airAcceleration : airDeceleration;
-        }
+        float accelRate = isGrounded ?
+            (Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration) :
+            (Mathf.Abs(targetSpeed) > 0.01f ? airAcceleration : airDeceleration);
 
         float speedDif = targetSpeed - rb.linearVelocity.x;
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, 0.95f) * Mathf.Sign(speedDif);
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
 
-        // Yerde olma kontrolü ve zıplama hakkı yenileme
+        // Zemin kontrolü
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
-        if (isGrounded) extraJumps = extraJumpsValue;
 
-        // Karakterin "yükselme" hızını yer çekimine göre kontrol etmeliyiz
-        float upwardVelocity = -gravityDir * rb.linearVelocity.y;
-        // Zıplama desteği (Jump Buffer/Apex Boost)
+        // Zıplama desteği (Apex boost)
         if (isHoldingJump && rb.linearVelocity.y > 0.1f && rb.linearVelocity.y < 3f)
         {
             float targetY = rb.linearVelocity.y + (extraBoostAmount * -gravityDir);
@@ -229,8 +217,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, smoothY);
         }
 
-        // Hızlı düşüş fiziği
-        // Eğer karakter yer çekimi yönünde hızlanıyorsa (düşüyorsa) çarpanı uygula
+        // Hızlı düşüş (Fast fall)
         bool isFalling = (gravityDir < 0 && rb.linearVelocity.y < 0) || (gravityDir > 0 && rb.linearVelocity.y > 0);
         if (isFalling)
         {
@@ -238,80 +225,81 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Ölüm tetikleyicileri
     private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Obstacle")) Die(); }
     private void OnCollisionEnter2D(Collision2D other) { if (other.gameObject.CompareTag("Obstacle")) Die(); }
 
+    /// <summary>
+    /// Karakter engele çarptığında ölüm işlemlerini başlatır.
+    /// </summary>
     public void Die()
     {
         if (!canMove) return;
 
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.AddDeath();
-        }
-
-        if (CameraRoomController.Instance != null)
-        {
-            CameraRoomController.Instance.ShakeCamera();
-        }
+        if (ScoreManager.Instance != null) ScoreManager.Instance.AddDeath();
+        if (CameraRoomController.Instance != null) CameraRoomController.Instance.ShakeCamera();
 
         GameObject soul = SoulPool.Instance.GetSoul();
         if (soul != null)
         {
-            soul.transform.position = transform.position; // Karakterin öldüğü yere ışınla
-            soul.SetActive(true); // Ruh uyanıp kendi kodunu çalıştırmaya başlar
+            soul.transform.position = transform.position;
+            soul.SetActive(true);
         }
 
         StartCoroutine(DeathRoutine());
         SoundManager.PlayThemeSFX(SFXType.Die);
-
     }
+
+    /// <summary>
+    /// Ölüm animasyonunu ve gecikmesini yönetir.
+    /// </summary>
     private IEnumerator DeathRoutine()
     {
         canMove = false;
         moveInput = 0;
 
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr != null) sr.enabled = false;
-
         rb.linearVelocity = Vector2.zero;
+
         yield return new WaitForSeconds(0.32f);
 
         ResetPosition();
         if (sr != null) sr.enabled = true;
-
         canMove = true;
     }
 
+    /// <summary>
+    /// Karakterin pozisyonunu, fiziğini ve durumunu varsayılana sıfırlar.
+    /// </summary>
     public void ResetPosition()
     {
         transform.position = startPos;
         rb.linearVelocity = Vector2.zero;
-
         rb.bodyType = RigidbodyType2D.Dynamic;
         canMove = true;
 
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
+        jumpCooldownCounter = 0f;
 
         ResetSpeed();
 
-        // Her şeyi sadece 1 KERE çağırıyoruz!
-        if (CameraRoomController.Instance != null)
-            CameraRoomController.Instance.ResetCamera();
-
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.ResetAllMechanics();
-        }
+        if (CameraRoomController.Instance != null) CameraRoomController.Instance.ResetCamera();
+        if (LevelManager.Instance != null) LevelManager.Instance.ResetAllMechanics();
     }
 
+    /// <summary>
+    /// Seviye kurallarını dikkate alarak yatay hareket yönünü atar.
+    /// </summary>
     public void Move(float dir)
     {
-        // Seviye kurallarına göre (sol/sağ yasak) hareketi engelle
+        // Zaman durmuşsa veya hareket yasaksa girdi alma (Ghost input koruması)
+        if (!canMove || Time.timeScale == 0f)
+        {
+            moveInput = 0;
+            return;
+        }
+
         LevelData data = LevelManager.Instance.activeLevel;
-        
         if (data != null)
         {
             if (data.isLeftForbidden && dir < 0) { moveInput = 0; return; }
@@ -319,39 +307,54 @@ public class PlayerController : MonoBehaviour
         }
         moveInput = dir;
     }
+
+    /// <summary>
+    /// Zıplama komutunu sonlandırır.
+    /// </summary>
     public void StopJump() => isHoldingJump = false;
 
+    /// <summary>
+    /// Fiziksel zıplama gücünü uygular ve sistemleri sıfırlar.
+    /// </summary>
     private void ApplyJump(float force)
     {
-        // Yer çekimi aşağıyken (-1) yukarı (+) zıplatır.
-        // Yer çekimi yukarıyken (1) aşağı (-) zıplatır.
-        SoundManager.PlayThemeSFX(SFXType.Jump,0.8f);
-        if (isGrounded && jumpParticles != null)
-        {
-            jumpParticles.Play();
-        }
+        SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
+        if (isGrounded && jumpParticles != null) jumpParticles.Play();
+
+        // Anti-Spam mühürleri
+        isGrounded = false;
+        jumpCooldownCounter = jumpCooldownTime;
+        coyoteTimeCounter = 0f;
+        jumpBufferCounter = 0f;
+
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(new Vector2(0f, -gravityDir * force), ForceMode2D.Impulse);
-       
     }
+
+    /// <summary>
+    /// Mobil kontroller için zıplama tamponunu başlatır.
+    /// </summary>
     public void StartJump()
     {
+        // Zaman durmuşsa girdi alma (Ghost input koruması)
+        if (!canMove || Time.timeScale == 0f) return;
+
         jumpBufferCounter = jumpBufferTime;
         isHoldingJump = true;
     }
-    public void ResetSpeed()
-    {
-        moveSpeed = defaultSpeed;
-    }
-    public void UpdateGravityDirection()
-    {
-        gravityDir = Mathf.Sign(Physics2D.gravity.y);
-    }
+
+    /// <summary>
+    /// Hızı varsayılan değerine döndürür.
+    /// </summary>
+    public void ResetSpeed() => moveSpeed = defaultSpeed;
+
+    /// <summary>
+    /// Mevcut yer çekimi yönünü belirler.
+    /// </summary>
+    public void UpdateGravityDirection() => gravityDir = Mathf.Sign(Physics2D.gravity.y);
+
     private void OnDestroy()
     {
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.StopTimer();
-        }
+        if (ScoreManager.Instance != null) ScoreManager.Instance.StopTimer();
     }
 }
