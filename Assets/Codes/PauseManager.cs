@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using System.Collections;
 
+/// <summary>
+/// Professional Pause Manager with full anti-spam protection for all menu buttons.
+/// (Tüm menü butonlarý için tam spam korumalý profesyonel Duraklatma Yöneticisi.)
+/// </summary>
 public class PauseManager : MonoBehaviour
 {
     [Header("Panels and Buttons (Paneller ve Butonlar)")]
@@ -9,43 +13,139 @@ public class PauseManager : MonoBehaviour
     public GameObject settingsPanelUI;
     public GameObject hudPauseButton;
     public GameObject extraHintButton;
+
     public static bool isPaused = false;
     public static bool isAdLoading = false;
     private bool isToggling = false;
 
-    [Header("Animation Controller (Animasyon Kontrolcüsü)")]
+    [Header("Animation Controllers (Animasyon Kontrolcüleri)")]
     public MenuBounceAnimator pauseAnimator;
     public MenuBounceAnimator settingsAnimator;
 
     [Header("Cooldown Settings (Spam Kilidi)")]
-    public float toggleCooldown = 0.4f; // Animasyon bitene kadar týklamayý yasaklar
+    public float toggleCooldown = 0.45f;
     private float lastToggleTime = 0f;
 
-    void Update()
+    /// <summary>
+    /// Resets all locks and states on start.
+    /// (Baþlangýçta tüm kilitleri ve durumlarý sýfýrlar.)
+    /// </summary>
+    private void Start()
     {
-        if (isAdLoading || isToggling) return;
+        isToggling = false;
+        isPaused = false;
+        Time.timeScale = 1f;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (UIManager.Instance != null)
         {
-            // ESC tuþuna spam atýlmasýný da engeller
-            if (Time.unscaledTime - lastToggleTime < toggleCooldown) return;
-
-            if (isPaused)
-            {
-                if (settingsPanelUI.activeSelf) CloseSettings();
-                else Resume();
-            }
-            else Pause();
+            UIManager.Instance.SetHUDBlock(false);
+            UIManager.Instance.SetPauseBlock(false);
         }
+    }
+
+    /// <summary>
+    /// Opens the settings sub-menu from the pause menu.
+    /// (Ayarlar alt menüsünü pause menüsünden açar.)
+    /// </summary>
+    public void OpenSettings()
+    {
+        if (isToggling || (Time.unscaledTime - lastToggleTime < toggleCooldown)) return;
+        isToggling = true;
+        lastToggleTime = Time.unscaledTime;
+
+        Debug.Log("Sistem: Ayarlar açýlýyor...");
+
+        // Menü butonlarýný dondur
+        if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
+
+        if (pauseAnimator != null) pauseAnimator.CloseMenu();
+        else if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+
+        if (settingsPanelUI != null) settingsPanelUI.SetActive(true);
+
+        StartCoroutine(UnlockToggling(0.4f));
+    }
+
+    /// <summary>
+    /// Closes settings and returns to the pause menu.
+    /// (Ayarlarý kapatýr ve pause menüsüne döner.)
+    /// </summary>
+    public void CloseSettings()
+    {
+        if (isToggling || (Time.unscaledTime - lastToggleTime < toggleCooldown)) return;
+        isToggling = true;
+        lastToggleTime = Time.unscaledTime;
+
+        Debug.Log("Sistem: Ayarlar kapatýlýyor...");
+
+        if (settingsAnimator != null) settingsAnimator.CloseMenu();
+        else if (settingsPanelUI != null) settingsPanelUI.SetActive(false);
+
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+
+        // Menü butonlarýný tekrar dondur (Açýlýþ animasyonu sýrasýnda)
+        if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
+
+        StartCoroutine(UnlockToggling(0.4f));
+    }
+
+    /// <summary>
+    /// Transitions to Level Selection scene.
+    /// (Bölüm seçme sahnesine geçiþ yapar.)
+    /// </summary>
+    public void GoToLevels()
+    {
+        if (isToggling) return;
+        isToggling = true;
+
+        Debug.Log("Sistem: Bölüm Menüsü tuþu tetiklendi!");
+
+        if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
+
+        Time.timeScale = 1f;
+        isPaused = false;
+
+        if (pauseAnimator != null)
+        {
+            pauseAnimator.CloseMenu();
+            Invoke(nameof(LoadLevelScene), 0.35f);
+        }
+        else LoadLevelScene();
+    }
+
+    private void LoadLevelScene()
+    {
+        if (LevelTransition.Instance != null)
+            LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene("Levels"));
+        else
+            SceneManager.LoadScene("Levels");
     }
 
     public void TogglePause()
     {
-        if (isAdLoading || isToggling ) return;
+       
+        if (UIManager.Instance != null && UIManager.Instance.IsHUDBlocked()) return;
 
-        // TogglePause içindeki kontroller Pause() ve Resume() içinde yapýlýyor
-        if (isPaused) Resume();
-        else Pause();
+        if (isAdLoading || isToggling) return;
+        if (isPaused) Resume(); else Pause();
+    }
+    public void Pause()
+    {
+        if (isToggling) return;
+        isToggling = true;
+
+        if (UIManager.Instance != null) UIManager.Instance.SetHUDBlock(true);
+
+        lastToggleTime = Time.unscaledTime;
+        HideWithFold(extraHintButton);
+        HideWithFold(hudPauseButton);
+
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+
+        if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
+        StartCoroutine(UnlockToggling(0.46f));
     }
 
     public void Resume()
@@ -53,166 +153,54 @@ public class PauseManager : MonoBehaviour
         if (isToggling) return;
         isToggling = true;
 
-        lastToggleTime = Time.unscaledTime;
+        if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
 
         if (pauseAnimator != null) pauseAnimator.CloseMenu();
-        else pauseMenuUI.SetActive(false);
+        else if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
 
-        settingsPanelUI.SetActive(false);
+        if (settingsPanelUI != null) settingsPanelUI.SetActive(false);
 
         ShowWithFold(extraHintButton);
         ShowWithFold(hudPauseButton);
-
-      
-        Input.ResetInputAxes();
 
         Time.timeScale = 1f;
         isPaused = false;
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
-
-        StartCoroutine(EnableButtonsAfterAnimation(0.46f));
-        StartCoroutine(WaitAndShowTutorial(0.3f));
-    }
-    private System.Collections.IEnumerator EnableButtonsAfterAnimation(float delay)
-    {
-        yield return new WaitForSecondsRealtime(delay); // unscaled time ile bekle
-
-        if (hudPauseButton != null)
-            hudPauseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-
-        if (extraHintButton != null)
-            extraHintButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-
-        isToggling = false; // KÝLÝDÝ AÇ
+        StartCoroutine(EnableUIAfterResume(0.46f));
     }
 
-    private System.Collections.IEnumerator WaitAndShowTutorial(float delay)
+    // --- YARDIMCI MOTORLAR ---
+
+    private IEnumerator EnableUIAfterResume(float delay)
     {
-        yield return new WaitForSeconds(delay);
-        TutorialTrigger.OnPauseToggled?.Invoke(false);
-    }
-
-    public void Pause()
-    {
-        if (isToggling) return;
-        isToggling = true;
-
-        // 1. MÜTHÝÞ AMELÝYAT: Animasyon oynamadan hemen önce butonlarýn fiþini çek!
-        // Artýk animasyon oynarken aradan sýzýp ikinci kez týklamak fiziksel olarak imkansýz.
-        if (hudPauseButton != null)
-            hudPauseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-
-        if (extraHintButton != null)
-            extraHintButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-
-        // Sayacý güncelle
-        lastToggleTime = Time.unscaledTime;
-
-        // 2. Animasyonlarý geri getirdik! Þekilli kapanacaklar.
-        HideWithFold(extraHintButton);
-        HideWithFold(hudPauseButton);
-
-        pauseMenuUI.SetActive(true);
-        TutorialTrigger.OnPauseToggled?.Invoke(true);
-
-        Time.timeScale = 0f;
-        isPaused = true;
-
-        if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
-        StartCoroutine(UnlockAfterAnimation(0.46f));
-    }
-    private System.Collections.IEnumerator UnlockAfterAnimation(float delay)
-    {
-        // Time.timeScale = 0f iken WaitForSecondsRealtime kullan
         yield return new WaitForSecondsRealtime(delay);
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.SetHUDBlock(false);
+            UIManager.Instance.SetPauseBlock(false);
+        }
         isToggling = false;
     }
 
-    public void OpenSettings()
+    private IEnumerator UnlockToggling(float delay)
     {
-        // KÝLÝT KONTROLÜ
-        if (Time.unscaledTime - lastToggleTime < toggleCooldown) return;
-        lastToggleTime = Time.unscaledTime;
-
-        if (pauseAnimator != null) pauseAnimator.CloseMenu();
-        else pauseMenuUI.SetActive(false);
-
-        settingsPanelUI.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(false);
+        isToggling = false;
     }
 
-    public void CloseSettings()
+    private void HideWithFold(GameObject obj)
     {
-        // KÝLÝT KONTROLÜ
-        if (Time.unscaledTime - lastToggleTime < toggleCooldown) return;
-        lastToggleTime = Time.unscaledTime;
-
-        if (settingsAnimator != null) settingsAnimator.CloseMenu();
-        else settingsPanelUI.SetActive(false);
-
-        pauseMenuUI.SetActive(true);
+        if (obj == null) return;
+        var anim = obj.GetComponent<ButtonFoldAnimator>();
+        if (anim != null && obj.activeInHierarchy) anim.HideButton(); else obj.SetActive(false);
     }
 
-    public void GoToLevels()
+    private void ShowWithFold(GameObject obj)
     {
-        Time.timeScale = 1f;
-        isPaused = false;
-
-        if (pauseAnimator != null)
-        {
-            pauseAnimator.CloseMenu();
-            Invoke("LoadLevelScene", 0.3f);
-        }
-        else
-        {
-            LoadLevelScene();
-        }
-    }
-
-    private void LoadLevelScene()
-    {
-        if (LevelTransition.Instance != null)
-        {
-            LevelTransition.Instance.FadeOut(() =>
-            {
-                SceneManager.LoadScene("Levels");
-            });
-        }
-        else
-        {
-            SceneManager.LoadScene("Levels");
-        }
-    }
-
-    private void HideWithFold(GameObject buttonObj)
-    {
-        if (buttonObj == null) return;
-
-        ButtonFoldAnimator foldAnim = buttonObj.GetComponent<ButtonFoldAnimator>();
-
-        if (foldAnim != null && buttonObj.activeInHierarchy)
-        {
-            foldAnim.HideButton();
-        }
-        else
-        {
-            buttonObj.SetActive(false);
-        }
-    }
-
-    private void ShowWithFold(GameObject buttonObj)
-    {
-        if (buttonObj == null) return;
-
-        ButtonFoldAnimator foldAnim = buttonObj.GetComponent<ButtonFoldAnimator>();
-
-        if (foldAnim != null)
-        {
-            foldAnim.ShowButton();
-        }
-        else
-        {
-            buttonObj.SetActive(true);
-        }
+        if (obj == null) return;
+        var anim = obj.GetComponent<ButtonFoldAnimator>();
+        if (anim != null) anim.ShowButton(); else obj.SetActive(true);
     }
 }

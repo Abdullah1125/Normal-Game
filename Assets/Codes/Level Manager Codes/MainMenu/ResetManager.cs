@@ -1,75 +1,102 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
+/// <summary>
+/// Manages data reset with independent panel animations and strict spam protection.
+/// (Baðýmsýz panel animasyonlarý ve sýký spam korumasýyla veri sýfýrlamayý yönetir.)
+/// </summary>
 public class ResetManager : MonoBehaviour
 {
-    public GameObject resetConfirmationPanel; // Reset onay paneli objesi
+    [Header("UI Panels (UI Panelleri)")]
+    public GameObject resetConfirmationPanel;
 
-    [Header("Animators(Animatörler)")]
-    public MenuBounceAnimator resetAnimator;   // Reset animatörü (Pop-up/Küçülen)
-    public MenuBounceAnimator settingsAnimator; // Ayarlar animatörü (Aþaðý kayan)
+    [Header("Panel Canvas Groups (Panel Kilit Gruplarý)")]
+    public CanvasGroup resetCanvasGroup;
+    public CanvasGroup settingsCanvasGroup;
 
-    public void OpenResetPanel() => resetConfirmationPanel.SetActive(true);
+    [Header("Animators (Animatörler)")]
+    public MenuBounceAnimator resetAnimator;
+    public MenuBounceAnimator settingsAnimator;
 
+    private bool isResetInProgress = false;
+
+    /// <summary>
+    /// Opens the reset panel if no reset process is active.
+    /// (Aktif bir sýfýrlama süreci yoksa reset panelini açar.)
+    /// </summary>
+    public void OpenResetPanel()
+    {
+        // Sýfýrlama iþlemi sürüyorsa yeni panel açma isteðini reddet
+        if (isResetInProgress) return;
+
+        if (resetCanvasGroup != null)
+        {
+            resetCanvasGroup.interactable = true;
+            resetCanvasGroup.blocksRaycasts = true;
+        }
+
+        if (resetConfirmationPanel != null) resetConfirmationPanel.SetActive(true);
+    }
+
+    /// <summary>
+    /// Closes only the reset confirmation panel.
+    /// (Sadece reset onay panelini kapatýr.)
+    /// </summary>
     public void CloseResetPanel()
     {
-        // Hayýr'a basýnca sadece reset paneli küçülür
+        if (isResetInProgress) return;
+
         if (resetAnimator != null) resetAnimator.CloseMenu();
-        else resetConfirmationPanel.SetActive(false);
+        else if (resetConfirmationPanel != null) resetConfirmationPanel.SetActive(false);
     }
 
+    /// <summary>
+    /// Executes reset, blocks all interaction and closes panels sequentially.
+    /// (Sýfýrlamayý yürütür, tüm etkileþimi kilitler ve panelleri sýrayla kapatýr.)
+    /// </summary>
     public void ConfirmReset()
     {
-        // 1. Verileri temizle (Leveller + Skorlar)
+        if (isResetInProgress) return;
+        isResetInProgress = true;
+
+        // 1. KÝLÝT: Her iki panelin de butonlarýný anýnda dondur
+        if (resetCanvasGroup != null) resetCanvasGroup.blocksRaycasts = false;
+        if (settingsCanvasGroup != null) settingsCanvasGroup.blocksRaycasts = false;
+
         DataResetProcess();
 
-        // 2. ÖNCE Reset paneli küçülerek yok olsun
+        // 2. SEKANS: Önce reset paneli kapansýn
         if (resetAnimator != null) resetAnimator.CloseMenu();
 
-        // 3. Ayarlar panelini 0.2 saniye sonra aþaðý gönder
-        // (Böylece Reset paneli Ayarlar ile beraber aþaðý sürüklenmez)
-        Invoke("CloseSettingsWithAnimation", 0.2f);
+        // 3. SEKANS: Ayarlar paneli arkadan gelsin
+        Invoke(nameof(CloseSettingsSequential), 0.3f);
 
-        // 4. Sahneyi en son yenile
-        Invoke("ReloadCurrentScene", 0.5f);
+        // 4. SEKANS: Sahne tazele
+        Invoke(nameof(ReloadCurrentScene), 0.7f);
     }
 
-    private void CloseSettingsWithAnimation()
+    private void CloseSettingsSequential()
     {
         if (settingsAnimator != null) settingsAnimator.CloseMenu();
     }
 
     private void DataResetProcess()
     {
-        // Önemli ayarlarý (Ses, Dil) yedekle
+        Time.timeScale = 1f;
+
         float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
         string lang = PlayerPrefs.GetString("SelectedLang", "English");
 
-        // --- SEVÝYE SIFIRLAMA ---
-        for (int i = 0; i < 60; i++)
-        {
-            PlayerPrefs.DeleteKey("LevelUnlocked_" + i);
-            PlayerPrefs.DeleteKey("LevelComplete_" + i);
-        }
+        PlayerPrefs.DeleteAll();
 
-        PlayerPrefs.DeleteKey("TotalDeaths"); // Toplam ölüm sayýsýný sil
-        PlayerPrefs.DeleteKey("TotalTime");   // Toplam süreyi sil
-
-        // ScoreManager o an sahnedeyse, deðiþkenlerini de hemen sýfýrla ki eski veri kalmasýn
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.totalDeaths = 0;
-            ScoreManager.Instance.totalTime = 0f;
-        }
-
-        // Ayarlarý geri yükle ve kaydet
         PlayerPrefs.SetFloat("MusicVolume", music);
         PlayerPrefs.SetFloat("SFXVolume", sfx);
         PlayerPrefs.SetString("SelectedLang", lang);
         PlayerPrefs.Save();
 
-        Debug.Log("Sistem: Tüm seviyeler ve skorlar sýfýrlandý!");
+        Debug.Log("Reset: Temizleme iþlemi tamamlandý.");
     }
 
     private void ReloadCurrentScene()

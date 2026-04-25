@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Jump")) StopJump();
 
         // Adım sesi efektini yönet
-        if (Mathf.Abs(moveInput) > 0.1f && isGrounded && canMove)
+        if (Mathf.Abs(moveInput) > 0.1f && Mathf.Abs(rb.linearVelocity.x) > 1f && isGrounded && canMove)
         {
             stepTimer -= Time.deltaTime;
 
@@ -276,6 +276,8 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Dynamic;
         canMove = true;
+
+        MobileDirectionButton.UpdateMovement();
 
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;

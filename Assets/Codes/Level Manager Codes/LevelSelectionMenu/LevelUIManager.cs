@@ -79,7 +79,7 @@ public class LevelUIManager : MonoBehaviour
     private Coroutine _dotsCoroutine;
     IEnumerator Start()
     {
-        // MÜTHİŞ AMELİYAT: Oyun açılır açılmaz 1 kare (salise) bekle. 
+        //
         // Bu sayede kapılar ekranda kapalı şekilde belirir, o ağır buton yaratma ve 
         // kasmalar oyuncu kapalı kapılara bakarken arkada gerçekleşir!
         yield return null;

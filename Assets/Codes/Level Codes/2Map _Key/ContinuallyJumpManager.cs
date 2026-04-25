@@ -21,6 +21,7 @@ public class TiringJumpRule : MonoBehaviour
     private float lastGroundY;
     private float lastJumpTime;
     private bool wasGrounded = false;
+    public float minSoundForce = 5f;
 
     private Rigidbody2D playerRb;
     private PlayerController player;
@@ -112,9 +113,13 @@ public class TiringJumpRule : MonoBehaviour
         playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
         playerRb.AddForce(Vector2.up * currentForce, ForceMode2D.Impulse);
 
-        if (SoundManager.instance != null)
+        // Yeterli güç varsa zıplama sesini çal
+        if (currentForce > minSoundForce)
         {
-            SoundManager.PlayThemeSFX(SFXType.Jump,0.8f);
+            if (SoundManager.instance != null)
+            {
+                SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
+            }
         }
     }
 
