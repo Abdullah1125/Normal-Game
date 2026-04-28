@@ -8,13 +8,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1800005171009680746, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
+      propertyPath: m_Radius
+      value: 0.51592463
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800005171009680746, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.62613016
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299523661462217451, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
+      propertyPath: buttonFriction
+      value: 1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 6414349542247852477, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
       propertyPath: m_SortingOrder
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8790384790403858680, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
       propertyPath: m_Name
-      value: BoxButton1
+      value: V_BoxButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8790384790403858680, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
+      propertyPath: m_TagString
+      value: BoxButton
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
       propertyPath: m_LocalPosition.x

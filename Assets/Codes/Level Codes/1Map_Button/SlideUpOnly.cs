@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class SlideUpOnly : MonoBehaviour
+public class SlideUpOnly : MonoBehaviour , IResettable
 {
     [Header("Slide Settings (Kaydýrma Ayarlarý)")]
     [Tooltip("Maximum upward limit for the object. (Obje yukarý doðru en fazla kaç birim kalkabilsin?)")]
@@ -26,10 +26,16 @@ public class SlideUpOnly : MonoBehaviour
     /// </summary>
     void Start()
     {
-        mainCam = Camera.main;
 
-        // Find the old gate automatically (Eski kapýyý otomatik bul)
-        GateController oldLogic = Object.FindFirstObjectByType<GateController>();
+        // Register to LevelManager (LevelManager'a kendini kaydettir)
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
+
+        mainCam = Camera.main;
+      
+        GateController oldLogic = GateController.Instance;
 
         if (oldLogic != null)
         {
@@ -47,28 +53,10 @@ public class SlideUpOnly : MonoBehaviour
     }
 
     /// <summary>
-    /// Subscribes to the level reset event.
-    /// (Level sýfýrlanma sinyalini dinlemeye baþlar.)
+    /// Resets the gate to its original starting position via IResettable interface.
+    /// (IResettable arayüzü üzerinden kapýyý orijinal baþlangýç pozisyonuna geri ýþýnlar.)
     /// </summary>
-    private void OnEnable()
-    {
-        LevelManager.OnLevelStarted += ResetGatePosition;
-    }
-
-    /// <summary>
-    /// Unsubscribes to prevent memory leaks.
-    /// (Hafýza sýzýntýsýný önlemek için dinlemeyi býrakýr.)
-    /// </summary>
-    private void OnDisable()
-    {
-        LevelManager.OnLevelStarted -= ResetGatePosition;
-    }
-
-    /// <summary>
-    /// Resets the gate to its original starting position.
-    /// (Kapýyý orijinal baþlangýç pozisyonuna geri ýþýnlar.)
-    /// </summary>
-    private void ResetGatePosition()
+    public void ResetMechanic() // SÝHÝR 3: Ýsim standartlaþtý!
     {
         transform.position = startPos;
     }
@@ -99,5 +87,14 @@ public class SlideUpOnly : MonoBehaviour
 
         // Lock X and Z, only update Y (X ve Z'yi kilitle, sadece Y'yi güncelle)
         transform.position = new Vector3(startPos.x, clampedY, startPos.z);
+    }
+    private void OnDestroy()
+    {
+        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        if (LevelManager.Instance != null)
+        {
+            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            LevelManager.Instance.UnregisterResettable(this);
+        }
     }
 }

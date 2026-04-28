@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Key : MonoBehaviour
+public class Key : MonoBehaviour , IResettable
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -25,9 +25,25 @@ public class Key : MonoBehaviour
             }
         }
     }
-
-    public void ResetKey()
+    void Start()
+    {
+        // Register to LevelManager (LevelManager'a kendini kaydettir)
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
+    }
+    public void ResetMechanic()
     {
         gameObject.SetActive(true);
+    }
+    private void OnDestroy()
+    {
+        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        if (LevelManager.Instance != null)
+        {
+            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            LevelManager.Instance.UnregisterResettable(this);
+        }
     }
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   levelID: 3
   levelName: "K\xF6r Haf\u0131za"
   isUnlocked: 1
-  isCompleted: 1
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0

@@ -24,6 +24,6 @@ MonoBehaviour:
   colliderLeyer: 1
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
+  - {fileID: 4084456280297532061, guid: c9ae82caa551acb478c5a5822c0293e2, type: 3}
   levelHint: hint_level_6
-  hintSprites: []
-  frameDuration: 0.05
+  hintVisualMap: {fileID: 0}

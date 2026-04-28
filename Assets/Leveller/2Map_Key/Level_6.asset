@@ -20,7 +20,11 @@ MonoBehaviour:
   isRightForbidden: 1
   isJumpForbidden: 1
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
   - {fileID: 3461225615517227208, guid: 5310b26cbaf629f4c99badc0425bd4ac, type: 3}
+  - {fileID: 4084456280297532061, guid: c9ae82caa551acb478c5a5822c0293e2, type: 3}
   levelHint: hint_level_11
+  hintVisualMap: {fileID: 0}

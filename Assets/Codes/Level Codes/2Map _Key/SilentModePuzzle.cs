@@ -82,7 +82,7 @@ public class SilentModePuzzle : MonoBehaviour
         {
             isSolved = false;
             checkTimer = 0f;
-            CloseTheGate(); // Kapıyı varsayılan haline (kapalı) döndür
+           
         }
     }
 }

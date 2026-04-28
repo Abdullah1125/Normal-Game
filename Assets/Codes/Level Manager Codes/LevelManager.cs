@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour
     public static System.Action OnLevelStarted;
 
     private List<GameObject> activeMechanics = new List<GameObject>();
-
+    private List<IResettable> masterResetList = new List<IResettable>();
     void Awake()
     {
         Instance = this;
@@ -31,7 +31,13 @@ public class LevelManager : MonoBehaviour
     {
         ApplyLevel();
     }
-
+    public void RegisterResettable(IResettable mechanic)
+    {
+        if (!masterResetList.Contains(mechanic))
+        {
+            masterResetList.Add(mechanic);
+        }
+    }
     public void NextLevel()
     {
         if (allLevels[currentLevelIndex].isCompleted)
@@ -83,6 +89,8 @@ public class LevelManager : MonoBehaviour
 
         SoundManager.UpdateThemeByLevelID(activeLevel.levelID);
 
+        masterResetList.RemoveAll(mechanic => mechanic as UnityEngine.Object == null);
+
         foreach (GameObject obj in activeMechanics)
         {
             if (obj != null) Destroy(obj);
@@ -113,40 +121,35 @@ public class LevelManager : MonoBehaviour
         OnLevelStarted?.Invoke();
     }
 
+    /// <summary>
+    /// Resets all interactive elements (boxes, keys, buttons, gates) in the level.
+    /// (Bölümdeki tüm etkileþimli öðeleri -kutular, anahtarlar, butonlar, kapýlar- sýfýrlar.)
+    /// </summary>
     public void ResetAllMechanics()
     {
-        // 1. OPTÝMÝZASYON: Bütün sahneyi YALNIZCA 1 KERE TARA! Döngünün dýþýnda!
-        var gates = Object.FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var g in gates) g.ResetGate();
+        masterResetList.RemoveAll(mechanic => (mechanic as Object) == null);
 
-        // 2. Sadece aktif mekaniklerin bileþenlerini kontrol et
-        foreach (GameObject obj in activeMechanics)
+        // Listeyi dönerken hem null kontrolü yapýyoruz hem de Unity objesi mi diye bakýyoruz
+        foreach (IResettable mechanic in masterResetList)
         {
-            if (obj == null) continue;
-
-            GateButton button = obj.GetComponentInChildren<GateButton>();
-            if (button != null) button.ResetButton();
-
-            Key key = obj.GetComponentInChildren<Key>();
-            if (key != null) key.ResetKey();
-
-            EscapeKey ekey = obj.GetComponentInChildren<EscapeKey>();
-            if (ekey != null) ekey.ResetKey();
-
-            BoxButton boxbutton = obj.GetComponentInChildren<BoxButton>();
-            if (boxbutton != null) boxbutton.ResetButton();
+            // SÝHÝR: (mechanic as Object) kýsmý, objenin Unity tarafýnda silinip silinmediðini kontrol eder
+            if (mechanic != null && (mechanic as Object) != null)
+            {
+                mechanic.ResetMechanic();
+            }
         }
 
         Physics2D.gravity = new Vector2(0, -9.81f);
-
-        if (PlayerController.Instance != null)
-        {
-            PlayerController.Instance.UpdateGravityDirection();
-        }
-
+        if (PlayerController.Instance != null) PlayerController.Instance.UpdateGravityDirection();
         OnLevelStarted?.Invoke();
     }
-
+    public void UnregisterResettable(IResettable mechanic)
+    {
+        if (masterResetList.Contains(mechanic))
+        {
+            masterResetList.Remove(mechanic);
+        }
+    }
     void GoToLevelSelect()
     {
         if (LevelTransition.Instance != null)
@@ -155,4 +158,6 @@ public class LevelManager : MonoBehaviour
         }
         else SceneManager.LoadScene("Levels");
     }
+
+   
 }

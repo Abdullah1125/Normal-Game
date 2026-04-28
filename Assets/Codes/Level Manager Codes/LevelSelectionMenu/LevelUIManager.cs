@@ -6,10 +6,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Bölüm seçim ekranını yönetir. Arayüz geçişleri ve optimizasyonlar içerir.
+/// </summary>
 public class LevelUIManager : MonoBehaviour
 {
     public List<LevelData> allGameLevels;
-    public GameObject buttonPrefab;
+
+    // JİLET: GameObject yerine direkt script tipini alıyoruz, Instantiate sonrası GetComponent ameleliği bitti!
+    public LevelMenuButton buttonPrefab;
     public Transform gridParent;
     private Vector2 originalGridPos;
 
@@ -17,6 +22,9 @@ public class LevelUIManager : MonoBehaviour
     private int levelsPerPage = 12;
     private List<LevelMenuButton> spawnedButtons = new List<LevelMenuButton>();
     public GameObject comingSoonPanel;
+
+    // JİLET: Sürekli aranan CanvasGroup'u hafızaya alıyoruz
+    private CanvasGroup comingSoonCG;
 
     [Header("Page Backgrounds(Sayfa Arka Planları)")]
     public Image backgroundImageTop;
@@ -50,7 +58,8 @@ public class LevelUIManager : MonoBehaviour
     private Vector2 origText2Pos;
 
     [Header("Pagination Settings(Sayfalandırma Ayarları)")]
-    public GameObject dotPrefab;
+    // JİLET: GameObject yerine direkt Image tipini alıyoruz
+    public Image dotPrefab;
     public Transform dotsParent;
     public Color activeColor = Color.white;
     public Color inactiveColor = Color.gray;
@@ -63,6 +72,9 @@ public class LevelUIManager : MonoBehaviour
     public CanvasGroup warningPanelCG;
     public TextMeshProUGUI warningPanelText;
 
+    // JİLET: Uyarı paneli için LocalizedText aramasını hafızaya alıyoruz
+    private LocalizedText warningLocText;
+
     private List<Image> spawnedDots = new List<Image>();
 
     public List<string> Level1 = new List<string>();
@@ -73,13 +85,35 @@ public class LevelUIManager : MonoBehaviour
     private RectTransform dummyRect;
     private List<LevelMenuButton> dummyButtons = new List<LevelMenuButton>();
 
-    public GameObject loadingAdPanel; 
+    public GameObject loadingAdPanel;
     public TextMeshProUGUI loadingText;
 
+    // JİLET: Yükleme ekranı için LocalizedText aramasını hafızaya alıyoruz
+    private LocalizedText loadingLocText;
+
     private Coroutine _dotsCoroutine;
+
+    void Awake()
+    {
+        // Bütün pahalı GetComponent işlemlerini oyun başlamadan 1 kere yapıyoruz
+        if (gridParent != null && gridRect == null)
+            gridRect = gridParent.GetComponent<RectTransform>();
+
+        if (Level1Text != null) text1Rect = Level1Text.GetComponent<RectTransform>();
+        if (Level2Text != null) text2Rect = Level2Text.GetComponent<RectTransform>();
+
+        if (comingSoonPanel != null)
+        {
+            comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
+            if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
+        }
+
+        if (warningPanelText != null) warningLocText = warningPanelText.GetComponent<LocalizedText>();
+        if (loadingText != null) loadingLocText = loadingText.GetComponent<LocalizedText>();
+    }
+
     IEnumerator Start()
     {
-        //
         // Bu sayede kapılar ekranda kapalı şekilde belirir, o ağır buton yaratma ve 
         // kasmalar oyuncu kapalı kapılara bakarken arkada gerçekleşir!
         yield return null;
@@ -105,16 +139,13 @@ public class LevelUIManager : MonoBehaviour
         // Başlangıç sayfasının kilit (Coming Soon) durumunu kontrol eder
         if (comingSoonPanel != null)
         {
-            CanvasGroup cg = comingSoonPanel.GetComponent<CanvasGroup>();
-            if (cg == null) cg = comingSoonPanel.AddComponent<CanvasGroup>();
-            cg.alpha = (currentPage > 0) ? 1f : 0f;
-            comingSoonPanel.SetActive(currentPage > 0);
+            if (comingSoonCG != null) comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
+            comingSoonPanel.SetActive(currentPage > 1);
         }
 
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
     }
-
 
     // Animasyonlarda render yükünü azaltmak için yedek tablo ve yazı kopyalarını oluşturur
     void CreateDummyPool()
@@ -131,8 +162,6 @@ public class LevelUIManager : MonoBehaviour
         dummyGridObj.transform.localScale = gridRect.localScale;
 
         // Yazıların RectTransform referanslarını ve orijinal konumlarını saklar
-        text1Rect = Level1Text != null ? Level1Text.GetComponent<RectTransform>() : null;
-        text2Rect = Level2Text != null ? Level2Text.GetComponent<RectTransform>() : null;
         if (text1Rect != null) origText1Pos = text1Rect.anchoredPosition;
         if (text2Rect != null) origText2Pos = text2Rect.anchoredPosition;
 
@@ -140,8 +169,8 @@ public class LevelUIManager : MonoBehaviour
         foreach (Transform t in dummyGridObj.transform) Destroy(t.gameObject);
         for (int i = 0; i < levelsPerPage; i++)
         {
-            GameObject btnObj = Instantiate(buttonPrefab, dummyGridObj.transform);
-            dummyButtons.Add(btnObj.GetComponent<LevelMenuButton>());
+            LevelMenuButton btn = Instantiate(buttonPrefab, dummyGridObj.transform);
+            dummyButtons.Add(btn);
         }
 
         // Havuz nesnesinin tıklanmasını engeller
@@ -172,8 +201,8 @@ public class LevelUIManager : MonoBehaviour
     {
         if (warningPanelCG == null || warningPanelText == null) return;
 
-        LocalizedText locText = warningPanelText.GetComponent<LocalizedText>();
-        if (locText != null) locText.enabled = false;
+        // Önceden bulduğumuz bileşeni kullanıyoruz
+        if (warningLocText != null) warningLocText.enabled = false;
 
         string baseWarning = "";
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
@@ -181,20 +210,19 @@ public class LevelUIManager : MonoBehaviour
             baseWarning = LocalizationManager.Instance.currentData.warning_panel;
         }
 
-      
         if (baseWarning.Contains("{MAP_NAME}"))
         {
             warningPanelText.text = baseWarning.Replace("{MAP_NAME}", chapterName);
         }
         else
         {
-           
             warningPanelText.text = chapterName + "\n" + baseWarning;
         }
 
         StopAllCoroutines();
         StartCoroutine(FadeWarningPanelRoutine());
     }
+
     private System.Collections.IEnumerator FadeWarningPanelRoutine()
     {
         warningPanelCG.gameObject.SetActive(true);
@@ -212,8 +240,8 @@ public class LevelUIManager : MonoBehaviour
 
         for (int i = 0; i < levelsPerPage; i++)
         {
-            GameObject btnObj = Instantiate(buttonPrefab, gridParent);
-            LevelMenuButton script = btnObj.GetComponent<LevelMenuButton>();
+            // JİLET: Direkt komponent olarak oluşturuyoruz
+            LevelMenuButton script = Instantiate(buttonPrefab, gridParent);
             spawnedButtons.Add(script);
         }
     }
@@ -225,22 +253,24 @@ public class LevelUIManager : MonoBehaviour
         int totalPages = Mathf.CeilToInt((float)allGameLevels.Count / levelsPerPage);
         for (int i = 0; i < totalPages; i++)
         {
-            GameObject dot = Instantiate(dotPrefab, dotsParent);
-            Image dotImage = dot.GetComponent<Image>();
+            // JİLET: Direkt Image olarak oluşturuyoruz
+            Image dotImage = Instantiate(dotPrefab, dotsParent);
             spawnedDots.Add(dotImage);
         }
     }
-void UpdatePaginationDots()
+
+    void UpdatePaginationDots()
     {
         for (int i = 0; i < spawnedDots.Count; i++)
         {
             bool isActive = (i == currentPage);
             spawnedDots[i].color = isActive ? activeColor : inactiveColor;
-            
+
             // Aktif olan nokta 0.6f, pasif olanlar 0.8f olacak şekilde ölçeklenir
             spawnedDots[i].transform.localScale = isActive ? new Vector3(0.5f, 0.5f, 1f) : new Vector3(0.6f, 0.6f, 1f);
         }
     }
+
     void RefreshPageUI()
     {
         UpdatePaginationDots();
@@ -280,7 +310,7 @@ void UpdatePaginationDots()
                 data.isUnlocked = PlayerPrefs.GetInt("LevelUnlocked_" + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt("LevelComplete_" + data.levelID, 0) == 1;
 
-                bool isComingSoon = (pageIndex > 0);
+                bool isComingSoon = (pageIndex > 1);
                 string localizedLevelName = data.levelName;
 
                 // Yerelleştirilmiş bölüm isimlerini atar
@@ -366,13 +396,11 @@ void UpdatePaginationDots()
         if (dummyLevel1Text != null) { dummyLevel1Text.text = Level1Text.text; dummyLevel1Text.gameObject.SetActive(true); dummyText1Rect.anchoredPosition = origText1Pos; }
         if (dummyLevel2Text != null) { dummyLevel2Text.text = Level2Text.text; dummyLevel2Text.gameObject.SetActive(true); dummyText2Rect.anchoredPosition = origText2Pos; }
 
-        CanvasGroup csGroup = null;
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            csGroup = comingSoonPanel.GetComponent<CanvasGroup>();
-            oldHasCS = (currentPage > 0);
-            newHasCS = (targetPage > 0);
+            oldHasCS = (currentPage > 1);
+            newHasCS = (targetPage > 1);
         }
 
         // Yeni sayfa verilerini asıl objelere yükler
@@ -386,11 +414,11 @@ void UpdatePaginationDots()
         if (text2Rect != null) text2Rect.anchoredPosition = t2In;
 
         if (comingSoonCoroutine != null) StopCoroutine(comingSoonCoroutine);
-        if (csGroup != null)
+        if (comingSoonCG != null)
         {
-            if (oldHasCS && !newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(csGroup, csGroup.alpha, 0f, true));
-            else if (!oldHasCS && newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(csGroup, 0f, 1f, false));
-            else if (newHasCS) { comingSoonPanel.SetActive(true); csGroup.alpha = 1f; }
+            if (oldHasCS && !newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(comingSoonCG, comingSoonCG.alpha, 0f, true));
+            else if (!oldHasCS && newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(comingSoonCG, 0f, 1f, false));
+            else if (newHasCS) { comingSoonPanel.SetActive(true); comingSoonCG.alpha = 1f; }
             else comingSoonPanel.SetActive(false);
         }
 
@@ -440,45 +468,38 @@ void UpdatePaginationDots()
         if (LevelTransition.Instance != null) LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene("MainMenu"); });
         else SceneManager.LoadScene("MainMenu");
     }
+
     public void StartFakeLoading(float duration, Action onComplete)
     {
         gameObject.SetActive(true);
         StartCoroutine(FakeLoadingRoutine(duration, onComplete));
     }
+
     private IEnumerator FakeLoadingRoutine(float duration, Action onComplete)
     {
         if (loadingAdPanel != null) loadingAdPanel.SetActive(true);
-
 
         _dotsCoroutine = StartCoroutine(AnimateDots());
 
         yield return new WaitForSeconds(duration);
 
-
         if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
         if (loadingAdPanel != null) loadingAdPanel.SetActive(false);
 
-
         onComplete?.Invoke();
-
     }
+
     private IEnumerator AnimateDots()
     {
         string baseText = "Reklam Yükleniyor";
 
-        //Objede LocalizedText varsa çeviriyi ona yaptırıyoruz!
+        // JİLET: Önceden bulduğumuz component üzerinden işlem yapıyoruz
         if (loadingText != null)
         {
-            LocalizedText locText = loadingText.GetComponent<LocalizedText>();
-            if (locText != null)
+            if (loadingLocText != null)
             {
-                // Çeviriyi anında yapmasını emrediyoruz
-                locText.UpdateText();
-
-                // Çevrilmiş tertemiz yazıyı (Örn: "Ad Loading") alıyoruz
+                loadingLocText.UpdateText();
                 baseText = loadingText.text;
-
-                // Ne olur ne olmaz, önceden kalma noktalar varsa temizliyoruz
                 baseText = baseText.Replace(".", "");
             }
         }
@@ -497,6 +518,7 @@ void UpdatePaginationDots()
             }
         }
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -509,7 +531,7 @@ void UpdatePaginationDots()
         }
     }
 
-    private void UnlockAllLevels()
+    public void UnlockAllLevels()
     {
         foreach (LevelData data in allGameLevels)
         {

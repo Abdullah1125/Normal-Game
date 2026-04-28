@@ -25,4 +25,6 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 961464341912579956, guid: b7922b34cd9463c4386e2b61581491de, type: 3}
   - {fileID: 8084022533016421062, guid: 618df04b7bbc6c44f81887617d168ddf, type: 3}
+  - {fileID: 4084456280297532061, guid: c9ae82caa551acb478c5a5822c0293e2, type: 3}
   levelHint: hint_level_10
+  hintVisualMap: {fileID: 0}

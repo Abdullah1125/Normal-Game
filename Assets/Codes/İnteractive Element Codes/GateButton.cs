@@ -1,6 +1,6 @@
 using UnityEngine;
-
-public class GateButton : MonoBehaviour
+using UnityEngine.Events;
+public class GateButton : MonoBehaviour , IResettable
 {
     [Header("Sprites(Görseller)")]
    
@@ -16,6 +16,9 @@ public class GateButton : MonoBehaviour
 
     [Header("Effects(Efektler)")]
     public ParticleSystem pressParticles;
+
+    [Header("Events (Olaylar)")]
+    public UnityEvent OnButtonPressed;
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -27,7 +30,14 @@ public class GateButton : MonoBehaviour
             normalSprite = sr.sprite;
         }
     }
-
+    void Start()
+    {
+        // Register to LevelManager (LevelManager'a kendini kaydettir)
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (IsPlayer(other) && !isPressed)
@@ -78,12 +88,7 @@ public class GateButton : MonoBehaviour
             UpdateCollider();
         }
 
-        // Yerçekimi Tetikleyici (Gravity)
-        GravityButtonTrigger gravityTrigger = GetComponent<GravityButtonTrigger>();
-        if (gravityTrigger != null)
-        {
-            gravityTrigger.ExecuteFlip();
-        }
+      
 
         // Ses Efekti
         if (SoundManager.instance != null)
@@ -96,9 +101,12 @@ public class GateButton : MonoBehaviour
         {
             GateController.Instance.OpenGate();
         }
+
+        OnButtonPressed?.Invoke();
     }
 
-    public void ResetButton()
+  
+    public void ResetMechanic() 
     {
         isPressed = false;
 
@@ -119,6 +127,15 @@ public class GateButton : MonoBehaviour
         if (polyCollider != null)
         {
             polyCollider.pathCount = 0;
+        }
+    }
+    private void OnDestroy()
+    {
+        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        if (LevelManager.Instance != null)
+        {
+            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }

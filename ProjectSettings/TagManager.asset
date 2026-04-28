@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - LevelMechanic
   - Background
+  - Box
+  - BoxButton
   layers:
   - Default
   - TransparentFX

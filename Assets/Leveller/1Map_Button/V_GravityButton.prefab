@@ -8,9 +8,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8461660431994230986}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExecuteFlip
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GravityButtonTrigger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_Name
       value: V_GravityButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.x

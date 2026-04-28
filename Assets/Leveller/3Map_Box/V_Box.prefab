@@ -14,11 +14,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2143722430678271271, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: slidingDamping
-      value: 0.5
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2143722430678271271, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: stoppingDamping
-      value: 6.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4090379713062305203, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: m_SortingOrder
@@ -26,7 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5571445652168138553, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: m_Name
-      value: Box1
+      value: V_Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 5571445652168138553, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
+      propertyPath: m_TagString
+      value: Box
       objectReference: {fileID: 0}
     - target: {fileID: 7323015699785377822, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: m_LocalPosition.x

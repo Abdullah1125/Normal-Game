@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class GateController : MonoBehaviour
+public class GateController : MonoBehaviour , IResettable
 {
     public Vector3 moveOffset = new Vector3(0, 3f, 0);
     public float moveSpeed = 2f;
@@ -27,26 +27,32 @@ public class GateController : MonoBehaviour
     private void Start()
     {
         UpdateKeyUI();
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
     }
 
     void Update()
     {
         Vector3 currentTarget = isOpening ? targetPos : startPos;
 
-        bool isMoving = transform.position != currentTarget;
+        // SÝHÝR 1: Eðer kapý zaten hedefe çok yakýnsa Update'i yorma, direkt oraya sabitle
+        if (Vector3.Distance(transform.position, currentTarget) < 0.001f)
+        {
+            transform.position = currentTarget;
+            if (frictionParticles != null && frictionParticles.isPlaying) frictionParticles.Stop();
+            return;
+        }
 
+        // Hareket kodu
         transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
 
-        if (frictionParticles != null)
+        // SÝHÝR 2: Partikülleri sadece hareket varsa ve çalmýyorsa baþlat
+        if (frictionParticles != null && !frictionParticles.isPlaying)
         {
-            if (isMoving && !frictionParticles.isPlaying)
-            {
-                frictionParticles.Play(); // Kapý kayarken tozu baþlat
-            }
-            else if (!isMoving && frictionParticles.isPlaying)
-            {
-                frictionParticles.Stop(); // Kapý durduðunda tozu kes
-            }
+            frictionParticles.Play();
         }
     }
 
@@ -73,7 +79,12 @@ public class GateController : MonoBehaviour
         if (!isOpening)
         {
             isOpening = true;
-            SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
+
+            //Sahne hala yüklüyse ve obje silinmiyorsa ses çýkar
+            if (gameObject.scene.isLoaded && gameObject.activeInHierarchy)
+            {
+                SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
+            }
         }
     }
 
@@ -84,7 +95,12 @@ public class GateController : MonoBehaviour
         if (isOpening)
         {
             isOpening = false;
-            SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
+
+            // Sahne silinirken (fiþ çekilirken) o sahte sesi yaratma!
+            if (gameObject.scene.isLoaded && gameObject.activeInHierarchy)
+            {
+                SoundManager.PlayThemeSFX(SFXType.SlidingDoor);
+            }
         }
     }
 
@@ -99,7 +115,7 @@ public class GateController : MonoBehaviour
         }
     }
 
-    public void ResetGate()
+    public void ResetMechanic()
     {
         keysCollected = 0;
         allKeysCollected = false;
@@ -114,5 +130,21 @@ public class GateController : MonoBehaviour
         {
             keyCountText.text = keysCollected + " / " + totalKeysNeeded;
         }
+    }
+
+    private void OnDestroy()
+    {
+        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        if (LevelManager.Instance != null)
+        {
+            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            LevelManager.Instance.UnregisterResettable(this);
+        }
+    
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
     }
 }

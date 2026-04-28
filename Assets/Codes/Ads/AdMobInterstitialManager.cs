@@ -3,8 +3,8 @@ using GoogleMobileAds.Api;
 using System;
 
 /// <summary>
-/// Manages interstitial ads and persists between scenes.
-/// (Geçiþ reklamlarýný yönetir ve sahneler arasý kalýcýlýk saðlar.)
+/// Manages interstitial ads, persists between scenes, and safely dispatches callbacks to the Main Thread.
+/// (Geçiþ reklamlarýný yönetir, sahneler arasý kalýcýlýk saðlar ve geri aramalarý Ana Ýþ Ýpliðine güvenle aktarýr.)
 /// </summary>
 public class AdMobInterstitialManager : MonoBehaviour
 {
@@ -12,15 +12,18 @@ public class AdMobInterstitialManager : MonoBehaviour
 
     private string _adUnitId = "ca-app-pub-3940256099942544/1033173712"; // Test ID
     private InterstitialAd _interstitialAd;
+
     private Action _onAdClosedCallback;
+
+    // MAIN THREAD DISPATCHER (Ana iþ ipliðine aktarýlacak görev)
+    private Action _executeOnMainThread;
 
     private void Awake()
     {
-        // SINGLETON VE SAHNE GEÇÝÞÝ KORUMASI
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Obje sahneler arasý silinmez
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -30,8 +33,20 @@ public class AdMobInterstitialManager : MonoBehaviour
 
     private void Start()
     {
-        // REKLAMI ANA MENÜDEYKEN ÝNDÝRMEYE BAÞLA
         MobileAds.Initialize((InitializationStatus status) => { LoadInterstitialAd(); });
+    }
+
+    /// <summary>
+    /// Executes pending callbacks on the Main Thread.
+    /// (Bekleyen geri aramalarý Ana Ýþ Ýpliðinde çalýþtýrýr.)
+    /// </summary>
+    private void Update()
+    {
+        if (_executeOnMainThread != null)
+        {
+            _executeOnMainThread.Invoke();
+            _executeOnMainThread = null; // Çalýþtýrdýktan sonra temizle
+        }
     }
 
     /// <summary>
@@ -40,19 +55,36 @@ public class AdMobInterstitialManager : MonoBehaviour
     /// </summary>
     public void LoadInterstitialAd()
     {
-        if (_interstitialAd != null) _interstitialAd.Destroy();
+        if (_interstitialAd != null)
+        {
+            _interstitialAd.Destroy();
+            _interstitialAd = null;
+        }
 
         var adRequest = new AdRequest();
         InterstitialAd.Load(_adUnitId, adRequest, (InterstitialAd ad, LoadAdError error) =>
         {
             if (error != null || ad == null) return;
+
             _interstitialAd = ad;
 
+            // REKLAM NORMAL KAPANDIÐINDA
             _interstitialAd.OnAdFullScreenContentClosed += () =>
             {
-                _onAdClosedCallback?.Invoke();
+                // Sahnede iþlem yapabilmesi için görevi Update'e devrediyoruz!
+                _executeOnMainThread = _onAdClosedCallback;
                 _onAdClosedCallback = null;
-                LoadInterstitialAd(); // Kapanýnca hemen yenisini indir
+                LoadInterstitialAd();
+            };
+
+            // REKLAM HATA VERÝP ÇÖKERSE (ÝSÝM DÜZELTÝLDÝ!)
+            _interstitialAd.OnAdFullScreenContentFailed += (AdError adError) =>
+            {
+                Debug.LogError("Reklam gösterilemedi: " + adError.GetMessage());
+                // Reklam çökse bile oyuncu ekranda takýlý kalmasýn, levele devam etsin
+                _executeOnMainThread = _onAdClosedCallback;
+                _onAdClosedCallback = null;
+                LoadInterstitialAd();
             };
         });
     }
@@ -69,13 +101,12 @@ public class AdMobInterstitialManager : MonoBehaviour
         {
             _onAdClosedCallback = onClosed;
             _interstitialAd.Show();
-            return true; // Reklam baþarýyla gösteriliyor!
+            return true;
         }
         else
         {
-            // Reklam hazýr deðilse yenisini yükle ve false dön ki fake loading baþlasýn
             LoadInterstitialAd();
-            return false; // Reklam yok!
+            return false;
         }
     }
 }

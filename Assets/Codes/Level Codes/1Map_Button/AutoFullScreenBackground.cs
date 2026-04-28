@@ -36,7 +36,10 @@ public class AutoFullScreenBackground : MonoBehaviour
     /// </summary>
     public void SetSizeToScreenByTag()
     {
-        bgObject = GameObject.FindGameObjectWithTag("Background");
+       if (BackgroundIdentity.Instance != null)
+        {
+            bgObject = BackgroundIdentity.Instance;
+        }
 
         // Eger obje o sirada silinmisse islem yapma, cokmeyi onle
         if (bgObject == null) return;

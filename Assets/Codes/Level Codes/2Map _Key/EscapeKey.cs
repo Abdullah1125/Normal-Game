@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EscapeKey : MonoBehaviour
+public class EscapeKey : MonoBehaviour , IResettable
 {
     [Header("Kaçış Noktaları (Local Offset)")]
     public Vector2 firstEscapeOffset = new Vector2(5, 2);
@@ -21,7 +21,14 @@ public class EscapeKey : MonoBehaviour
         targetPos = startPos;
         myCollider = GetComponent<Collider2D>();
     }
-
+    void Start()
+    {
+        // Register to LevelManager (LevelManager'a kendini kaydettir)
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
+    }
     void Update()
     {
         if (PlayerController.Instance == null) return;
@@ -71,12 +78,21 @@ public class EscapeKey : MonoBehaviour
         }
     }
 
-    public void ResetKey()
+    public void ResetMechanic()
     {
         gameObject.SetActive(true);
         transform.position = startPos;
         targetPos = startPos;
         escapePhase = 0;
         if (myCollider != null) myCollider.enabled = true; // Reset atınca tekrar aç
+    }
+    private void OnDestroy()
+    {
+        // Obje silinirken LevelManager'ın listesini de temizliyoruz
+        if (LevelManager.Instance != null)
+        {
+            // Eğer LevelManager'da RemoveResettable fonksiyonu yoksa aşağıya ekledim
+            LevelManager.Instance.UnregisterResettable(this);
+        }
     }
 }

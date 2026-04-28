@@ -15,7 +15,7 @@ MonoBehaviour:
   levelID: 0
   levelName: Normal
   isUnlocked: 1
-  isCompleted: 1
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0

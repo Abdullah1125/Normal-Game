@@ -25,3 +25,4 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 5969259166198355378, guid: ca4f209a6712f594d8f66cd6b697e5ef, type: 3}
   levelHint: hint_level_4
+  hintVisualMap: {fileID: 0}
