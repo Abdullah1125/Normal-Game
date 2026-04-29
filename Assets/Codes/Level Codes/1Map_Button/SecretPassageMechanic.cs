@@ -1,16 +1,19 @@
 using UnityEngine;
 
+/// <summary>
+/// Gizli geçit duvarýnýn çarpýþmasýný kapatýr. Kamera hareket tetikleyicileri kaldýrýlmýþtýr.
+/// </summary>
 public class SecretPassageMechanic : MonoBehaviour
 {
-    [Header("Wall Settings(Duvar Ayarlarý)")]
+    [Header("Wall Settings (Duvar Ayarlarý)")]
     public string targetObjectName = "Tilemap_Secret";
-
-    [Header("Camera Settings(Kamera Ayarlarý")]
-    public Vector3 secretRoomPos;
 
     private GameObject secretWall;
     private Collider2D wallCollider;
 
+    /// <summary>
+    /// Baþlangýçta gizli duvarý bulur ve oyuncunun içinden geçebilmesi için collider'ýný kapatýr.
+    /// </summary>
     void Start()
     {
         secretWall = GameObject.Find(targetObjectName);
@@ -21,29 +24,11 @@ public class SecretPassageMechanic : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // Gizli odaya git
-            if (CameraRoomController.Instance != null)
-                CameraRoomController.Instance.SetTargetPosition(secretRoomPos);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // Ana odaya dön
-            if (CameraRoomController.Instance != null)
-                CameraRoomController.Instance.ResetCamera();
-        }
-    }
-
+    /// <summary>
+    /// Obje devre dýþý kaldýðýnda duvar collider'ýný tekrar aktif eder.
+    /// </summary>
     private void OnDisable()
     {
-        // OnDestroy yerine OnDisable kullan - daha güvenli
         if (wallCollider != null) wallCollider.enabled = true;
     }
 }

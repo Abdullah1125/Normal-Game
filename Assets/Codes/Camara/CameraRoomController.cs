@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Handles camera shake and hit-stop effects. Camera movement/transition has been removed.
+/// (Kamera sarsýntýsý ve vuruþ donmasýný yönetir. Kamera hareketi/geçiþi kaldýrýlmýþtýr.)
+/// </summary>
 public class CameraRoomController : MonoBehaviour
 {
     public static CameraRoomController Instance;
@@ -15,22 +19,19 @@ public class CameraRoomController : MonoBehaviour
     // Ölüm anýnda oyunun saliselik donma süresi (Hit Stop).
     public float hitStopDuration = 0.05f;
 
-    [Header("Transition Settings(Geçiþ Ayarlarý)")]
-    public float transitionSpeed = 5f;
-    private Vector3 mainRoomPos;
-    private Vector3 targetPos;
+    // Kameranýn baþlangýçtaki sabit pozisyonu
+    private Vector3 basePosition;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
-        mainRoomPos = transform.position;
-        targetPos = mainRoomPos;
+        basePosition = transform.position; // Baþlangýç yerini kaydet
     }
 
-    void Update()
+    void LateUpdate()
     {
-        Vector3 nextPos = Vector3.Lerp(transform.position, targetPos, transitionSpeed * Time.deltaTime);
-        transform.position = nextPos + shakeOffset;
+        // Kamera artýk bir yere gitmiyor, sadece ana pozisyonunda durup gerekirse titriyor
+        transform.position = basePosition + shakeOffset;
     }
 
     // --- SARSINTI MEKANÝZMASI ---
@@ -43,12 +44,11 @@ public class CameraRoomController : MonoBehaviour
     private IEnumerator ShakeRoutine()
     {
         // 1. AÞAMA: HIT STOP (ZAMAN DONMASI)
-        // Karakter öldüðü an oyun saliselik buz keser. Ekran titreþmeden önce bu donma, çarpmanýn þiddetini beynimize iþler.
         if (hitStopDuration > 0f)
         {
-            Time.timeScale = 0f; // Oyunu dondur
-            yield return new WaitForSecondsRealtime(hitStopDuration); // Gerçek zamanda çok kýsa bir süre bekle
-            Time.timeScale = 1f; // Oyunu geri akýt
+            Time.timeScale = 0f;
+            yield return new WaitForSecondsRealtime(hitStopDuration);
+            Time.timeScale = 1f;
         }
 
         // 2. AÞAMA: KÜBÝK SARSINTI (BALYOZ ETKÝSÝ)
@@ -70,18 +70,5 @@ public class CameraRoomController : MonoBehaviour
         }
 
         shakeOffset = Vector3.zero;
-    }
-
-    public void SetTargetPosition(Vector3 newPos)
-    {
-        targetPos = newPos;
-    }
-
-    public void ResetCamera()
-    {
-        StopAllCoroutines();
-        shakeOffset = Vector3.zero;
-        targetPos = mainRoomPos;
-        Time.timeScale = 1f; // Ne olur ne olmaz, sýfýrlanýnca zamanýn aktýðýndan emin olalým
     }
 }

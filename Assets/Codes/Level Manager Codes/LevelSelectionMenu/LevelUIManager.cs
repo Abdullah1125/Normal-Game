@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,15 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// <summary>
-/// Bölüm seçim ekranını yönetir. Arayüz geçişleri ve optimizasyonlar içerir.
-/// </summary>
 public class LevelUIManager : MonoBehaviour
 {
     public List<LevelData> allGameLevels;
-
-    // JİLET: GameObject yerine direkt script tipini alıyoruz, Instantiate sonrası GetComponent ameleliği bitti!
-    public LevelMenuButton buttonPrefab;
+    public GameObject buttonPrefab;
     public Transform gridParent;
     private Vector2 originalGridPos;
 
@@ -22,9 +17,6 @@ public class LevelUIManager : MonoBehaviour
     private int levelsPerPage = 12;
     private List<LevelMenuButton> spawnedButtons = new List<LevelMenuButton>();
     public GameObject comingSoonPanel;
-
-    // JİLET: Sürekli aranan CanvasGroup'u hafızaya alıyoruz
-    private CanvasGroup comingSoonCG;
 
     [Header("Page Backgrounds(Sayfa Arka Planları)")]
     public Image backgroundImageTop;
@@ -58,8 +50,7 @@ public class LevelUIManager : MonoBehaviour
     private Vector2 origText2Pos;
 
     [Header("Pagination Settings(Sayfalandırma Ayarları)")]
-    // JİLET: GameObject yerine direkt Image tipini alıyoruz
-    public Image dotPrefab;
+    public GameObject dotPrefab;
     public Transform dotsParent;
     public Color activeColor = Color.white;
     public Color inactiveColor = Color.gray;
@@ -72,8 +63,10 @@ public class LevelUIManager : MonoBehaviour
     public CanvasGroup warningPanelCG;
     public TextMeshProUGUI warningPanelText;
 
-    // JİLET: Uyarı paneli için LocalizedText aramasını hafızaya alıyoruz
-    private LocalizedText warningLocText;
+    [Header("Grid Layout Settings(Izgara Boyut Ayarları)")]
+    private Vector2 originalCellSize;
+    private Vector2 originalSpacing;
+    private bool isGridInitialized = false;
 
     private List<Image> spawnedDots = new List<Image>();
 
@@ -85,43 +78,33 @@ public class LevelUIManager : MonoBehaviour
     private RectTransform dummyRect;
     private List<LevelMenuButton> dummyButtons = new List<LevelMenuButton>();
 
-    public GameObject loadingAdPanel;
+    public GameObject loadingAdPanel; 
     public TextMeshProUGUI loadingText;
 
-    // JİLET: Yükleme ekranı için LocalizedText aramasını hafızaya alıyoruz
-    private LocalizedText loadingLocText;
-
     private Coroutine _dotsCoroutine;
-
-    void Awake()
+    void Start()
     {
-        // Bütün pahalı GetComponent işlemlerini oyun başlamadan 1 kere yapıyoruz
-        if (gridParent != null && gridRect == null)
-            gridRect = gridParent.GetComponent<RectTransform>();
-
-        if (Level1Text != null) text1Rect = Level1Text.GetComponent<RectTransform>();
-        if (Level2Text != null) text2Rect = Level2Text.GetComponent<RectTransform>();
-
-        if (comingSoonPanel != null)
-        {
-            comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
-            if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
-        }
-
-        if (warningPanelText != null) warningLocText = warningPanelText.GetComponent<LocalizedText>();
-        if (loadingText != null) loadingLocText = loadingText.GetComponent<LocalizedText>();
-    }
-
-    IEnumerator Start()
-    {
-        // Bu sayede kapılar ekranda kapalı şekilde belirir, o ağır buton yaratma ve 
-        // kasmalar oyuncu kapalı kapılara bakarken arkada gerçekleşir!
-        yield return null;
-
         if (gridRect == null) gridRect = gridParent.GetComponent<RectTransform>();
 
         // Grid'in editördeki orijinal pozisyonunu hafızaya alır
         originalGridPos = gridRect.anchoredPosition;
+
+        // Tam ekran genişliğinde kaydırma yapabilmek için Canvas'ın gerçek genişliğini alır
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.rootCanvas != null)
+        {
+            RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
+            if (canvasRect != null)
+            {
+                slideDistance = canvasRect.rect.width;
+            }
+        }
+        else
+        {
+            slideDistance = Screen.width;
+        }
+
+        AdjustGridLayout();
 
         PrepareButtons();
         CreateDummyPool();
@@ -139,7 +122,9 @@ public class LevelUIManager : MonoBehaviour
         // Başlangıç sayfasının kilit (Coming Soon) durumunu kontrol eder
         if (comingSoonPanel != null)
         {
-            if (comingSoonCG != null) comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
+            CanvasGroup cg = comingSoonPanel.GetComponent<CanvasGroup>();
+            if (cg == null) cg = comingSoonPanel.AddComponent<CanvasGroup>();
+            cg.alpha = (currentPage > 1) ? 1f : 0f;
             comingSoonPanel.SetActive(currentPage > 1);
         }
 
@@ -147,6 +132,7 @@ public class LevelUIManager : MonoBehaviour
         FillGridWithPageData(currentPage, spawnedButtons);
     }
 
+    
     // Animasyonlarda render yükünü azaltmak için yedek tablo ve yazı kopyalarını oluşturur
     void CreateDummyPool()
     {
@@ -162,6 +148,8 @@ public class LevelUIManager : MonoBehaviour
         dummyGridObj.transform.localScale = gridRect.localScale;
 
         // Yazıların RectTransform referanslarını ve orijinal konumlarını saklar
+        text1Rect = Level1Text != null ? Level1Text.GetComponent<RectTransform>() : null;
+        text2Rect = Level2Text != null ? Level2Text.GetComponent<RectTransform>() : null;
         if (text1Rect != null) origText1Pos = text1Rect.anchoredPosition;
         if (text2Rect != null) origText2Pos = text2Rect.anchoredPosition;
 
@@ -169,8 +157,8 @@ public class LevelUIManager : MonoBehaviour
         foreach (Transform t in dummyGridObj.transform) Destroy(t.gameObject);
         for (int i = 0; i < levelsPerPage; i++)
         {
-            LevelMenuButton btn = Instantiate(buttonPrefab, dummyGridObj.transform);
-            dummyButtons.Add(btn);
+            GameObject btnObj = Instantiate(buttonPrefab, dummyGridObj.transform);
+            dummyButtons.Add(btnObj.GetComponent<LevelMenuButton>());
         }
 
         // Havuz nesnesinin tıklanmasını engeller
@@ -201,28 +189,23 @@ public class LevelUIManager : MonoBehaviour
     {
         if (warningPanelCG == null || warningPanelText == null) return;
 
-        // Önceden bulduğumuz bileşeni kullanıyoruz
-        if (warningLocText != null) warningLocText.enabled = false;
+      
+        LocalizedText locText = warningPanelText.GetComponent<LocalizedText>();
+        if (locText != null) locText.enabled = false;
 
-        string baseWarning = "";
+        
+        string baseWarning = "Haritayı bitirmeden geri dönemezsin!";
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
             baseWarning = LocalizationManager.Instance.currentData.warning_panel;
         }
 
-        if (baseWarning.Contains("{MAP_NAME}"))
-        {
-            warningPanelText.text = baseWarning.Replace("{MAP_NAME}", chapterName);
-        }
-        else
-        {
-            warningPanelText.text = chapterName + "\n" + baseWarning;
-        }
+       
+        warningPanelText.text = chapterName + "\n" + baseWarning;
 
         StopAllCoroutines();
         StartCoroutine(FadeWarningPanelRoutine());
     }
-
     private System.Collections.IEnumerator FadeWarningPanelRoutine()
     {
         warningPanelCG.gameObject.SetActive(true);
@@ -233,6 +216,39 @@ public class LevelUIManager : MonoBehaviour
         warningPanelCG.gameObject.SetActive(false);
     }
 
+    // Ekran çözünürlüğüne göre GridLayoutGroup boşluk boyutlarını dinamik olarak ayarlar
+    private void AdjustGridLayout()
+    {
+        GridLayoutGroup gridLayout = gridParent.GetComponent<GridLayoutGroup>();
+        if (gridLayout == null) return;
+
+        if (!isGridInitialized)
+        {
+            originalCellSize = gridLayout.cellSize;
+            originalSpacing = gridLayout.spacing;
+            isGridInitialized = true;
+        }
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null)
+        {
+            CanvasScaler scaler = canvas.rootCanvas.GetComponent<CanvasScaler>();
+            if (scaler != null)
+            {
+                float currentAspect = (float)Screen.width / Screen.height;
+                float referenceAspect = scaler.referenceResolution.x / scaler.referenceResolution.y;
+                
+                // En-boy oranına göre çarpan hesapla
+                float aspectMultiplier = currentAspect / referenceAspect;
+
+                // Sadece yatay (X) boşlukları ekrana göre dinamik olarak oranla
+                // Hücre boyutları ve dikey (Y) boşluklar orijinal kalacak
+                gridLayout.cellSize = originalCellSize;
+                gridLayout.spacing = new Vector2(originalSpacing.x * aspectMultiplier, originalSpacing.y);
+            }
+        }
+    }
+
     void PrepareButtons()
     {
         foreach (Transform t in gridParent) Destroy(t.gameObject);
@@ -240,8 +256,8 @@ public class LevelUIManager : MonoBehaviour
 
         for (int i = 0; i < levelsPerPage; i++)
         {
-            // JİLET: Direkt komponent olarak oluşturuyoruz
-            LevelMenuButton script = Instantiate(buttonPrefab, gridParent);
+            GameObject btnObj = Instantiate(buttonPrefab, gridParent);
+            LevelMenuButton script = btnObj.GetComponent<LevelMenuButton>();
             spawnedButtons.Add(script);
         }
     }
@@ -253,24 +269,22 @@ public class LevelUIManager : MonoBehaviour
         int totalPages = Mathf.CeilToInt((float)allGameLevels.Count / levelsPerPage);
         for (int i = 0; i < totalPages; i++)
         {
-            // JİLET: Direkt Image olarak oluşturuyoruz
-            Image dotImage = Instantiate(dotPrefab, dotsParent);
+            GameObject dot = Instantiate(dotPrefab, dotsParent);
+            Image dotImage = dot.GetComponent<Image>();
             spawnedDots.Add(dotImage);
         }
     }
-
-    void UpdatePaginationDots()
+void UpdatePaginationDots()
     {
         for (int i = 0; i < spawnedDots.Count; i++)
         {
             bool isActive = (i == currentPage);
             spawnedDots[i].color = isActive ? activeColor : inactiveColor;
-
+            
             // Aktif olan nokta 0.6f, pasif olanlar 0.8f olacak şekilde ölçeklenir
             spawnedDots[i].transform.localScale = isActive ? new Vector3(0.5f, 0.5f, 1f) : new Vector3(0.6f, 0.6f, 1f);
         }
     }
-
     void RefreshPageUI()
     {
         UpdatePaginationDots();
@@ -366,6 +380,21 @@ public class LevelUIManager : MonoBehaviour
     {
         isAnimating = true;
 
+        // Tam ekran genişliğinde kaydırma yapabilmek için Canvas'ın gerçek genişliğini alır
+        Canvas canvas = gridRect != null ? gridRect.GetComponentInParent<Canvas>() : null;
+        if (canvas != null && canvas.rootCanvas != null)
+        {
+            RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
+            if (canvasRect != null)
+            {
+                slideDistance = canvasRect.rect.width;
+            }
+        }
+        else
+        {
+            slideDistance = Screen.width;
+        }
+
         Vector2 startPos = originalGridPos;
         Vector2 offsetOut = new Vector2(direction * slideDistance, 0);
         Vector2 offsetIn = new Vector2(-direction * slideDistance, 0);
@@ -396,9 +425,11 @@ public class LevelUIManager : MonoBehaviour
         if (dummyLevel1Text != null) { dummyLevel1Text.text = Level1Text.text; dummyLevel1Text.gameObject.SetActive(true); dummyText1Rect.anchoredPosition = origText1Pos; }
         if (dummyLevel2Text != null) { dummyLevel2Text.text = Level2Text.text; dummyLevel2Text.gameObject.SetActive(true); dummyText2Rect.anchoredPosition = origText2Pos; }
 
+        CanvasGroup csGroup = null;
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
+            csGroup = comingSoonPanel.GetComponent<CanvasGroup>();
             oldHasCS = (currentPage > 1);
             newHasCS = (targetPage > 1);
         }
@@ -414,11 +445,11 @@ public class LevelUIManager : MonoBehaviour
         if (text2Rect != null) text2Rect.anchoredPosition = t2In;
 
         if (comingSoonCoroutine != null) StopCoroutine(comingSoonCoroutine);
-        if (comingSoonCG != null)
+        if (csGroup != null)
         {
-            if (oldHasCS && !newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(comingSoonCG, comingSoonCG.alpha, 0f, true));
-            else if (!oldHasCS && newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(comingSoonCG, 0f, 1f, false));
-            else if (newHasCS) { comingSoonPanel.SetActive(true); comingSoonCG.alpha = 1f; }
+            if (oldHasCS && !newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(csGroup, csGroup.alpha, 0f, true));
+            else if (!oldHasCS && newHasCS) comingSoonCoroutine = StartCoroutine(FadeComingSoonRoutine(csGroup, 0f, 1f, false));
+            else if (newHasCS) { comingSoonPanel.SetActive(true); csGroup.alpha = 1f; }
             else comingSoonPanel.SetActive(false);
         }
 
@@ -468,57 +499,44 @@ public class LevelUIManager : MonoBehaviour
         if (LevelTransition.Instance != null) LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene("MainMenu"); });
         else SceneManager.LoadScene("MainMenu");
     }
-
     public void StartFakeLoading(float duration, Action onComplete)
     {
         gameObject.SetActive(true);
         StartCoroutine(FakeLoadingRoutine(duration, onComplete));
     }
-
     private IEnumerator FakeLoadingRoutine(float duration, Action onComplete)
     {
         if (loadingAdPanel != null) loadingAdPanel.SetActive(true);
+
 
         _dotsCoroutine = StartCoroutine(AnimateDots());
 
         yield return new WaitForSeconds(duration);
 
+
         if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
         if (loadingAdPanel != null) loadingAdPanel.SetActive(false);
 
-        onComplete?.Invoke();
-    }
 
+        onComplete?.Invoke();
+
+    }
     private IEnumerator AnimateDots()
     {
-        string baseText = "Reklam Yükleniyor";
+        string baseText = "Reklam Yükleniyor"; // Burayı istediğin gibi değiştir
+        int dotCount = 0;
 
-        // JİLET: Önceden bulduğumuz component üzerinden işlem yapıyoruz
-        if (loadingText != null)
-        {
-            if (loadingLocText != null)
-            {
-                loadingLocText.UpdateText();
-                baseText = loadingText.text;
-                baseText = baseText.Replace(".", "");
-            }
-        }
-
-        // Animasyon Döngüsü
         while (true)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                if (loadingText != null)
-                {
-                    loadingText.text = baseText + new string('.', i);
-                }
+            dotCount++;
+            if (dotCount > 5) dotCount = 0; // 5 noktadan sonra sıfırla
 
-                yield return new WaitForSecondsRealtime(0.4f);
-            }
+            if (loadingText != null)
+                loadingText.text = baseText + new string('.', dotCount);
+
+            yield return new WaitForSeconds(0.4f); // Noktaların hızı
         }
     }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -531,7 +549,7 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
-    public void UnlockAllLevels()
+    private void UnlockAllLevels()
     {
         foreach (LevelData data in allGameLevels)
         {
@@ -543,6 +561,6 @@ public class LevelUIManager : MonoBehaviour
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 
-        Debug.Log("GELİŞTİRİCİ HİLESİ: Bütün bölümlerin kilidi açıldı!");
+        Debug.Log("🛠️ GELİŞTİRİCİ HİLESİ: Bütün bölümlerin kilidi açıldı!");
     }
 }

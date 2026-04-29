@@ -3,9 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
+/// <summary>
+/// Manages cinematic door transitions and scene loading.
+/// (Sinematik kapı geçişlerini ve sahne yüklemelerini yönetir.)
+/// </summary>
 public class LevelTransition : MonoBehaviour
 {
-    public static LevelTransition Instance;
+    public static LevelTransition Instance { get; private set; }
 
     [Header("Cinematic Doors (Sinematik Kapılar)")]
     public RectTransform topPanel;    // Üst kapı paneli
@@ -14,34 +18,81 @@ public class LevelTransition : MonoBehaviour
 
     [Header("Settings (Ayarlar)")]
     public bool openDoorsOnStart = true;
+    public float overlapMargin = 10f; // Kapanmada ortadaki boşluğu kapatmak için kesişme payı
     public TextMeshProUGUI levelText;
 
+    // Sahneler arası taşınan statik durum değişkenleri
     public static bool isComingFromDoorTransition = false;
     public static bool isTransitioning = false;
 
-    // YENİ AMELİYAT: Eylem Kuyruğu (Hafıza) Değişkenleri
+    // Eylem Kuyruğu (Hafıza) Değişkenleri
     private bool isQueued = false;
     private System.Action queuedAction = null;
 
     private float closedYOffset = 0f;
 
     [Header("Sounds (Sesler)")]
-    public AudioClip fadeSound; // ElevenLabs'ten indirdiğin geçiş sesi
+    public AudioClip fadeSound;
+
+    // Önbellek değişkenleri
+    private RectTransform canvasRect;
+
+    /// <summary>
+    /// Initializes singleton, resets states, and caches components.
+    /// (Singleton'ı başlatır, durumları sıfırlar ve bileşenleri önbelleğe alır.)
+    /// </summary>
     private void Awake()
     {
-        // Önemli Düzeltme: Yeni sahne yüklendiğinde eski hafızayı ve kilidi sıfırla ki bug'da kalmasın
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
+
         isTransitioning = false;
         isQueued = false;
         queuedAction = null;
+
+        Canvas rootCanvas = GetComponentInParent<Canvas>();
+        if (rootCanvas != null)
+        {
+            canvasRect = rootCanvas.GetComponent<RectTransform>();
+        }
+
+        Canvas.ForceUpdateCanvases();
 
         SetupDoors();
         if (levelText != null) levelText.alpha = 0f;
     }
 
+    /// <summary>
+    /// Automatically adjusts doors when screen resolution or orientation changes.
+    /// (Ekran çözünürlüğü veya yönelimi değiştiğinde kapıları otomatik ayarlar.)
+    /// </summary>
+    private void OnRectTransformDimensionsChange()
+    {
+        if (canvasRect != null && !isTransitioning)
+        {
+            SetupDoors();
+        }
+    }
+
+    /// <summary>
+    /// Adjusts door sizes and initial positions based on screen dimensions.
+    /// (Kapı boyutlarını ve başlangıç pozisyonlarını ekran boyutlarına göre ayarlar.)
+    /// </summary>
     private void SetupDoors()
     {
         if (topPanel == null || bottomPanel == null) return;
+
+        topPanel.anchorMin = new Vector2(0.5f, 0.5f);
+        topPanel.anchorMax = new Vector2(0.5f, 0.5f);
+        topPanel.pivot = new Vector2(0.5f, 0.5f);
+
+        bottomPanel.anchorMin = new Vector2(0.5f, 0.5f);
+        bottomPanel.anchorMax = new Vector2(0.5f, 0.5f);
+        bottomPanel.pivot = new Vector2(0.5f, 0.5f);
 
         float h = GetCanvasHeight();
         float w = GetCanvasWidth() + 500f;
@@ -50,7 +101,8 @@ public class LevelTransition : MonoBehaviour
         topPanel.sizeDelta = new Vector2(w, doorHeight);
         bottomPanel.sizeDelta = new Vector2(w, doorHeight);
 
-        closedYOffset = doorHeight / 2f;
+        // Kesişme payını merkeze itme gücünden çıkarıyoruz ki paneller merkezin biraz daha ötesine geçsin
+        closedYOffset = (doorHeight / 2f) - overlapMargin;
 
         if (isComingFromDoorTransition || openDoorsOnStart)
         {
@@ -70,8 +122,14 @@ public class LevelTransition : MonoBehaviour
         }
     }
 
-    IEnumerator Start()
+    /// <summary>
+    /// Opens the doors at the start of the scene if requested.
+    /// (İsteniyorsa sahne başlangıcında kapıları açar.)
+    /// </summary>
+    private IEnumerator Start()
     {
+        yield return null;
+
         if (isComingFromDoorTransition || openDoorsOnStart)
         {
             isTransitioning = true;
@@ -82,27 +140,28 @@ public class LevelTransition : MonoBehaviour
 
             isTransitioning = false;
 
-            // YENİ AMELİYAT: Kapılar tamamen açıldı! Sırada bekleyen (spamlanmış) bir emir var mı?
             if (isQueued)
             {
                 isQueued = false;
-                FadeOut(queuedAction); // Hafızadaki emri anında çalıştır!
+                FadeOut(queuedAction);
             }
         }
     }
 
+    /// <summary>
+    /// Closes doors and executes the provided action upon completion.
+    /// (Kapıları kapatır ve tamamlandığında belirtilen eylemi çalıştırır.)
+    /// </summary>
     public void FadeOut(System.Action onComplete = null)
     {
         if (isTransitioning)
         {
-            // Adam kapı açılırken tuşa bastıysa, reddetme! Sadece hafızaya al.
             isQueued = true;
             queuedAction = onComplete;
             return;
         }
 
         isTransitioning = true;
-
         PlayFadeSound();
 
         StartCoroutine(CloseDoorsRoutine(() =>
@@ -127,7 +186,6 @@ public class LevelTransition : MonoBehaviour
     private IEnumerator TransitionRoutine(string message, System.Action middleAction)
     {
         isTransitioning = true;
-
         PlayFadeSound();
 
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
@@ -204,25 +262,18 @@ public class LevelTransition : MonoBehaviour
 
     private float GetCanvasHeight()
     {
-        Canvas canvas = GetComponentInParent<Canvas>();
-        return canvas != null ? canvas.GetComponent<RectTransform>().rect.height : Screen.height;
+        return canvasRect != null ? canvasRect.rect.height : Screen.height;
     }
 
     private float GetCanvasWidth()
     {
-        Canvas canvas = GetComponentInParent<Canvas>();
-        return canvas != null ? canvas.GetComponent<RectTransform>().rect.width : Screen.width;
+        return canvasRect != null ? canvasRect.rect.width : Screen.width;
     }
 
-    /// <summary>
-    /// Plays the transition sound at 30% volume.
-    /// (Geçiş sesini %30 seviyesinde çalar.)
-    /// </summary>
     private void PlayFadeSound()
     {
         if (fadeSound != null && SoundManager.instance != null && SoundManager.instance.sfxSource != null)
         {
-            // Sesi direkt SoundManager'ın ana hoparlöründen %30 şiddetinde çaldırıyoruz
             SoundManager.instance.sfxSource.PlayOneShot(fadeSound, 0.3f);
         }
     }

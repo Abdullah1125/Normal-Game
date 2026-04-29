@@ -5,8 +5,7 @@ using System;
 using System.Collections;
 
 /// <summary>
-/// Handles extra hints with ad integration and global UI locking via Canvas Groups.
-/// (Reklam entegrasyonu ve Canvas Group kilitleri ile ekstra ipuçlarını yönetir.)
+/// Reklam entegrasyonu ve Canvas Group kilitleri ile ekstra ipuçlarını yönetir.
 /// </summary>
 public class ExtraHintUI : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class ExtraHintUI : MonoBehaviour
     public Image hintImage;
     public GameObject mainHintPanel;
 
-    [Header("Loading UI (Darlama Paneli)")]
+    [Header("Loading UI (Yükleme Paneli)")]
     public GameObject loadingPanel;
     public TextMeshProUGUI loadingText;
 
@@ -33,10 +32,33 @@ public class ExtraHintUI : MonoBehaviour
     public static int lastUnlockedLevelID = -1;
     private Coroutine _dotsCoroutine;
 
+    // Önbelleğe alınmış bileşen referansları
+    private LocalizedText cachedLoadingLocText;
+    private ButtonFoldAnimator pauseButtonAnim;
+    private ButtonFoldAnimator extraHintButtonAnim;
+
+    /// <summary>
+    /// Bileşen referanslarını oyun başlamadan önce önbelleğe alır (Caching).
+    /// </summary>
+    private void Awake()
+    {
+        if (loadingText != null) 
+            cachedLoadingLocText = loadingText.GetComponent<LocalizedText>();
+            
+        if (pauseButton != null) 
+            pauseButtonAnim = pauseButton.GetComponent<ButtonFoldAnimator>();
+            
+        if (extraHintButton != null) 
+            extraHintButtonAnim = extraHintButton.GetComponent<ButtonFoldAnimator>();
+    }
+
+    /// <summary>
+    /// Başlangıçta aktif seviyenin ipucu durumunu denetler.
+    /// </summary>
     private void Start() => CheckLevelStatus();
 
     /// <summary>
-    /// Checks if the hint for the current level is already unlocked.
+    /// Aktif seviye için ipucunun daha önce açılıp açılmadığını kontrol eder.
     /// </summary>
     private void CheckLevelStatus()
     {
@@ -47,7 +69,7 @@ public class ExtraHintUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles the hint button click and locks the HUD.
+    /// İpucu butonuna tıklandığında çalışır ve arayüzü kilitler.
     /// </summary>
     public void OnHintButtonClick()
     {
@@ -60,13 +82,13 @@ public class ExtraHintUI : MonoBehaviour
             return;
         }
 
-        // İnternet yoksa 10 saniye darlama, varsa reklam yükle
+        // İnternet bağlantısına göre zaman aşımı süresini belirle
         float timeout = (Application.internetReachability == NetworkReachability.NotReachable) ? 10.0f : 5.0f;
         StartCoroutine(SmartAdLoader(timeout));
     }
 
     /// <summary>
-    /// Displays the hint content and pauses the game.
+    /// İpucu panelini gösterir ve oyun zamanını durdurur.
     /// </summary>
     public void ShowExtraHint()
     {
@@ -75,7 +97,7 @@ public class ExtraHintUI : MonoBehaviour
 
         TutorialTrigger.OnHintToggled?.Invoke(true);
 
-        // Dil desteğine göre yazıyı çek
+        // İpucu metnini yerelleştirme verilerinden çek
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
             string[] allHints = LocalizationManager.Instance.currentData.extra_hints;
@@ -83,7 +105,7 @@ public class ExtraHintUI : MonoBehaviour
                 hintText.text = allHints[currentLevelData.levelID];
         }
 
-        // Görsel varsa yerleştir, yoksa metni genişlet
+        // Görselin varlığına göre UI düzenini ayarla
         if (currentLevelData.hintVisualMap != null)
         {
             hintImage.sprite = currentLevelData.hintVisualMap;
@@ -100,23 +122,23 @@ public class ExtraHintUI : MonoBehaviour
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = false;
         mainHintPanel.SetActive(true);
 
-        HideWithFold(pauseButton);
-        HideWithFold(extraHintButton);
+        HideWithFold(pauseButton, pauseButtonAnim);
+        HideWithFold(extraHintButton, extraHintButtonAnim);
     }
 
     /// <summary>
-    /// Closes the hint panel and releases the UI lock after animation.
+    /// İpucu panelini kapatır ve arayüz kilitlerini serbest bırakır.
     /// </summary>
     public void CloseExtraHint()
     {
-        // Panel butonu kilitlenir
+        // İpucu paneli geçiş süresince diğer tıklamaları engelle
         if (UIManager.Instance != null) UIManager.Instance.SetHintBlock(true);
 
         Time.timeScale = 1f;
         if (PlayerController.Instance != null) PlayerController.Instance.canMove = true;
 
-        ShowWithFold(pauseButton);
-        ShowWithFold(extraHintButton);
+        ShowWithFold(pauseButton, pauseButtonAnim);
+        ShowWithFold(extraHintButton, extraHintButtonAnim);
 
         if (hintAnimator != null)
         {
@@ -129,10 +151,12 @@ public class ExtraHintUI : MonoBehaviour
             TutorialTrigger.OnHintToggled?.Invoke(false);
         }
 
-        // Animasyon bitince kilitleri aç
         StartCoroutine(EnableUIAfterHint(0.475f));
     }
 
+    /// <summary>
+    /// Reklam yükleme sürecini yönetir.
+    /// </summary>
     private IEnumerator SmartAdLoader(float timeout)
     {
         PauseManager.isAdLoading = true;
@@ -145,7 +169,7 @@ public class ExtraHintUI : MonoBehaviour
         while (timer < timeout)
         {
             timer += Time.unscaledDeltaTime;
-            // Reklam hazır mı kontrolü (Manager üzerinden)
+            
             if (AdMobRewardedManager.Instance != null && AdMobRewardedManager.Instance.IsAdReady())
             {
                 adOpened = true;
@@ -172,6 +196,9 @@ public class ExtraHintUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Mevcut seviyenin ipucunu açılmış olarak kaydeder.
+    /// </summary>
     private void UnlockHint()
     {
         isHintUnlocked = true;
@@ -179,6 +206,9 @@ public class ExtraHintUI : MonoBehaviour
             lastUnlockedLevelID = LevelManager.Instance.activeLevel.levelID;
     }
 
+    /// <summary>
+    /// Belirtilen gecikme sonrasında arayüz kilitlerini kaldırır.
+    /// </summary>
     private IEnumerator EnableUIAfterHint(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
@@ -189,19 +219,26 @@ public class ExtraHintUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Eğitici içeriği tetiklemek için kısa bir süre bekler.
+    /// </summary>
     private IEnumerator WaitAndShowTutorial()
     {
         yield return new WaitForSeconds(0.4f);
         TutorialTrigger.OnHintToggled?.Invoke(false);
     }
 
+    /// <summary>
+    /// Yükleme ekranındaki hareketli nokta animasyonunu oynatır.
+    /// </summary>
     private IEnumerator AnimateDots()
     {
         string baseText = "Reklam Yükleniyor";
-        if (loadingText != null)
+        
+        if (loadingText != null && cachedLoadingLocText != null)
         {
-            LocalizedText locText = loadingText.GetComponent<LocalizedText>();
-            if (locText != null) { locText.UpdateText(); baseText = loadingText.text.Replace(".", ""); }
+            cachedLoadingLocText.UpdateText(); 
+            baseText = loadingText.text.Replace(".", ""); 
         }
 
         while (true)
@@ -214,17 +251,21 @@ public class ExtraHintUI : MonoBehaviour
         }
     }
 
-    private void HideWithFold(GameObject obj)
+    /// <summary>
+    /// Hedef butonu katlanma animasyonu ile gizler.
+    /// </summary>
+    private void HideWithFold(GameObject obj, ButtonFoldAnimator anim)
     {
         if (obj == null) return;
-        var anim = obj.GetComponent<ButtonFoldAnimator>();
         if (anim != null && obj.activeInHierarchy) anim.HideButton(); else obj.SetActive(false);
     }
 
-    private void ShowWithFold(GameObject obj)
+    /// <summary>
+    /// Hedef butonu katlanma animasyonu ile görünür hale getirir.
+    /// </summary>
+    private void ShowWithFold(GameObject obj, ButtonFoldAnimator anim)
     {
         if (obj == null) return;
-        var anim = obj.GetComponent<ButtonFoldAnimator>();
         if (anim != null) anim.ShowButton(); else obj.SetActive(true);
     }
 }

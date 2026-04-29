@@ -1,6 +1,10 @@
 using UnityEngine;
 
-public class TiringJumpRule : MonoBehaviour
+/// <summary>
+/// Controls the tiring jump mechanic of the player.
+/// (Oyuncunun yorulan zıplama mekaniğini kontrol eder.)
+/// </summary>
+public class TiringJumpRule : MonoBehaviour, IResettable 
 {
     public static TiringJumpRule Instance { get; private set; }
 
@@ -16,62 +20,68 @@ public class TiringJumpRule : MonoBehaviour
 
     [Header("Auto Jump (Otomatik Zıplama)")]
     public float jumpCooldown = 0.1f;
+    public float minSoundForce = 5f;
 
     private float currentForce;
     private float lastGroundY;
     private float lastJumpTime;
     private bool wasGrounded = false;
-    public float minSoundForce = 5f;
+
+    // Performans için arama gecikmesi değişkenleri
+    private float playerSearchCooldown = 0.5f;
+    private float lastSearchTime = 0f;
 
     private Rigidbody2D playerRb;
     private PlayerController player;
 
-    void Awake()
+    private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         currentForce = startingForce;
     }
 
     /// <summary>
-    /// Subscribe to the level start event.
-    /// (Bölüm başlama olayına abone olur.)
+    /// Obje sahneye yüklendiğinde kendini LevelManager'ın sıfırlama listesine ekler.
     /// </summary>
-    private void OnEnable()
+    private void Start()
     {
-        // LevelManager her ResetAllMechanics dediğinde burası otomatik tetiklenir.
-        LevelManager.OnLevelStarted += ResetJumpForce;
-    }
+        //Event dinlemek yerine doğrudan yöneticiye kayıt oluyoruz
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterResettable(this);
+        }
 
-    /// <summary>
-    /// Unsubscribe to prevent memory leaks.
-    /// (Bellek sızıntısını önlemek için abonelikten çıkar.)
-    /// </summary>
-    private void OnDisable()
-    {
-        LevelManager.OnLevelStarted -= ResetJumpForce;
-    }
-
-    void Start()
-    {
         FindPlayer();
     }
 
-    void FindPlayer()
+    /// <summary>
+    /// Obje sahneden silindiğinde hafıza sızıntısını önlemek için listeden çıkar.
+    /// </summary>
+    private void OnDestroy()
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj != null)
+        // Silinirken kaydı siliyoruz ki oyun çökmesin
+        if (LevelManager.Instance != null)
         {
-            playerRb = playerObj.GetComponent<Rigidbody2D>();
-            player = playerObj.GetComponent<PlayerController>();
-            lastGroundY = playerObj.transform.position.y;
+            LevelManager.Instance.UnregisterResettable(this);
         }
     }
 
-    void Update()
+    private void Update()
     {
+        // Performans optimizasyonu: Oyuncu yoksa saniyede 60 kez değil, yarım saniyede bir ara
         if (playerRb == null || player == null)
         {
-            FindPlayer();
+            if (Time.time > lastSearchTime + playerSearchCooldown)
+            {
+                FindPlayer();
+                lastSearchTime = Time.time;
+            }
             return;
         }
 
@@ -88,7 +98,18 @@ public class TiringJumpRule : MonoBehaviour
         wasGrounded = player.isGrounded;
     }
 
-    void OnLanded()
+    private void FindPlayer()
+    {
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            playerRb = playerObj.GetComponent<Rigidbody2D>();
+            player = playerObj.GetComponent<PlayerController>();
+            lastGroundY = playerObj.transform.position.y;
+        }
+    }
+
+    private void OnLanded()
     {
         float currentY = player.transform.position.y;
         float heightDifference = lastGroundY - currentY;
@@ -107,27 +128,23 @@ public class TiringJumpRule : MonoBehaviour
         lastGroundY = currentY;
     }
 
-    void AutoJump()
+    private void AutoJump()
     {
         lastJumpTime = Time.time;
         playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
         playerRb.AddForce(Vector2.up * currentForce, ForceMode2D.Impulse);
 
-        // Yeterli güç varsa zıplama sesini çal
-        if (currentForce > minSoundForce)
+        if (currentForce > minSoundForce && SoundManager.instance != null)
         {
-            if (SoundManager.instance != null)
-            {
-                SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
-            }
+            SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
         }
     }
 
     /// <summary>
-    /// Resets the mechanics. Automatically called via LevelManager.OnLevelStarted.
-    /// (Mekaniği sıfırlar. LevelManager.OnLevelStarted aracılığıyla otomatik çağrılır.)
+    /// IResettable arayüzünün zorunlu kıldığı sıfırlama fonksiyonu.
+    /// (LevelManager tarafından bölüm yeniden başladığında otomatik tetiklenir.)
     /// </summary>
-    public void ResetJumpForce()
+    public void ResetMechanic() //  Fonksiyon ismi arayüze uyduruldu
     {
         currentForce = startingForce;
 

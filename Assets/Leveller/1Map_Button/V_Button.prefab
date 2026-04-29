@@ -10,12 +10,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 3273822670683174205}
+      objectReference: {fileID: 899300247014029947, guid: c69756b9fd745f24d8e401126c9ff197, type: 3}
     - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: OnButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -73,8 +73,3 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
---- !u!1 &3273822670683174205 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
-  m_PrefabInstance: {fileID: 6094298537732093381}
-  m_PrefabAsset: {fileID: 0}

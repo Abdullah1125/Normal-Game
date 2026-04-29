@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
         ResetSpeed();
 
-        if (CameraRoomController.Instance != null) CameraRoomController.Instance.ResetCamera();
+      
         if (LevelManager.Instance != null) LevelManager.Instance.ResetAllMechanics();
     }
 
