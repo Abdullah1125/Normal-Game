@@ -1,34 +1,31 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-public class LocalizationManager : MonoBehaviour
+public class LocalizationManager : SingletonPersistent<LocalizationManager>
 {
-    public static LocalizationManager Instance;
     public LanguageData currentData;
 
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
-        else { Destroy(gameObject); }
-
-        // Daha önce seçilen dili yükle, yoksa Ýngilizce baþla
-        LoadLanguage(PlayerPrefs.GetString("SelectedLang", "English"));
+        base.Awake();
+        LoadLanguage(PlayerPrefs.GetString(Constants.PREF_SELECTED_LANG, "English"));
     }
 
     public void LoadLanguage(string langName)
     {
-        // Assets/Resources/Languages/ klasöründen JSON oku
+        // Assets/Resources/Languages/ klasÃƒÂ¶rÃƒÂ¼nden JSON oku
         TextAsset jsonFile = Resources.Load<TextAsset>("Languages/" + langName);
 
         if (jsonFile != null)
         {
             currentData = JsonUtility.FromJson<LanguageData>(jsonFile.text);
-            PlayerPrefs.SetString("SelectedLang", langName);
+            PlayerPrefs.SetString(Constants.PREF_SELECTED_LANG, langName);
 
-            // Sahnedeki LocalizedText olan her þeyi güncelle
+            // Sahnedeki LocalizedText olan her Ã…Å¸eyi gÃƒÂ¼ncelle
             LocalizedText[] allTexts = FindObjectsByType<LocalizedText>(FindObjectsSortMode.None);
             foreach (var t in allTexts) t.UpdateText();
 
-            Debug.Log(langName + " dili yüklendi.");
+            Debug.Log(langName + " dili yÃƒÂ¼klendi.");
         }
     }
 }
+

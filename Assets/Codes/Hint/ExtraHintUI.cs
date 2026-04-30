@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -52,20 +52,20 @@ public class ExtraHintUI : MonoBehaviour
             extraHintButtonAnim = extraHintButton.GetComponent<ButtonFoldAnimator>();
     }
 
-    /// <summary>
-    /// Başlangıçta aktif seviyenin ipucu durumunu denetler.
-    /// </summary>
-    private void Start() => CheckLevelStatus();
-
-    /// <summary>
-    /// Aktif seviye için ipucunun daha önce açılıp açılmadığını kontrol eder.
-    /// </summary>
-    private void CheckLevelStatus()
+    private void OnEnable()
     {
-        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
-        {
-            isHintUnlocked = (LevelManager.Instance.activeLevel.levelID == lastUnlockedLevelID);
-        }
+        LevelManager.OnLevelStarted += ResetHintStatus;
+    }
+
+    private void OnDisable()
+    {
+        LevelManager.OnLevelStarted -= ResetHintStatus;
+    }
+
+    private void ResetHintStatus()
+    {
+        isHintUnlocked = false;
+        lastUnlockedLevelID = -1;
     }
 
     /// <summary>

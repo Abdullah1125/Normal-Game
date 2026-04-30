@@ -1,19 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoulPool : MonoBehaviour
+public class SoulPool : Singleton<SoulPool>
 {
-    public static SoulPool Instance;
     public GameObject soulPrefab;
     public int poolSize = 10;
 
     private List<GameObject> pooledSouls = new List<GameObject>();
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
 
-        // Oyun baþýnda binalarý inþa et ve gizle
+        // Oyun baÅŸÄ±nda binalarÄ± inÅŸa et ve gizle
         for (int i = 0; i < poolSize; i++)
         {
             GameObject obj = Instantiate(soulPrefab);
@@ -24,7 +23,7 @@ public class SoulPool : MonoBehaviour
 
     public GameObject GetSoul()
     {
-        // Depoda boþta (aktif olmayan) ruh var mý bak
+        // Depoda boÅŸta (aktif olmayan) ruh var mÄ± bak
         foreach (GameObject soul in pooledSouls)
         {
             if (!soul.activeInHierarchy)
@@ -33,7 +32,7 @@ public class SoulPool : MonoBehaviour
             }
         }
 
-        // Eðer hepsi doluysa (ki 10 tane yetecektir) bir tane daha yaratýp listeye ekle
+        // EÄŸer hepsi doluysa (ki 10 tane yetecektir) bir tane daha yaratÄ±p listeye ekle
         GameObject newSoul = Instantiate(soulPrefab);
         newSoul.SetActive(false);
         pooledSouls.Add(newSoul);

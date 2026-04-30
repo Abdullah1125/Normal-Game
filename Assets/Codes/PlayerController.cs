@@ -1,44 +1,43 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
-    public static PlayerController Instance { get; private set; }
 
     private SpriteRenderer sr;
 
-    [Header("Movement Settings (Hareket Ayarları)")]
+    [Header("Movement Settings (Hareket AyarlarÃ„Â±)")]
     public float moveSpeed = 14f;
     public float defaultSpeed = 14f;
     public float airAcceleration = 25f;
     public bool canMove = true;
 
-    [Header("Jump Settings (Zıplama Ayarları)")]
+    [Header("Jump Settings (ZÃ„Â±plama AyarlarÃ„Â±)")]
     public float firstJumpForce = 13f;
     public float doubleJumpForce = 10f;
     public float fallMultiplier = 10f;
     public int extraJumpsValue = 1;
     private int extraJumps;
 
-    [Header("Juicy Movement (Akıcı Hareket)")]
+    [Header("Juicy Movement (AkÃ„Â±cÃ„Â± Hareket)")]
     public float acceleration = 75f;
     public float deceleration = 50f;
     public float airDeceleration = 10f;
 
-    [Header("Jump Boost (Zıplama Desteği)")]
+    [Header("Jump Boost (ZÃ„Â±plama DesteÃ„Å¸i)")]
     public float extraBoostAmount = 2f;
     public float boostSmoothness = 3f;
 
-    [Header("Mobile Jump Assist (Mobil Zıplama Yardımı)")]
+    [Header("Mobile Jump Assist (Mobil ZÃ„Â±plama YardÃ„Â±mÃ„Â±)")]
     public float coyotoTime = 0.2f;
     public float jumpBufferTime = 0.2f;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
-    [Header("Anti-Spam Settings (Spam Ayarları)")]
+    [Header("Anti-Spam Settings (Spam AyarlarÃ„Â±)")]
     public float jumpCooldownTime = 0.05f;
     private float jumpCooldownCounter;
 
@@ -48,12 +47,12 @@ public class PlayerController : MonoBehaviour
     private bool isHoldingJump;
     private float gravityDir;
 
-    [Header("Sensors (Sensörler)")]
+    [Header("Sensors (SensÃƒÂ¶rler)")]
     public Transform groundCheck;
     public float checkRadius = 0.25f;
     public LayerMask groundLayer;
 
-    [Header("Death Settings (Ölüm Ayarları)")]
+    [Header("Death Settings (Ãƒâ€“lÃƒÂ¼m AyarlarÃ„Â±)")]
     private Vector2 startPos;
     public GameObject soulPrefab;
 
@@ -67,7 +66,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem walkParticles;
 
     /// <summary>
-    /// Oyun başladığında başlangıç pozisyonunu kaydeder ve zamanlayıcıyı başlatır.
+    /// Oyun baÃ…Å¸ladÃ„Â±Ã„Å¸Ã„Â±nda baÃ…Å¸langÃ„Â±ÃƒÂ§ pozisyonunu kaydeder ve zamanlayÃ„Â±cÃ„Â±yÃ„Â± baÃ…Å¸latÃ„Â±r.
     /// </summary>
     void Start()
     {
@@ -80,12 +79,11 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Gerekli bileşenleri alır ve varsayılan değerleri atar.
+    /// Gerekli bileÃ…Å¸enleri alÃ„Â±r ve varsayÃ„Â±lan deÃ„Å¸erleri atar.
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        base.Awake();
 
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -96,7 +94,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Girdi kontrollerini ve zıplama mantığını her karede işler.
+    /// Girdi kontrollerini ve zÃ„Â±plama mantÃ„Â±Ã„Å¸Ã„Â±nÃ„Â± her karede iÃ…Å¸ler.
     /// </summary>
     void Update()
     {
@@ -112,10 +110,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Yukarı yönlü hızı hesapla (Triple jump bug'ını engeller)
+        // YukarÃ„Â± yÃƒÂ¶nlÃƒÂ¼ hÃ„Â±zÃ„Â± hesapla (Triple jump bug'Ã„Â±nÃ„Â± engeller)
         float currentUpwardVelocity = -gravityDir * rb.linearVelocity.y;
 
-        // Yerdeyken ve zıplamıyorken hakları yenile
+        // Yerdeyken ve zÃ„Â±plamÃ„Â±yorken haklarÃ„Â± yenile
         if (isGrounded && currentUpwardVelocity <= 0.1f)
         {
             coyoteTimeCounter = coyotoTime;
@@ -126,14 +124,14 @@ public class PlayerController : MonoBehaviour
             coyoteTimeCounter -= Time.deltaTime;
         }
 
-        // Zıplama tamponu (Jump Buffer)
+        // ZÃ„Â±plama tamponu (Jump Buffer)
         if (Input.GetButtonDown("Jump")) jumpBufferCounter = jumpBufferTime;
         else jumpBufferCounter -= Time.deltaTime;
 
-        // Zıplama cooldown sayacını düşür
+        // ZÃ„Â±plama cooldown sayacÃ„Â±nÃ„Â± dÃƒÂ¼Ã…Å¸ÃƒÂ¼r
         if (jumpCooldownCounter > 0f) jumpCooldownCounter -= Time.deltaTime;
 
-        // Zıplama işlemini tetikle
+        // ZÃ„Â±plama iÃ…Å¸lemini tetikle
         if (jumpBufferCounter > 0f && jumpCooldownCounter <= 0f)
         {
             if (LevelManager.Instance.activeLevel.isJumpForbidden) return;
@@ -153,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonUp("Jump")) StopJump();
 
-        // Adım sesi efektini yönet
+        // AdÃ„Â±m sesi efektini yÃƒÂ¶net
         if (Mathf.Abs(moveInput) > 0.1f && Mathf.Abs(rb.linearVelocity.x) > 1f && isGrounded && canMove)
         {
             stepTimer -= Time.deltaTime;
@@ -176,24 +174,24 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Karakterin yönünü ve yer çekimine göre rotasyonunu günceller.
+    /// Karakterin yÃƒÂ¶nÃƒÂ¼nÃƒÂ¼ ve yer ÃƒÂ§ekimine gÃƒÂ¶re rotasyonunu gÃƒÂ¼nceller.
     /// </summary>
     private void UpdateVisuals()
     {
-        // Yüzünü çevir
+        // YÃƒÂ¼zÃƒÂ¼nÃƒÂ¼ ÃƒÂ§evir
         if (Mathf.Abs(moveInput) > 0.1f)
         {
             if (moveInput > 0.1f) sr.flipX = (gravityDir > 0);
             else if (moveInput < -0.1f) sr.flipX = !(gravityDir > 0);
         }
 
-        // Gövdeyi ters çevir (Ters yerçekimi)
+        // GÃƒÂ¶vdeyi ters ÃƒÂ§evir (Ters yerÃƒÂ§ekimi)
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
     }
 
     /// <summary>
-    /// Fizik tabanlı hareketleri ve yer kontrolünü hesaplar.
+    /// Fizik tabanlÃ„Â± hareketleri ve yer kontrolÃƒÂ¼nÃƒÂ¼ hesaplar.
     /// </summary>
     void FixedUpdate()
     {
@@ -206,10 +204,10 @@ public class PlayerController : MonoBehaviour
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, 0.95f) * Mathf.Sign(speedDif);
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
 
-        // Zemin kontrolü
+        // Zemin kontrolÃƒÂ¼
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
 
-        // Zıplama desteği (Apex boost)
+        // ZÃ„Â±plama desteÃ„Å¸i (Apex boost)
         if (isHoldingJump && rb.linearVelocity.y > 0.1f && rb.linearVelocity.y < 3f)
         {
             float targetY = rb.linearVelocity.y + (extraBoostAmount * -gravityDir);
@@ -217,7 +215,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, smoothY);
         }
 
-        // Hızlı düşüş (Fast fall)
+        // HÃ„Â±zlÃ„Â± dÃƒÂ¼Ã…Å¸ÃƒÂ¼Ã…Å¸ (Fast fall)
         bool isFalling = (gravityDir < 0 && rb.linearVelocity.y < 0) || (gravityDir > 0 && rb.linearVelocity.y > 0);
         if (isFalling)
         {
@@ -225,11 +223,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Obstacle")) Die(); }
-    private void OnCollisionEnter2D(Collision2D other) { if (other.gameObject.CompareTag("Obstacle")) Die(); }
+    private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag(Constants.TAG_OBSTACLE)) Die(); }
+    private void OnCollisionEnter2D(Collision2D other) { if (other.gameObject.CompareTag(Constants.TAG_OBSTACLE)) Die(); }
 
     /// <summary>
-    /// Karakter engele çarptığında ölüm işlemlerini başlatır.
+    /// Karakter engele ÃƒÂ§arptÃ„Â±Ã„Å¸Ã„Â±nda ÃƒÂ¶lÃƒÂ¼m iÃ…Å¸lemlerini baÃ…Å¸latÃ„Â±r.
     /// </summary>
     public void Die()
     {
@@ -250,7 +248,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Ölüm animasyonunu ve gecikmesini yönetir.
+    /// Ãƒâ€“lÃƒÂ¼m animasyonunu ve gecikmesini yÃƒÂ¶netir.
     /// </summary>
     private IEnumerator DeathRoutine()
     {
@@ -268,7 +266,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Karakterin pozisyonunu, fiziğini ve durumunu varsayılana sıfırlar.
+    /// Karakterin pozisyonunu, fiziÃ„Å¸ini ve durumunu varsayÃ„Â±lana sÃ„Â±fÃ„Â±rlar.
     /// </summary>
     public void ResetPosition()
     {
@@ -290,11 +288,11 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Seviye kurallarını dikkate alarak yatay hareket yönünü atar.
+    /// Seviye kurallarÃ„Â±nÃ„Â± dikkate alarak yatay hareket yÃƒÂ¶nÃƒÂ¼nÃƒÂ¼ atar.
     /// </summary>
     public void Move(float dir)
     {
-        // Zaman durmuşsa veya hareket yasaksa girdi alma (Ghost input koruması)
+        // Zaman durmuÃ…Å¸sa veya hareket yasaksa girdi alma (Ghost input korumasÃ„Â±)
         if (!canMove || Time.timeScale == 0f)
         {
             moveInput = 0;
@@ -311,19 +309,19 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Zıplama komutunu sonlandırır.
+    /// ZÃ„Â±plama komutunu sonlandÃ„Â±rÃ„Â±r.
     /// </summary>
     public void StopJump() => isHoldingJump = false;
 
     /// <summary>
-    /// Fiziksel zıplama gücünü uygular ve sistemleri sıfırlar.
+    /// Fiziksel zÃ„Â±plama gÃƒÂ¼cÃƒÂ¼nÃƒÂ¼ uygular ve sistemleri sÃ„Â±fÃ„Â±rlar.
     /// </summary>
     private void ApplyJump(float force)
     {
         SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
         if (isGrounded && jumpParticles != null) jumpParticles.Play();
 
-        // Anti-Spam mühürleri
+        // Anti-Spam mÃƒÂ¼hÃƒÂ¼rleri
         isGrounded = false;
         jumpCooldownCounter = jumpCooldownTime;
         coyoteTimeCounter = 0f;
@@ -334,11 +332,11 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Mobil kontroller için zıplama tamponunu başlatır.
+    /// Mobil kontroller iÃƒÂ§in zÃ„Â±plama tamponunu baÃ…Å¸latÃ„Â±r.
     /// </summary>
     public void StartJump()
     {
-        // Zaman durmuşsa girdi alma (Ghost input koruması)
+        // Zaman durmuÃ…Å¸sa girdi alma (Ghost input korumasÃ„Â±)
         if (!canMove || Time.timeScale == 0f) return;
 
         jumpBufferCounter = jumpBufferTime;
@@ -346,12 +344,12 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Hızı varsayılan değerine döndürür.
+    /// HÃ„Â±zÃ„Â± varsayÃ„Â±lan deÃ„Å¸erine dÃƒÂ¶ndÃƒÂ¼rÃƒÂ¼r.
     /// </summary>
     public void ResetSpeed() => moveSpeed = defaultSpeed;
 
     /// <summary>
-    /// Mevcut yer çekimi yönünü belirler.
+    /// Mevcut yer ÃƒÂ§ekimi yÃƒÂ¶nÃƒÂ¼nÃƒÂ¼ belirler.
     /// </summary>
     public void UpdateGravityDirection() => gravityDir = Mathf.Sign(Physics2D.gravity.y);
 
@@ -360,3 +358,4 @@ public class PlayerController : MonoBehaviour
         if (ScoreManager.Instance != null) ScoreManager.Instance.StopTimer();
     }
 }
+

@@ -92,7 +92,7 @@ public class TutorialTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constants.TAG_PLAYER))
         {
             isPlayerInside = true;
 
@@ -107,7 +107,7 @@ public class TutorialTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constants.TAG_PLAYER))
         {
             isPlayerInside = false;
 

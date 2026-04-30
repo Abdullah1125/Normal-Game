@@ -3,38 +3,37 @@ using UnityEngine;
 
 /// <summary>
 /// Handles camera shake and hit-stop effects. Camera movement/transition has been removed.
-/// (Kamera sarsıntısı ve vuruş donmasını yönetir. Kamera hareketi/geçişi kaldırılmıştır.)
+/// (Kamera sarsÄ±ntÄ±sÄ± ve vuruÅŸ donmasÄ±nÄ± yÃ¶netir. Kamera hareketi/geÃ§iÅŸi kaldÄ±rÄ±lmÄ±ÅŸtÄ±r.)
 /// </summary>
-public class CameraRoomController : MonoBehaviour
+public class CameraRoomController : Singleton<CameraRoomController>
 {
-    public static CameraRoomController Instance;
 
-    [Header("Death Shake Settings (Ölüm Tokadı)")]
+    [Header("Death Shake Settings (Ã–lÃ¼m TokadÄ±)")]
     public float shakeDuration = 0.35f;
     public float shakeMagnitude = 0.6f;
     public float shakeSpeed = 45f;
     private Vector3 shakeOffset;
 
-    [Header("Impact Settings (Çarpışma Hissi)")]
-    // Ölüm anında oyunun saliselik donma süresi (Hit Stop).
+    [Header("Impact Settings (Ã‡arpÄ±ÅŸma Hissi)")]
+    // Ã–lÃ¼m anÄ±nda oyunun saliselik donma sÃ¼resi (Hit Stop).
     public float hitStopDuration = 0.05f;
 
-    // Kameranın başlangıçtaki sabit pozisyonu
+    // KameranÄ±n baÅŸlangÄ±Ã§taki sabit pozisyonu
     private Vector3 basePosition;
 
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
-        basePosition = transform.position; // Başlangıç yerini kaydet
+        base.Awake();
+        basePosition = transform.position; // BaÅŸlangÄ±Ã§ yerini kaydet
     }
 
     void LateUpdate()
     {
-        // Kamera artık bir yere gitmiyor, sadece ana pozisyonunda durup gerekirse titriyor
+        // Kamera artÄ±k bir yere gitmiyor, sadece ana pozisyonunda durup gerekirse titriyor
         transform.position = basePosition + shakeOffset;
     }
 
-    // --- SARSINTI MEKANİZMASI ---
+    // --- SARSINTI MEKANÄ°ZMASI ---
     public void ShakeCamera()
     {
         StopAllCoroutines();
@@ -43,7 +42,7 @@ public class CameraRoomController : MonoBehaviour
 
     private IEnumerator ShakeRoutine()
     {
-        // 1. AŞAMA: HIT STOP (ZAMAN DONMASI)
+        // 1. AÅAMA: HIT STOP (ZAMAN DONMASI)
         if (hitStopDuration > 0f)
         {
             Time.timeScale = 0f;
@@ -51,7 +50,7 @@ public class CameraRoomController : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        // 2. AŞAMA: KÜBİK SARSINTI (BALYOZ ETKİSİ)
+        // 2. AÅAMA: KÃœBÄ°K SARSINTI (BALYOZ ETKÄ°SÄ°)
         float elapsed = 0.0f;
         float randomStart = Random.Range(-1000f, 1000f);
 

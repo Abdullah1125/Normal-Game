@@ -1,18 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Box : MonoBehaviour , IResettable
 {
-    [Header("Friction Settings(Sürtünme Ayarlarý)")]
-    public float slidingDamping = 0.2f;   // Yandan itilirkenki sürtünme
-    public float stoppingDamping = 3.0f;  // Býrakýldýðýnda durma direnci (Zýnk diye durmasý için artýrdým)
+    [Header("Friction Settings(SÃ¼rtÃ¼nme AyarlarÄ±)")]
+    public float slidingDamping = 0.2f;   // Yandan itilirkenki sÃ¼rtÃ¼nme
+    public float stoppingDamping = 3.0f;  // BÄ±rakÄ±ldÄ±ÄŸÄ±nda durma direnci (ZÄ±nk diye durmasÄ± iÃ§in artÄ±rdÄ±m)
     public float stopThreshold = 0.1f;
 
     private Rigidbody2D rb;
     private bool isBeingPushed = false;
     private Vector2 originalPos;
 
-    // Kekeleme (Stuttering) Korumasý için zamanlayýcý
+    // Kekeleme (Stuttering) KorumasÄ± iÃ§in zamanlayÄ±cÄ±
     private float pushTimeout = 0.1f;
     private float pushTimer = 0f;
 
@@ -41,7 +41,7 @@ public class Box : MonoBehaviour , IResettable
     }
     void FixedUpdate()
     {
-        // 1. ZAMANLAYICI KONTROLÜ (Mikro sekmelerde kutu aniden durmasýn diye)
+        // 1. ZAMANLAYICI KONTROLÃœ (Mikro sekmelerde kutu aniden durmasÄ±n diye)
         if (pushTimer > 0)
         {
             pushTimer -= Time.fixedDeltaTime;
@@ -53,36 +53,36 @@ public class Box : MonoBehaviour , IResettable
             isBeingPushed = false;
         }
 
-        // 2. FREN SÝSTEMÝ
+        // 2. FREN SÄ°STEMÄ°
         if (!isBeingPushed)
         {
             if (rb.linearVelocity.magnitude > stopThreshold)
             {
-                // Kutuyu daha kararlý durdurmak için Lerp yerine direkt direnç uyguluyoruz
+                // Kutuyu daha kararlÄ± durdurmak iÃ§in Lerp yerine direkt direnÃ§ uyguluyoruz
                 rb.linearDamping = stoppingDamping;
             }
             else
             {
                 // Tamamen durdur
-                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y); // Sadece X'i sýfýrla, yerçekimini bozma!
+                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y); // Sadece X'i sÄ±fÄ±rla, yerÃ§ekimini bozma!
                 rb.linearDamping = stoppingDamping;
             }
         }
     }
 
-    // Enter yerine Stay kullanýyoruz ki oyuncu iterken sürekli tetiklensin
+    // Enter yerine Stay kullanÄ±yoruz ki oyuncu iterken sÃ¼rekli tetiklensin
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
         {
-            // SÝHÝR BURADA: Temasýn yönünü (Normal) buluyoruz
-            // Eðer normal.x 0.5'ten büyükse, bu yandan bir çarpýþmadýr (Ýtme)
-            // Eðer normal.y büyükse, oyuncu kutunun üstündedir veya altýndadýr.
+            // SÄ°HÄ°R BURADA: TemasÄ±n yÃ¶nÃ¼nÃ¼ (Normal) buluyoruz
+            // EÄŸer normal.x 0.5'ten bÃ¼yÃ¼kse, bu yandan bir Ã§arpÄ±ÅŸmadÄ±r (Ä°tme)
+            // EÄŸer normal.y bÃ¼yÃ¼kse, oyuncu kutunun Ã¼stÃ¼ndedir veya altÄ±ndadÄ±r.
             float hitNormalX = Mathf.Abs(collision.contacts[0].normal.x);
 
             if (hitNormalX > 0.5f)
             {
-                // Sadece yandan temas varsa itilme süresini yenile
+                // Sadece yandan temas varsa itilme sÃ¼resini yenile
                 pushTimer = pushTimeout;
             }
         }
@@ -99,11 +99,12 @@ public class Box : MonoBehaviour , IResettable
 
     private void OnDestroy()
     {
-        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        // Obje silinirken LevelManager'Ä±n listesini de temizliyoruz
         if (LevelManager.Instance != null)
         {
-            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            // EÄŸer LevelManager'da RemoveResettable fonksiyonu yoksa aÅŸaÄŸÄ±ya ekledim
             LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }
+

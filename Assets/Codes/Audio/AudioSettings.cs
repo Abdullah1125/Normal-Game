@@ -27,8 +27,8 @@ public class AudioSettings : MonoBehaviour
     void Start()
     {
    
-        float savedMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float savedSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        float savedMusic = PlayerPrefs.GetFloat(Constants.PREF_MUSIC_VOLUME, 0.75f);
+        float savedSFX = PlayerPrefs.GetFloat(Constants.PREF_SFX_VOLUME, 0.75f);
 
      
         if (musicSlider != null) musicSlider.SetValueWithoutNotify(savedMusic);
@@ -83,7 +83,7 @@ public class AudioSettings : MonoBehaviour
     public void SetMusicVolume(float value)
     {
         ApplyVolume("MusicVol", value);
-        PlayerPrefs.SetFloat("MusicVolume", value);
+        PlayerPrefs.SetFloat(Constants.PREF_MUSIC_VOLUME, value);
         PlayerPrefs.Save();
         isMusicMuted = value <= 0.01f;
         UpdateMusicIcon(value);
@@ -92,7 +92,7 @@ public class AudioSettings : MonoBehaviour
     public void SetSFXVolume(float value)
     {
         ApplyVolume("SFXVol", value);
-        PlayerPrefs.SetFloat("SFXVolume", value);
+        PlayerPrefs.SetFloat(Constants.PREF_SFX_VOLUME, value);
         PlayerPrefs.Save();
         isSFXMuted = value <= 0.01f;
         UpdateSFXIcon(value);

@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Events;
 public class GateButton : MonoBehaviour , IResettable
 {
-    [Header("Sprites(Görseller)")]
+    [Header("Sprites(GÃ¶rseller)")]
    
     public Sprite normalSprite;
     public Sprite pressedSprite;
@@ -24,7 +24,7 @@ public class GateButton : MonoBehaviour , IResettable
         sr = GetComponent<SpriteRenderer>();
         polyCollider = GetComponent<PolygonCollider2D>();
 
-        // Baþlangýçta Sprite Renderer'daki görseli hafýzaya al
+        // BaÅŸlangÄ±Ã§ta Sprite Renderer'daki gÃ¶rseli hafÄ±zaya al
         if (normalSprite == null && sr != null)
         {
             normalSprite = sr.sprite;
@@ -56,12 +56,12 @@ public class GateButton : MonoBehaviour , IResettable
 
     private bool IsPlayer(Collider2D other)
     {
-        return other.CompareTag("Player");
+        return other.CompareTag(Constants.TAG_PLAYER);
     }
 
     private void TryPressButton()
     {
-        // ARADIÐIN KISIM BURASI: Level aktif deðilse buton basýlmaz, rengi kararýr
+        // ARADIÄžIN KISIM BURASI: Level aktif deÄŸilse buton basÄ±lmaz, rengi kararÄ±r
         if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
         {
             if (sr != null) sr.color = disabledColor;
@@ -80,23 +80,23 @@ public class GateButton : MonoBehaviour , IResettable
             pressParticles.Play();
         }
 
-        // Sprite Deðiþimi
+        // Sprite DeÄŸiÅŸimi
         if (sr != null && pressedSprite != null)
         {
             sr.sprite = pressedSprite;
-            // Collider'ýn havada kalmasýný engellemek için güncelleme
+            // Collider'Ä±n havada kalmasÄ±nÄ± engellemek iÃ§in gÃ¼ncelleme
             UpdateCollider();
         }
 
       
 
         // Ses Efekti
-        if (SoundManager.instance != null)
+        if (SoundManager.Instance != null)
         {
             SoundManager.PlayThemeSFX(SFXType.Button);
         }
 
-        // KAPIYI AÇAN KISIM
+        // KAPIYI AÃ‡AN KISIM
         if (GateController.Instance != null)
         {
             GateController.Instance.OpenGate();
@@ -110,7 +110,7 @@ public class GateButton : MonoBehaviour , IResettable
     {
         isPressed = false;
 
-        // Sprite'ý ve Rengi eski haline döndür
+        // Sprite'Ä± ve Rengi eski haline dÃ¶ndÃ¼r
         if (sr != null)
         {
             sr.sprite = normalSprite;
@@ -123,7 +123,7 @@ public class GateButton : MonoBehaviour , IResettable
 
     private void UpdateCollider()
     {
-        // Sprite deðiþince karakterin havada kalmamasý için collider'ý yeniler
+        // Sprite deÄŸiÅŸince karakterin havada kalmamasÄ± iÃ§in collider'Ä± yeniler
         if (polyCollider != null)
         {
             polyCollider.pathCount = 0;
@@ -131,11 +131,12 @@ public class GateButton : MonoBehaviour , IResettable
     }
     private void OnDestroy()
     {
-        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        // Obje silinirken LevelManager'Ä±n listesini de temizliyoruz
         if (LevelManager.Instance != null)
         {
-            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            // EÄŸer LevelManager'da RemoveResettable fonksiyonu yoksa aÅŸaÄŸÄ±ya ekledim
             LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }
+

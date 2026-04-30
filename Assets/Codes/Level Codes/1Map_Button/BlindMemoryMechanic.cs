@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class BlindMemoryMechanic : MonoBehaviour
 {
-    // Renderer'larý bir kere sakla
+    // Renderer'larï¿½ bir kere sakla
     private TilemapRenderer[] cachedRenderers;
 
     void Awake()
@@ -24,7 +24,7 @@ public class BlindMemoryMechanic : MonoBehaviour
 
     private void SetGridVisibility(bool isVisible)
     {
-        // Artýk Find yok, saklanan diziyi kullan
+        // Artï¿½k Find yok, saklanan diziyi kullan
         if (cachedRenderers == null) return;
 
         foreach (TilemapRenderer r in cachedRenderers)

@@ -32,8 +32,8 @@ public class SilentModePuzzle : MonoBehaviour
         float systemVolume = AudioSettings.GetAndroidPhysicalVolume();
 
         
-        float menuMusic = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float menuSFX = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        float menuMusic = PlayerPrefs.GetFloat(Constants.PREF_MUSIC_VOLUME, 0.75f);
+        float menuSFX = PlayerPrefs.GetFloat(Constants.PREF_SFX_VOLUME, 0.75f);
 
         
         bool isSilent = (systemVolume <= 0.01f) || (menuMusic <= 0.01f && menuSFX <= 0.01f);

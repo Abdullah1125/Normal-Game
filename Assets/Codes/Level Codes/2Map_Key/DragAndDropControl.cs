@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Handles dragging and dropping the player using mouse or touch.
-/// (Fare veya dokunmatik kullanarak oyuncuyu sürükleyip bırakmayı yönetir.)
+/// (Fare veya dokunmatik kullanarak oyuncuyu sÃ¼rÃ¼kleyip bÄ±rakmayÄ± yÃ¶netir.)
 /// </summary>
 public class DragAndDropControl : MonoBehaviour, IResettable
 {
@@ -13,37 +13,37 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     [Header("Settings (Ayarlar)")]
     public float grabRadius = 1f;
     public LayerMask playerLayer;
-    public string playerTag = "Player";
+    public string playerTag = Constants.TAG_PLAYER;
 
-    [Header("Boundaries (Sınırlar)")]
+    [Header("Boundaries (SÄ±nÄ±rlar)")]
     public bool useBoundaries = true;
     public float minX = -8f;
     public float maxX = 8f;
     public float minY = -4.5f;
     public float maxY = 4.5f;
 
-    // Önbelleğe alınmış bileşen referansı
+    // Ã–nbelleÄŸe alÄ±nmÄ±ÅŸ bileÅŸen referansÄ±
     private Rigidbody2D playerRb;
 
     /// <summary>
     /// Caches camera and player references.
-    /// (Kamera ve oyuncu referanslarını önbelleğe alır.)
+    /// (Kamera ve oyuncu referanslarÄ±nÄ± Ã¶nbelleÄŸe alÄ±r.)
     /// </summary>
     private void Awake()
     {
         cam = Camera.main;
 
-        // Eğer bu script doğrudan oyuncu üzerindeyse referansı al
+        // EÄŸer bu script doÄŸrudan oyuncu Ã¼zerindeyse referansÄ± al
         playerRb = GetComponent<Rigidbody2D>();
     }
 
     /// <summary>
     /// Registers to the level management system.
-    /// (Seviye yönetim sistemine kayıt olur.)
+    /// (Seviye yÃ¶netim sistemine kayÄ±t olur.)
     /// </summary>
     private void Start()
     {
-        // Eğer script başka bir objede ise oyuncuyu etiketiyle bul
+        // EÄŸer script baÅŸka bir objede ise oyuncuyu etiketiyle bul
         if (playerRb == null)
         {
             GameObject pObj = GameObject.FindWithTag(playerTag);
@@ -58,7 +58,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
     /// <summary>
     /// Unregisters from the system to prevent memory leaks.
-    /// (Bellek sızıntısını önlemek için sistem kaydını siler.)
+    /// (Bellek sÄ±zÄ±ntÄ±sÄ±nÄ± Ã¶nlemek iÃ§in sistem kaydÄ±nÄ± siler.)
     /// </summary>
     private void OnDestroy()
     {
@@ -75,7 +75,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
     /// <summary>
     /// Manages the drag logic without redundant GetComponents.
-    /// (Gereksiz GetComponent aramaları yapmadan sürükleme mantığını yönetir.)
+    /// (Gereksiz GetComponent aramalarÄ± yapmadan sÃ¼rÃ¼kleme mantÄ±ÄŸÄ±nÄ± yÃ¶netir.)
     /// </summary>
     private void HandleInput()
     {
@@ -87,7 +87,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             Collider2D hitCollider = Physics2D.OverlapCircle(mousePos, grabRadius, playerLayer);
 
-            // GetComponent artık burada değil, Awake/Start içinde yapıldı.
+            // GetComponent artÄ±k burada deÄŸil, Awake/Start iÃ§inde yapÄ±ldÄ±.
             if (hitCollider != null && hitCollider.CompareTag(playerTag))
             {
                 isDragging = true;
@@ -97,7 +97,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
             }
         }
 
-        // 2. Sürükleme 
+        // 2. SÃ¼rÃ¼kleme 
         if (isDragging && Input.GetMouseButton(0))
         {
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -114,7 +114,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
             playerRb.transform.position = new Vector3(targetX, targetY, playerRb.transform.position.z);
         }
 
-        // 3. Bırakma
+        // 3. BÄ±rakma
         if (Input.GetMouseButtonUp(0))
         {
             ReleasePlayer();
@@ -123,7 +123,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
     /// <summary>
     /// Returns the player to a dynamic physics state.
-    /// (Oyuncuyu dinamik fizik durumuna geri döndürür.)
+    /// (Oyuncuyu dinamik fizik durumuna geri dÃ¶ndÃ¼rÃ¼r.)
     /// </summary>
     private void ReleasePlayer()
     {
@@ -136,7 +136,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
     /// <summary>
     /// Implementation of IResettable to clean up state on level reset.
-    /// (Seviye sıfırlandığında durumu temizlemek için IResettable uygulaması.)
+    /// (Seviye sÄ±fÄ±rlandÄ±ÄŸÄ±nda durumu temizlemek iÃ§in IResettable uygulamasÄ±.)
     /// </summary>
     public void ResetMechanic()
     {

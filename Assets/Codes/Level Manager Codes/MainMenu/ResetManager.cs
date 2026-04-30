@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
 /// Manages data reset with independent panel animations and strict spam protection.
-/// (Bağımsız panel animasyonları ve sıkı spam korumasıyla veri sıfırlamayı yönetir.)
+/// (BaÄŸÄ±msÄ±z panel animasyonlarÄ± ve sÄ±kÄ± spam korumasÄ±yla veri sÄ±fÄ±rlamayÄ± yÃ¶netir.)
 /// </summary>
 public class ResetManager : MonoBehaviour
 {
     [Header("UI Panels (UI Panelleri)")]
     public GameObject resetConfirmationPanel;
 
-    [Header("Panel Canvas Groups (Panel Kilit Grupları)")]
+    [Header("Panel Canvas Groups (Panel Kilit GruplarÄ±)")]
     public CanvasGroup resetCanvasGroup;
     public CanvasGroup settingsCanvasGroup;
 
-    [Header("Animators (Animatörler)")]
+    [Header("Animators (AnimatÃ¶rler)")]
     public MenuBounceAnimator resetAnimator;
     public MenuBounceAnimator settingsAnimator;
 
@@ -23,11 +23,11 @@ public class ResetManager : MonoBehaviour
 
     /// <summary>
     /// Opens the reset panel if no reset process is active.
-    /// (Aktif bir sıfırlama süreci yoksa reset panelini açar.)
+    /// (Aktif bir sÄ±fÄ±rlama sÃ¼reci yoksa reset panelini aÃ§ar.)
     /// </summary>
     public void OpenResetPanel()
     {
-        // Sıfırlama işlemi sürüyorsa yeni panel açma isteğini reddet
+        // SÄ±fÄ±rlama iÅŸlemi sÃ¼rÃ¼yorsa yeni panel aÃ§ma isteÄŸini reddet
         if (isResetInProgress) return;
 
         if (resetCanvasGroup != null)
@@ -40,46 +40,46 @@ public class ResetManager : MonoBehaviour
     }
     /// <summary>
     /// Closes only the reset confirmation panel with strict anti-spam.
-    /// (Sadece reset onay panelini sıkı spam korumasıyla kapatır.)
+    /// (Sadece reset onay panelini sÄ±kÄ± spam korumasÄ±yla kapatÄ±r.)
     /// </summary>
     public void CloseResetPanel()
     {
-        // Eğer ana sıfırlama işlemi başladıysa zaten hiçbir şey yapma
+        // EÄŸer ana sÄ±fÄ±rlama iÅŸlemi baÅŸladÄ±ysa zaten hiÃ§bir ÅŸey yapma
         if (isResetInProgress) return;
 
-        // 1. KİLİT (HAYIR SPAM KORUMASI): 
-        // Eğer panel zaten kapanma emri aldıysa (tıklamalar kapalıysa) fonksiyonu durdur.
+        // 1. KÄ°LÄ°T (HAYIR SPAM KORUMASI): 
+        // EÄŸer panel zaten kapanma emri aldÄ±ysa (tÄ±klamalar kapalÄ±ysa) fonksiyonu durdur.
         if (resetCanvasGroup != null)
         {
-            // Raycast zaten kapalıysa demek ki kapanış başlamış, defol git diyoruz.
+            // Raycast zaten kapalÄ±ysa demek ki kapanÄ±ÅŸ baÅŸlamÄ±ÅŸ, defol git diyoruz.
             if (!resetCanvasGroup.blocksRaycasts) return;
 
-            // Değilse hemen tıklamaları dondur (Ghost click engelleme)
+            // DeÄŸilse hemen tÄ±klamalarÄ± dondur (Ghost click engelleme)
             resetCanvasGroup.blocksRaycasts = false;
             resetCanvasGroup.interactable = false;
         }
 
-        // 2. Kapanış animasyonunu tetikle
+        // 2. KapanÄ±ÅŸ animasyonunu tetikle
         if (resetAnimator != null) resetAnimator.CloseMenu();
         else if (resetConfirmationPanel != null) resetConfirmationPanel.SetActive(false);
     }
 
     /// <summary>
     /// Executes reset, blocks all interaction and closes panels sequentially.
-    /// (Sıfırlamayı yürütür, tüm etkileşimi kilitler ve panelleri sırayla kapatır.)
+    /// (SÄ±fÄ±rlamayÄ± yÃ¼rÃ¼tÃ¼r, tÃ¼m etkileÅŸimi kilitler ve panelleri sÄ±rayla kapatÄ±r.)
     /// </summary>
     public void ConfirmReset()
     {
         if (isResetInProgress) return;
         isResetInProgress = true;
 
-        // 1. KİLİT: Her iki panelin de butonlarını anında dondur
+        // 1. KÄ°LÄ°T: Her iki panelin de butonlarÄ±nÄ± anÄ±nda dondur
         if (resetCanvasGroup != null) resetCanvasGroup.blocksRaycasts = false;
         if (settingsCanvasGroup != null) settingsCanvasGroup.blocksRaycasts = false;
 
         DataResetProcess();
 
-        // 2. SEKANS: Önce reset paneli kapansın
+        // 2. SEKANS: Ã–nce reset paneli kapansÄ±n
         if (resetAnimator != null) resetAnimator.CloseMenu();
 
         // 3. SEKANS: Ayarlar paneli arkadan gelsin
@@ -98,18 +98,18 @@ public class ResetManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
-        string lang = PlayerPrefs.GetString("SelectedLang", "English");
+        float music = PlayerPrefs.GetFloat(Constants.PREF_MUSIC_VOLUME, 0.75f);
+        float sfx = PlayerPrefs.GetFloat(Constants.PREF_SFX_VOLUME, 0.75f);
+        string lang = PlayerPrefs.GetString(Constants.PREF_SELECTED_LANG, "English");
 
         PlayerPrefs.DeleteAll();
 
-        PlayerPrefs.SetFloat("MusicVolume", music);
-        PlayerPrefs.SetFloat("SFXVolume", sfx);
-        PlayerPrefs.SetString("SelectedLang", lang);
+        PlayerPrefs.SetFloat(Constants.PREF_MUSIC_VOLUME, music);
+        PlayerPrefs.SetFloat(Constants.PREF_SFX_VOLUME, sfx);
+        PlayerPrefs.SetString(Constants.PREF_SELECTED_LANG, lang);
         PlayerPrefs.Save();
 
-        Debug.Log("Reset: Temizleme işlemi tamamlandı.");
+        Debug.Log("Reset: Temizleme iÅŸlemi tamamlandÄ±.");
     }
 
     private void ReloadCurrentScene()

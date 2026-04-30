@@ -4,32 +4,23 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AdMobRewardedManager : MonoBehaviour
+public class AdMobRewardedManager : SingletonPersistent<AdMobRewardedManager>
 {
-    public static AdMobRewardedManager Instance;
 
     [Header("Ad Unit IDs(Reklam Birimi Kimlikleri)")]
-    // Test ID'leri yüklüdür; yayına çıkarken kendi ID'lerinle değiştir.
+    // Test ID'leri yÃ¼klÃ¼dÃ¼r; yayÄ±na Ã§Ä±karken kendi ID'lerinle deÄŸiÅŸtir.
     private string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
 
     private RewardedAd _rewardedAd;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // Aga bu kodun yolda ölmesini engeller!
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        base.Awake();
     }
 
     private void Start()
     {
-        // Yeni SDK sürümüne uygun Test Cihazı yapılandırması
+        // Yeni SDK sÃ¼rÃ¼mÃ¼ne uygun Test CihazÄ± yapÄ±landÄ±rmasÄ±
         RequestConfiguration requestConfiguration = new RequestConfiguration
         {
             TestDeviceIds = new List<string> { "TEST_DEVICE_ID_BURAYA" }
@@ -49,7 +40,7 @@ public class AdMobRewardedManager : MonoBehaviour
             if (error != null || ad == null) return;
             _rewardedAd = ad;
 
-            // Arka planda patlamaması için yeni güncel Thread sistemi eklendi
+            // Arka planda patlamamasÄ± iÃ§in yeni gÃ¼ncel Thread sistemi eklendi
             _rewardedAd.OnAdFullScreenContentClosed += () =>
             {
                 MobileAdsEventExecutor.ExecuteInUpdate(() => { LoadRewardedAd(); });
@@ -72,7 +63,7 @@ public class AdMobRewardedManager : MonoBehaviour
         {
             _rewardedAd.Show((Reward reward) =>
             {
-                // Ödül verme (UI açma) işlemini zorla ana işlemciye yolluyoruz
+                // Ã–dÃ¼l verme (UI aÃ§ma) iÅŸlemini zorla ana iÅŸlemciye yolluyoruz
                 MobileAdsEventExecutor.ExecuteInUpdate(() =>
                 {
                     onReward?.Invoke();
@@ -82,7 +73,7 @@ public class AdMobRewardedManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Ödüllü reklam henüz hazır değil.");
+            Debug.Log("Ã–dÃ¼llÃ¼ reklam henÃ¼z hazÄ±r deÄŸil.");
             LoadRewardedAd();
             return false;
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// List of all sound effect types.
-/// (Tüm ses efekti türlerinin listesi.)
+/// (TÃ¼m ses efekti tÃ¼rlerinin listesi.)
 /// </summary>
 public enum SFXType
 {
@@ -12,13 +12,13 @@ public enum SFXType
     Key,
     DoorPass,
     SlidingDoor,
-    MenuPop,   // Ortadan açýlan için
+    MenuPop,   // Ortadan aÃ§Ä±lan iÃ§in
     MenuSlide
 }
 
 /// <summary>
 /// Data class holding specific audio clips for a theme.
-/// (Bir temaya ait özel ses dosyalarýný tutan veri sýnýfý.)
+/// (Bir temaya ait Ã¶zel ses dosyalarÄ±nÄ± tutan veri sÄ±nÄ±fÄ±.)
 /// </summary>
 [System.Serializable]
 public class ThemeAudio
@@ -37,11 +37,10 @@ public class ThemeAudio
 
 }
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : SingletonPersistent<SoundManager>
 {
-    public static SoundManager instance;
 
-    [Header("Speaker (Hoparlörler)")]
+    [Header("Speaker (HoparlÃ¶rler)")]
     public AudioSource sfxSource;
 
     [Header("Theme Packages (Tema Ses Paketleri)")]
@@ -51,37 +50,35 @@ public class SoundManager : MonoBehaviour
     private static System.Collections.Generic.Dictionary<AudioClip, float> _soundTimers = new System.Collections.Generic.Dictionary<AudioClip, float>();
     /// <summary>
     /// Sets up the singleton pattern.
-    /// (Singleton yapýsýný kurar.)
+    /// (Singleton yapÄ±sÄ±nÄ± kurar.)
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); }
-        else { Destroy(gameObject); }
-
+        base.Awake();
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
     }
 
     /// <summary>
     /// Updates the current audio theme based on the active level ID.
-    /// (Aktif bölüm ID'sine göre mevcut ses temasýný günceller.)
+    /// (Aktif bÃ¶lÃ¼m ID'sine gÃ¶re mevcut ses temasÄ±nÄ± gÃ¼nceller.)
     /// </summary>
     public static void UpdateThemeByLevelID(int levelID)
     {
-        if (instance == null || instance.themeAudios.Length == 0) return;
+        if (Instance == null || Instance.themeAudios.Length == 0) return;
 
-        instance.currentThemeIndex = levelID / 12;
-        instance.currentThemeIndex = Mathf.Clamp(instance.currentThemeIndex, 0, instance.themeAudios.Length - 1);
+        Instance.currentThemeIndex = levelID / 12;
+        Instance.currentThemeIndex = Mathf.Clamp(Instance.currentThemeIndex, 0, Instance.themeAudios.Length - 1);
     }
 
     /// <summary>
     /// Plays a theme-specific sound effect. Adds a volume parameter to lower specific loud sounds.
-    /// (Belirli çok çýkan sesleri kýsmak için ses seviyesi parametresi eklendi.)
+    /// (Belirli Ã§ok Ã§Ä±kan sesleri kÄ±smak iÃ§in ses seviyesi parametresi eklendi.)
     /// </summary>
     public static void PlayThemeSFX(SFXType type, float volumeMultiplier = 1f)
     {
-        if (instance == null || instance.themeAudios.Length == 0) return;
+        if (Instance == null || Instance.themeAudios.Length == 0) return;
 
-        ThemeAudio currentTheme = instance.themeAudios[instance.currentThemeIndex];
+        ThemeAudio currentTheme = Instance.themeAudios[Instance.currentThemeIndex];
         AudioClip clipToPlay = null;
 
         switch (type)
@@ -103,28 +100,28 @@ public class SoundManager : MonoBehaviour
     }
     // <summary>
     /// Creates a temporary AudioSource, adjusts volume, and prevents overlapping spam.
-    /// (Geçici bir AudioSource oluþturur, sesi ayarlar ve üst üste binme spam'ini önler.)
+    /// (GeÃ§ici bir AudioSource oluÅŸturur, sesi ayarlar ve Ã¼st Ã¼ste binme spam'ini Ã¶nler.)
     /// </summary>
     private static void PlayClipWithPitch(AudioClip clip, float volumeMultiplier)
     {
-        // 1. ANTI-SPAM KONTROLÜ (Ayný ses 0.08 saniye içinde tekrar çalamaz)
+        // 1. ANTI-SPAM KONTROLÃœ (AynÄ± ses 0.08 saniye iÃ§inde tekrar Ã§alamaz)
         if (_soundTimers.TryGetValue(clip, out float lastPlayedTime))
         {
-            // Eðer son çalýnma üzerinden 0.08 saniyeden az zaman geçtiyse, iptal et!
+            // EÄŸer son Ã§alÄ±nma Ã¼zerinden 0.08 saniyeden az zaman geÃ§tiyse, iptal et!
             if (Time.unscaledTime - lastPlayedTime < 0.08f) return;
         }
 
-        // Sesin son çalýnma zamanýný hafýzaya kaydet
+        // Sesin son Ã§alÄ±nma zamanÄ±nÄ± hafÄ±zaya kaydet
         _soundTimers[clip] = Time.unscaledTime;
 
-        // 2. HAYALET OBJE YARATMA (Eski kodun aynýsý)
+        // 2. HAYALET OBJE YARATMA (Eski kodun aynÄ±sÄ±)
         GameObject tempAudioObj = new GameObject("TempSFX_" + clip.name);
         AudioSource tempSource = tempAudioObj.AddComponent<AudioSource>();
 
-        if (instance != null && instance.sfxSource != null)
+        if (Instance != null && Instance.sfxSource != null)
         {
-            tempSource.volume = instance.sfxSource.volume * volumeMultiplier;
-            tempSource.outputAudioMixerGroup = instance.sfxSource.outputAudioMixerGroup;
+            tempSource.volume = Instance.sfxSource.volume * volumeMultiplier;
+            tempSource.outputAudioMixerGroup = Instance.sfxSource.outputAudioMixerGroup;
         }
 
         tempSource.clip = clip;

@@ -2,30 +2,16 @@ using UnityEngine;
 
 /// <summary>
 /// Centralized manager for handling UI interaction states and input blocking.
-/// (UI etkileşim durumlarını ve giriş engellemeyi yöneten merkezi yönetici.)
+/// (UI etkileÅŸim durumlarÄ±nÄ± ve giriÅŸ engellemeyi yÃ¶neten merkezi yÃ¶netici.)
 /// </summary>
-public class UIManager : MonoBehaviour
-{
-    public static UIManager Instance { get; private set; }
+public class UIManager : Singleton<UIManager>
+{    [Header("UI Interaction Groups (UI EtkileÅŸim GruplarÄ±)")]
+    public CanvasGroup mainMenuButtons;   // Ana menÃ¼ buton grubu
+    public CanvasGroup hudButtons;        // Oyun iÃ§i HUD (Pause/Ä°pucu) grubu
+    public CanvasGroup pauseMenuButtons;  // Duraklatma menÃ¼sÃ¼ grubu
+    public CanvasGroup hintPanelButtons;  // Ä°pucu paneli grubu
 
-    [Header("UI Interaction Groups (UI Etkileşim Grupları)")]
-    public CanvasGroup mainMenuButtons;   // Ana menü buton grubu
-    public CanvasGroup hudButtons;        // Oyun içi HUD (Pause/İpucu) grubu
-    public CanvasGroup pauseMenuButtons;  // Duraklatma menüsü grubu
-    public CanvasGroup hintPanelButtons;  // İpucu paneli grubu
 
-    /// <summary>
-    /// Singleton initialization and reference cleanup.
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     /// <summary>
     /// Sets the block state of a specific CanvasGroup.
@@ -35,13 +21,13 @@ public class UIManager : MonoBehaviour
     {
         if (group == null) return;
 
-        // block = true (kilitli) ise, tıklamalar (raycast) kapalı (false) olmalı.
+        // block = true (kilitli) ise, tÄ±klamalar (raycast) kapalÄ± (false) olmalÄ±.
         group.blocksRaycasts = !block;
     }
 
     /// <summary>
     /// Checks if a specific CanvasGroup is currently blocked.
-    /// (Belirli bir CanvasGroup'un şu an kilitli olup olmadığını kontrol eder.)
+    /// (Belirli bir CanvasGroup'un ÅŸu an kilitli olup olmadÄ±ÄŸÄ±nÄ± kontrol eder.)
     /// </summary>
     private bool IsGroupBlocked(CanvasGroup group)
     {
@@ -49,7 +35,7 @@ public class UIManager : MonoBehaviour
         return !group.blocksRaycasts;
     }
 
-    // --- INTERFACE METHODS (ARAYÜZ METOTLARI) ---
+    // --- INTERFACE METHODS (ARAYÃœZ METOTLARI) ---
 
     // Main Menu Controls
     public void SetMainMenuBlock(bool state) => SetGroupBlock(mainMenuButtons, state);

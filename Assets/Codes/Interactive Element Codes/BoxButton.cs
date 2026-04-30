@@ -119,7 +119,7 @@ public class BoxButton : MonoBehaviour, IResettable
     /// </summary>
     private bool IsBox(Collider2D other)
     {
-        return other.CompareTag("Box");
+        return other.CompareTag(Constants.TAG_BOX);
     }
 
     /// <summary>

@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
 /// Manages main menu interactions with anti-spam transition protection.
-/// (Ana menü etkileşimlerini spam önleyici geçiş korumasıyla yönetir.)
+/// (Ana menÃ¼ etkileÅŸimlerini spam Ã¶nleyici geÃ§iÅŸ korumasÄ±yla yÃ¶netir.)
 /// </summary>
 public class MainMenuManager : MonoBehaviour
 {
@@ -13,20 +13,20 @@ public class MainMenuManager : MonoBehaviour
     public GameObject scorePanel;
     public GameObject resetPanel;
 
-    [Header("Panel Canvas Groups (Panel Kilit Grupları)")]
+    [Header("Panel Canvas Groups (Panel Kilit GruplarÄ±)")]
     public CanvasGroup settingsCanvasGroup;
     public CanvasGroup scoreCanvasGroup;
 
-    [Header("Animators (Animatörler)")]
+    [Header("Animators (AnimatÃ¶rler)")]
     public MenuBounceAnimator settingsAnimator;
     public MenuBounceAnimator scoreAnimator;
 
-    // Geçiş devam ederken yeni komut almasını engelleyen kilit
+    // GeÃ§iÅŸ devam ederken yeni komut almasÄ±nÄ± engelleyen kilit
     private bool isTransitioning = false;
 
     /// <summary>
     /// Starts the game level.
-    /// (Oyun seviyesini başlatır.)
+    /// (Oyun seviyesini baÅŸlatÄ±r.)
     /// </summary>
     public void PlayGame()
     {
@@ -36,14 +36,14 @@ public class MainMenuManager : MonoBehaviour
         UIManager.Instance.SetMainMenuBlock(true);
 
         if (LevelTransition.Instance != null)
-            LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene("Levels"));
+            LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene(Constants.SCENE_LEVELS));
         else
-            SceneManager.LoadScene("Levels");
+            SceneManager.LoadScene(Constants.SCENE_LEVELS);
     }
 
     /// <summary>
     /// Opens the settings panel safely.
-    /// (Ayarlar panelini güvenli bir şekilde açar.)
+    /// (Ayarlar panelini gÃ¼venli bir ÅŸekilde aÃ§ar.)
     /// </summary>
     public void OpenSettings()
     {
@@ -61,7 +61,7 @@ public class MainMenuManager : MonoBehaviour
 
     /// <summary>
     /// Opens the score panel safely.
-    /// (Skor panelini güvenli bir şekilde açar.)
+    /// (Skor panelini gÃ¼venli bir ÅŸekilde aÃ§ar.)
     /// </summary>
     public void OpenScore()
     {
@@ -79,7 +79,7 @@ public class MainMenuManager : MonoBehaviour
 
     /// <summary>
     /// Handles panel transitions and manages global UI blocks.
-    /// (Panel geçişlerini işler ve global UI kilitlerini yönetir.)
+    /// (Panel geÃ§iÅŸlerini iÅŸler ve global UI kilitlerini yÃ¶netir.)
     /// </summary>
     private IEnumerator PanelTransitionRoutine(GameObject panel, CanvasGroup group, bool opening, MenuBounceAnimator animator = null)
     {
@@ -87,20 +87,20 @@ public class MainMenuManager : MonoBehaviour
 
         if (opening)
         {
-            // 1. Ana menüyü dondur
+            // 1. Ana menÃ¼yÃ¼ dondur
             UIManager.Instance.SetMainMenuBlock(true);
 
-            // 2. Paneli ve butonlarını hazırla
+            // 2. Paneli ve butonlarÄ±nÄ± hazÄ±rla
             if (group != null) { group.blocksRaycasts = true; group.interactable = true; }
             if (resetPanel != null) resetPanel.SetActive(false);
             panel.SetActive(true);
 
-            // Animasyon süresi kadar bekle (0.45s civarı)
+            // Animasyon sÃ¼resi kadar bekle (0.45s civarÄ±)
             yield return new WaitForSecondsRealtime(0.5f);
         }
         else
         {
-            // 1. Kapanan panelin butonlarını anında dondur (Ghost Click koruması)
+            // 1. Kapanan panelin butonlarÄ±nÄ± anÄ±nda dondur (Ghost Click korumasÄ±)
             if (group != null) { group.blocksRaycasts = false; group.interactable = false; }
 
             // 2. Animasyonu oynat
@@ -110,7 +110,7 @@ public class MainMenuManager : MonoBehaviour
             // Animasyonun bitmesini bekle
             yield return new WaitForSecondsRealtime(0.4f);
 
-            // 3. Ana menüyü tekrar uyandır
+            // 3. Ana menÃ¼yÃ¼ tekrar uyandÄ±r
             UIManager.Instance.SetMainMenuBlock(false);
         }
 

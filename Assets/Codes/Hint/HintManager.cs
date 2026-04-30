@@ -1,13 +1,12 @@
 using UnityEngine;
 using TMPro;
 
-public class HintManager : MonoBehaviour
+public class HintManager : Singleton<HintManager>
 {
-    public static HintManager Instance;
     public GameObject hintPanel;    
     public TextMeshProUGUI hintText;
 
-    void Awake() => Instance = this;
+    protected override void Awake() { base.Awake(); }
 
     public void UpdateLevelHint()
     {

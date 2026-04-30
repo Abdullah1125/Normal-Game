@@ -5,27 +5,26 @@ using TMPro;
 
 /// <summary>
 /// Manages cinematic door transitions and scene loading.
-/// (Sinematik kapı geçişlerini ve sahne yüklemelerini yönetir.)
+/// (Sinematik kapÄ± geÃ§iÅŸlerini ve sahne yÃ¼klemelerini yÃ¶netir.)
 /// </summary>
-public class LevelTransition : MonoBehaviour
+public class LevelTransition : Singleton<LevelTransition>
 {
-    public static LevelTransition Instance { get; private set; }
 
-    [Header("Cinematic Doors (Sinematik Kapılar)")]
-    public RectTransform topPanel;    // Üst kapı paneli
-    public RectTransform bottomPanel; // Alt kapı paneli
+    [Header("Cinematic Doors (Sinematik KapÄ±lar)")]
+    public RectTransform topPanel;    // Ãœst kapÄ± paneli
+    public RectTransform bottomPanel; // Alt kapÄ± paneli
     public float doorSpeed = 0.5f;
 
     [Header("Settings (Ayarlar)")]
     public bool openDoorsOnStart = true;
-    public float overlapMargin = 10f; // Kapanmada ortadaki boşluğu kapatmak için kesişme payı
+    public float overlapMargin = 10f; // Kapanmada ortadaki boÅŸluÄŸu kapatmak iÃ§in kesiÅŸme payÄ±
     public TextMeshProUGUI levelText;
 
-    // Sahneler arası taşınan statik durum değişkenleri
+    // Sahneler arasÄ± taÅŸÄ±nan statik durum deÄŸiÅŸkenleri
     public static bool isComingFromDoorTransition = false;
     public static bool isTransitioning = false;
 
-    // Eylem Kuyruğu (Hafıza) Değişkenleri
+    // Eylem KuyruÄŸu (HafÄ±za) DeÄŸiÅŸkenleri
     private bool isQueued = false;
     private System.Action queuedAction = null;
 
@@ -34,21 +33,16 @@ public class LevelTransition : MonoBehaviour
     [Header("Sounds (Sesler)")]
     public AudioClip fadeSound;
 
-    // Önbellek değişkenleri
+    // Ã–nbellek deÄŸiÅŸkenleri
     private RectTransform canvasRect;
 
     /// <summary>
     /// Initializes singleton, resets states, and caches components.
-    /// (Singleton'ı başlatır, durumları sıfırlar ve bileşenleri önbelleğe alır.)
+    /// (Singleton'Ä± baÅŸlatÄ±r, durumlarÄ± sÄ±fÄ±rlar ve bileÅŸenleri Ã¶nbelleÄŸe alÄ±r.)
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        base.Awake();
 
         isTransitioning = false;
         isQueued = false;
@@ -68,7 +62,7 @@ public class LevelTransition : MonoBehaviour
 
     /// <summary>
     /// Automatically adjusts doors when screen resolution or orientation changes.
-    /// (Ekran çözünürlüğü veya yönelimi değiştiğinde kapıları otomatik ayarlar.)
+    /// (Ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼ÄŸÃ¼ veya yÃ¶nelimi deÄŸiÅŸtiÄŸinde kapÄ±larÄ± otomatik ayarlar.)
     /// </summary>
     private void OnRectTransformDimensionsChange()
     {
@@ -80,7 +74,7 @@ public class LevelTransition : MonoBehaviour
 
     /// <summary>
     /// Adjusts door sizes and initial positions based on screen dimensions.
-    /// (Kapı boyutlarını ve başlangıç pozisyonlarını ekran boyutlarına göre ayarlar.)
+    /// (KapÄ± boyutlarÄ±nÄ± ve baÅŸlangÄ±Ã§ pozisyonlarÄ±nÄ± ekran boyutlarÄ±na gÃ¶re ayarlar.)
     /// </summary>
     private void SetupDoors()
     {
@@ -101,7 +95,7 @@ public class LevelTransition : MonoBehaviour
         topPanel.sizeDelta = new Vector2(w, doorHeight);
         bottomPanel.sizeDelta = new Vector2(w, doorHeight);
 
-        // Kesişme payını merkeze itme gücünden çıkarıyoruz ki paneller merkezin biraz daha ötesine geçsin
+        // KesiÅŸme payÄ±nÄ± merkeze itme gÃ¼cÃ¼nden Ã§Ä±karÄ±yoruz ki paneller merkezin biraz daha Ã¶tesine geÃ§sin
         closedYOffset = (doorHeight / 2f) - overlapMargin;
 
         if (isComingFromDoorTransition || openDoorsOnStart)
@@ -124,7 +118,7 @@ public class LevelTransition : MonoBehaviour
 
     /// <summary>
     /// Opens the doors at the start of the scene if requested.
-    /// (İsteniyorsa sahne başlangıcında kapıları açar.)
+    /// (Ä°steniyorsa sahne baÅŸlangÄ±cÄ±nda kapÄ±larÄ± aÃ§ar.)
     /// </summary>
     private IEnumerator Start()
     {
@@ -150,7 +144,7 @@ public class LevelTransition : MonoBehaviour
 
     /// <summary>
     /// Closes doors and executes the provided action upon completion.
-    /// (Kapıları kapatır ve tamamlandığında belirtilen eylemi çalıştırır.)
+    /// (KapÄ±larÄ± kapatÄ±r ve tamamlandÄ±ÄŸÄ±nda belirtilen eylemi Ã§alÄ±ÅŸtÄ±rÄ±r.)
     /// </summary>
     public void FadeOut(System.Action onComplete = null)
     {
@@ -272,9 +266,9 @@ public class LevelTransition : MonoBehaviour
 
     private void PlayFadeSound()
     {
-        if (fadeSound != null && SoundManager.instance != null && SoundManager.instance.sfxSource != null)
+        if (fadeSound != null && SoundManager.Instance != null && SoundManager.Instance.sfxSource != null)
         {
-            SoundManager.instance.sfxSource.PlayOneShot(fadeSound, 0.3f);
+            SoundManager.Instance.sfxSource.PlayOneShot(fadeSound, 0.3f);
         }
     }
 }

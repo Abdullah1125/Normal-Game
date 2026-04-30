@@ -67,12 +67,12 @@ public class EscapeKey : MonoBehaviour , IResettable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constants.TAG_PLAYER))
         {
             if (GateController.Instance != null)
             {
                 GateController.Instance.RegisterKeyCollected();
-                if (SoundManager.instance != null) SoundManager.PlayThemeSFX(SFXType.Key);
+                if (SoundManager.Instance != null) SoundManager.PlayThemeSFX(SFXType.Key);
                 gameObject.SetActive(false);
             }
         }
@@ -96,3 +96,4 @@ public class EscapeKey : MonoBehaviour , IResettable
         }
     }
 }
+

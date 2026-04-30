@@ -48,7 +48,7 @@ public class FinishPoint : MonoBehaviour, IResettable
     /// </summary>
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !_isProcessing && !isFinishBlocked)
+        if (other.CompareTag(Constants.TAG_PLAYER) && !_isProcessing && !isFinishBlocked)
         {
             // --- ALTIN VURUŞ: ANINDA KİLİTLE ---
             IsLevelFinishing = true;
@@ -69,7 +69,7 @@ public class FinishPoint : MonoBehaviour, IResettable
     /// </summary>
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !IsLevelFinishing)
+        if (other.CompareTag(Constants.TAG_PLAYER) && !IsLevelFinishing)
         {
             isPlayerInZone = false;
             _playerRb = null;
@@ -94,7 +94,7 @@ public class FinishPoint : MonoBehaviour, IResettable
         if (PlayerController.Instance != null)
             PlayerController.Instance.canMove = false;
 
-        if (SoundManager.instance != null)
+        if (SoundManager.Instance != null)
             SoundManager.PlayThemeSFX(SFXType.DoorPass);
 
         // Bir frame bekle ve sahneyi yükle
@@ -123,3 +123,4 @@ public class FinishPoint : MonoBehaviour, IResettable
         }
     }
 }
+

@@ -76,7 +76,7 @@ public class LevelMenuButton : MonoBehaviour
         int currentChapter = globalIndex / 6;
         int chapterLastLevelIndex = (currentChapter * 6) + 5;
 
-        bool isChapterFinished = PlayerPrefs.GetInt("LevelComplete_" + chapterLastLevelIndex, 0) == 1;
+        bool isChapterFinished = PlayerPrefs.GetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + chapterLastLevelIndex, 0) == 1;
 
         if (!isChapterFinished)
         {
@@ -103,7 +103,7 @@ public class LevelMenuButton : MonoBehaviour
         int highestUnlockedInThisChapter = 0;
         for (int i = (currentChapter * 6); i <= chapterLastLevelIndex; i++)
         {
-            if (PlayerPrefs.GetInt("LevelUnlocked_" + i, 0) == 1)
+            if (PlayerPrefs.GetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + i, 0) == 1)
                 highestUnlockedInThisChapter = i;
         }
 
@@ -125,7 +125,7 @@ public class LevelMenuButton : MonoBehaviour
     /// </summary>
     private string GetLocalizedMapName(int currentChapter)
     {
-        string mapName = "Map";
+        string mapName = Constants.SCENE_MAP_SUFFIX;
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
             string[] titles = LocalizationManager.Instance.currentData.page_titles;
@@ -175,11 +175,11 @@ public class LevelMenuButton : MonoBehaviour
     private void LoadMapScene()
     {
         int mapNum = (globalIndex / 6) + 1;
-        PlayerPrefs.SetInt("SelectedInternalIndex", globalIndex % 6);
+        PlayerPrefs.SetInt(Constants.PREF_SELECTED_INTERNAL_INDEX, globalIndex % 6);
 
         if (LevelTransition.Instance != null)
-            LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene(mapNum + "Map"); });
+            LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene(mapNum + Constants.SCENE_MAP_SUFFIX); });
         else
-            SceneManager.LoadScene(mapNum + "Map");
+            SceneManager.LoadScene(mapNum + Constants.SCENE_MAP_SUFFIX);
     }
 }

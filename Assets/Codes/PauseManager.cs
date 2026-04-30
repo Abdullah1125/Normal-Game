@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
 /// Professional Pause Manager with full anti-spam protection for all menu buttons.
-/// (Tüm menü butonları için tam spam korumalı profesyonel Duraklatma Yöneticisi.)
+/// (TÃ¼m menÃ¼ butonlarÄ± iÃ§in tam spam korumalÄ± profesyonel Duraklatma YÃ¶neticisi.)
 /// </summary>
 public class PauseManager : MonoBehaviour
 {
@@ -18,7 +18,7 @@ public class PauseManager : MonoBehaviour
     public static bool isAdLoading = false;
     private bool isToggling = false;
 
-    [Header("Animation Controllers (Animasyon Kontrolcüleri)")]
+    [Header("Animation Controllers (Animasyon KontrolcÃ¼leri)")]
     public MenuBounceAnimator pauseAnimator;
     public MenuBounceAnimator settingsAnimator;
 
@@ -28,7 +28,7 @@ public class PauseManager : MonoBehaviour
 
     /// <summary>
     /// Resets all locks and states on start.
-    /// (Başlangıçta tüm kilitleri ve durumları sıfırlar.)
+    /// (BaÅŸlangÄ±Ã§ta tÃ¼m kilitleri ve durumlarÄ± sÄ±fÄ±rlar.)
     /// </summary>
     private void Start()
     {
@@ -45,7 +45,7 @@ public class PauseManager : MonoBehaviour
 
     /// <summary>
     /// Opens the settings sub-menu from the pause menu.
-    /// (Ayarlar alt menüsünü pause menüsünden açar.)
+    /// (Ayarlar alt menÃ¼sÃ¼nÃ¼ pause menÃ¼sÃ¼nden aÃ§ar.)
     /// </summary>
     public void OpenSettings()
     {
@@ -53,9 +53,9 @@ public class PauseManager : MonoBehaviour
         isToggling = true;
         lastToggleTime = Time.unscaledTime;
 
-        Debug.Log("Sistem: Ayarlar açılıyor...");
+        Debug.Log("Sistem: Ayarlar aÃ§Ä±lÄ±yor...");
 
-        // Menü butonlarını dondur
+        // MenÃ¼ butonlarÄ±nÄ± dondur
         if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
 
         if (pauseAnimator != null) pauseAnimator.CloseMenu();
@@ -68,7 +68,7 @@ public class PauseManager : MonoBehaviour
 
     /// <summary>
     /// Closes settings and returns to the pause menu.
-    /// (Ayarları kapatır ve pause menüsüne döner.)
+    /// (AyarlarÄ± kapatÄ±r ve pause menÃ¼sÃ¼ne dÃ¶ner.)
     /// </summary>
     public void CloseSettings()
     {
@@ -76,14 +76,14 @@ public class PauseManager : MonoBehaviour
         isToggling = true;
         lastToggleTime = Time.unscaledTime;
 
-        Debug.Log("Sistem: Ayarlar kapatılıyor...");
+        Debug.Log("Sistem: Ayarlar kapatÄ±lÄ±yor...");
 
         if (settingsAnimator != null) settingsAnimator.CloseMenu();
         else if (settingsPanelUI != null) settingsPanelUI.SetActive(false);
 
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
 
-        // Menü butonlarını tekrar dondur (Açılış animasyonu sırasında)
+        // MenÃ¼ butonlarÄ±nÄ± tekrar dondur (AÃ§Ä±lÄ±ÅŸ animasyonu sÄ±rasÄ±nda)
         if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
 
         StartCoroutine(UnlockToggling(0.4f));
@@ -91,14 +91,14 @@ public class PauseManager : MonoBehaviour
 
     /// <summary>
     /// Transitions to Level Selection scene.
-    /// (Bölüm seçme sahnesine geçiş yapar.)
+    /// (BÃ¶lÃ¼m seÃ§me sahnesine geÃ§iÅŸ yapar.)
     /// </summary>
     public void GoToLevels()
     {
         if (isToggling) return;
         isToggling = true;
 
-        Debug.Log("Sistem: Bölüm Menüsü tuşu tetiklendi!");
+        Debug.Log("Sistem: BÃ¶lÃ¼m MenÃ¼sÃ¼ tuÅŸu tetiklendi!");
 
         if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
 
@@ -116,9 +116,9 @@ public class PauseManager : MonoBehaviour
     private void LoadLevelScene()
     {
         if (LevelTransition.Instance != null)
-            LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene("Levels"));
+            LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene(Constants.SCENE_LEVELS));
         else
-            SceneManager.LoadScene("Levels");
+            SceneManager.LoadScene(Constants.SCENE_LEVELS);
     }
 
     public void TogglePause()

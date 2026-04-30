@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(RectTransform))]
@@ -6,22 +6,22 @@ public class MenuBounceAnimator : MonoBehaviour
 {
     private RectTransform rectTransform;
 
-    [Header("Animation Type (Animasyon Türü)")]
+    [Header("Animation Type (Animasyon TÃ¼rÃ¼)")]
     public bool slideFromBottom = true;
 
-    [Header("Delay Settings (Gecikme Ayarları)")]
+    [Header("Delay Settings (Gecikme AyarlarÄ±)")]
     public float openDelay = 0f;
     public float closeDelay = 0f;
 
-    [Header("Opening Settings (Açılma Ayarları)")]
+    [Header("Opening Settings (AÃ§Ä±lma AyarlarÄ±)")]
     public float openDuration = 0.4f;
     public float openOvershoot = 1.5f;
 
-    [Header("Shutdown Settings (Kapanma Ayarları)")]
+    [Header("Shutdown Settings (Kapanma AyarlarÄ±)")]
     public float closeDuration = 0.3f;
     public float closeAnticipation = 1.5f;
 
-    [Header("Glide Settings (Kayma Ayarları)")]
+    [Header("Glide Settings (Kayma AyarlarÄ±)")]
     public float startYOffset = -1500f;
 
     private Vector2 originalPosition;
@@ -54,16 +54,16 @@ public class MenuBounceAnimator : MonoBehaviour
 
     /// <summary>
     /// Animates the menu and triggers sounds for both opening and closing.
-    /// (Menüyü canlandırır ve hem açılış hem kapanış için sesleri tetikler.)
+    /// (MenÃ¼yÃ¼ canlandÄ±rÄ±r ve hem aÃ§Ä±lÄ±ÅŸ hem kapanÄ±ÅŸ iÃ§in sesleri tetikler.)
     /// </summary>
     private IEnumerator BounceRoutine(bool isOpening)
     {
-        // Sound Logic (Ses Mantığı)
-        if (SoundManager.instance != null)
+        // Sound Logic (Ses MantÄ±ÄŸÄ±)
+        if (SoundManager.Instance != null)
         {
             if (isOpening)
             {
-                // Açılış sesi (Aşağıdan mı ortadan mı?)
+                // AÃ§Ä±lÄ±ÅŸ sesi (AÅŸaÄŸÄ±dan mÄ± ortadan mÄ±?)
                 if (slideFromBottom)
                     SoundManager.PlayThemeSFX(SFXType.MenuSlide, 0.2f);
                 else
@@ -71,7 +71,7 @@ public class MenuBounceAnimator : MonoBehaviour
             }
             else
             {
-                // Kapanış sesi (Burayı boş bırakmıştın, ekledik!)
+                // KapanÄ±ÅŸ sesi (BurayÄ± boÅŸ bÄ±rakmÄ±ÅŸtÄ±n, ekledik!)
                 SoundManager.PlayThemeSFX(SFXType.MenuSlide, 0.1f);
             }
         }

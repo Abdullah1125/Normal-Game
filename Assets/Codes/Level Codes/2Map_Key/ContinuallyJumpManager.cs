@@ -1,24 +1,23 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Controls the tiring jump mechanic of the player.
-/// (Oyuncunun yorulan zıplama mekaniğini kontrol eder.)
+/// (Oyuncunun yorulan zÃ„Â±plama mekaniÃ„Å¸ini kontrol eder.)
 /// </summary>
-public class TiringJumpRule : MonoBehaviour, IResettable 
+public class TiringJumpRule : Singleton<TiringJumpRule>, IResettable 
 {
-    public static TiringJumpRule Instance { get; private set; }
 
-    [Header("Jump Settings (Zıplama Ayarları)")]
+    [Header("Jump Settings (ZÃ„Â±plama AyarlarÃ„Â±)")]
     public float startingForce = 15f;
     public float fatigueAmount = 1.5f;
     public float minimumForce = 4f;
 
-    [Header("Fall Support (Zıplama Desteği)")]
+    [Header("Fall Support (ZÃ„Â±plama DesteÃ„Å¸i)")]
     public float fallBoostMultiplier = 2.5f;
     public float maxForce = 20f;
     public float minFallDistance = 0.8f;
 
-    [Header("Auto Jump (Otomatik Zıplama)")]
+    [Header("Auto Jump (Otomatik ZÃ„Â±plama)")]
     public float jumpCooldown = 0.1f;
     public float minSoundForce = 5f;
 
@@ -27,31 +26,25 @@ public class TiringJumpRule : MonoBehaviour, IResettable
     private float lastJumpTime;
     private bool wasGrounded = false;
 
-    // Performans için arama gecikmesi değişkenleri
+    // Performans iÃƒÂ§in arama gecikmesi deÃ„Å¸iÃ…Å¸kenleri
     private float playerSearchCooldown = 0.5f;
     private float lastSearchTime = 0f;
 
     private Rigidbody2D playerRb;
     private PlayerController player;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
+        base.Awake();
         currentForce = startingForce;
     }
 
     /// <summary>
-    /// Obje sahneye yüklendiğinde kendini LevelManager'ın sıfırlama listesine ekler.
+    /// Obje sahneye yÃƒÂ¼klendiÃ„Å¸inde kendini LevelManager'Ã„Â±n sÃ„Â±fÃ„Â±rlama listesine ekler.
     /// </summary>
     private void Start()
     {
-        //Event dinlemek yerine doğrudan yöneticiye kayıt oluyoruz
+        //Event dinlemek yerine doÃ„Å¸rudan yÃƒÂ¶neticiye kayÃ„Â±t oluyoruz
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.RegisterResettable(this);
@@ -61,11 +54,11 @@ public class TiringJumpRule : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Obje sahneden silindiğinde hafıza sızıntısını önlemek için listeden çıkar.
+    /// Obje sahneden silindiÃ„Å¸inde hafÃ„Â±za sÃ„Â±zÃ„Â±ntÃ„Â±sÃ„Â±nÃ„Â± ÃƒÂ¶nlemek iÃƒÂ§in listeden ÃƒÂ§Ã„Â±kar.
     /// </summary>
     private void OnDestroy()
     {
-        // Silinirken kaydı siliyoruz ki oyun çökmesin
+        // Silinirken kaydÃ„Â± siliyoruz ki oyun ÃƒÂ§ÃƒÂ¶kmesin
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.UnregisterResettable(this);
@@ -74,7 +67,7 @@ public class TiringJumpRule : MonoBehaviour, IResettable
 
     private void Update()
     {
-        // Performans optimizasyonu: Oyuncu yoksa saniyede 60 kez değil, yarım saniyede bir ara
+        // Performans optimizasyonu: Oyuncu yoksa saniyede 60 kez deÃ„Å¸il, yarÃ„Â±m saniyede bir ara
         if (playerRb == null || player == null)
         {
             if (Time.time > lastSearchTime + playerSearchCooldown)
@@ -100,7 +93,7 @@ public class TiringJumpRule : MonoBehaviour, IResettable
 
     private void FindPlayer()
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
+        GameObject playerObj = GameObject.FindWithTag(Constants.TAG_PLAYER);
         if (playerObj != null)
         {
             playerRb = playerObj.GetComponent<Rigidbody2D>();
@@ -134,17 +127,17 @@ public class TiringJumpRule : MonoBehaviour, IResettable
         playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0f);
         playerRb.AddForce(Vector2.up * currentForce, ForceMode2D.Impulse);
 
-        if (currentForce > minSoundForce && SoundManager.instance != null)
+        if (currentForce > minSoundForce && SoundManager.Instance != null)
         {
             SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
         }
     }
 
     /// <summary>
-    /// IResettable arayüzünün zorunlu kıldığı sıfırlama fonksiyonu.
-    /// (LevelManager tarafından bölüm yeniden başladığında otomatik tetiklenir.)
+    /// IResettable arayÃƒÂ¼zÃƒÂ¼nÃƒÂ¼n zorunlu kÃ„Â±ldÃ„Â±Ã„Å¸Ã„Â± sÃ„Â±fÃ„Â±rlama fonksiyonu.
+    /// (LevelManager tarafÃ„Â±ndan bÃƒÂ¶lÃƒÂ¼m yeniden baÃ…Å¸ladÃ„Â±Ã„Å¸Ã„Â±nda otomatik tetiklenir.)
     /// </summary>
-    public void ResetMechanic() //  Fonksiyon ismi arayüze uyduruldu
+    public void ResetMechanic() //  Fonksiyon ismi arayÃƒÂ¼ze uyduruldu
     {
         currentForce = startingForce;
 
@@ -155,3 +148,4 @@ public class TiringJumpRule : MonoBehaviour, IResettable
         }
     }
 }
+

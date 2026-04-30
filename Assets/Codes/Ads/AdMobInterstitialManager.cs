@@ -4,31 +4,22 @@ using System;
 
 /// <summary>
 /// Manages interstitial ads, persists between scenes, and safely dispatches callbacks to the Main Thread.
-/// (Geçiş reklamlarını yönetir, sahneler arası kalıcılık sağlar ve geri aramaları Ana İş İpliğine güvenle aktarır.)
+/// (GeÃ§iÅŸ reklamlarÄ±nÄ± yÃ¶netir, sahneler arasÄ± kalÄ±cÄ±lÄ±k saÄŸlar ve geri aramalarÄ± Ana Ä°ÅŸ Ä°pliÄŸine gÃ¼venle aktarÄ±r.)
 /// </summary>
-public class AdMobInterstitialManager : MonoBehaviour
+public class AdMobInterstitialManager : SingletonPersistent<AdMobInterstitialManager>
 {
-    public static AdMobInterstitialManager Instance;
 
     private string _adUnitId = "ca-app-pub-3940256099942544/1033173712"; // Test ID
     private InterstitialAd _interstitialAd;
 
     private Action _onAdClosedCallback;
 
-    // MAIN THREAD DISPATCHER (Ana iş ipliğine aktarılacak görev)
+    // MAIN THREAD DISPATCHER (Ana iÅŸ ipliÄŸine aktarÄ±lacak gÃ¶rev)
     private Action _executeOnMainThread;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        base.Awake();
     }
 
     private void Start()
@@ -38,20 +29,20 @@ public class AdMobInterstitialManager : MonoBehaviour
 
     /// <summary>
     /// Executes pending callbacks on the Main Thread.
-    /// (Bekleyen geri aramaları Ana İş İpliğinde çalıştırır.)
+    /// (Bekleyen geri aramalarÄ± Ana Ä°ÅŸ Ä°pliÄŸinde Ã§alÄ±ÅŸtÄ±rÄ±r.)
     /// </summary>
     private void Update()
     {
         if (_executeOnMainThread != null)
         {
             _executeOnMainThread.Invoke();
-            _executeOnMainThread = null; // Çalıştırdıktan sonra temizle
+            _executeOnMainThread = null; // Ã‡alÄ±ÅŸtÄ±rdÄ±ktan sonra temizle
         }
     }
 
     /// <summary>
     /// Loads a new interstitial ad from Google.
-    /// (Google'dan yeni bir geçiş reklamı yükler.)
+    /// (Google'dan yeni bir geÃ§iÅŸ reklamÄ± yÃ¼kler.)
     /// </summary>
     public void LoadInterstitialAd()
     {
@@ -68,20 +59,20 @@ public class AdMobInterstitialManager : MonoBehaviour
 
             _interstitialAd = ad;
 
-            // REKLAM NORMAL KAPANDIĞINDA
+            // REKLAM NORMAL KAPANDIÄINDA
             _interstitialAd.OnAdFullScreenContentClosed += () =>
             {
-                // Sahnede işlem yapabilmesi için görevi Update'e devrediyoruz!
+                // Sahnede iÅŸlem yapabilmesi iÃ§in gÃ¶revi Update'e devrediyoruz!
                 _executeOnMainThread = _onAdClosedCallback;
                 _onAdClosedCallback = null;
                 LoadInterstitialAd();
             };
 
-            // REKLAM HATA VERİP ÇÖKERSE (İSİM DÜZELTİLDİ!)
+            // REKLAM HATA VERÄ°P Ã‡Ã–KERSE (Ä°SÄ°M DÃœZELTÄ°LDÄ°!)
             _interstitialAd.OnAdFullScreenContentFailed += (AdError adError) =>
             {
-                Debug.LogError("Reklam gösterilemedi: " + adError.GetMessage());
-                // Reklam çökse bile oyuncu ekranda takılı kalmasın, levele devam etsin
+                Debug.LogError("Reklam gÃ¶sterilemedi: " + adError.GetMessage());
+                // Reklam Ã§Ã¶kse bile oyuncu ekranda takÄ±lÄ± kalmasÄ±n, levele devam etsin
                 _executeOnMainThread = _onAdClosedCallback;
                 _onAdClosedCallback = null;
                 LoadInterstitialAd();
@@ -93,7 +84,7 @@ public class AdMobInterstitialManager : MonoBehaviour
 
     /// <summary>
     /// Shows the interstitial ad if ready and returns the status.
-    /// (Reklam hazırsa gösterir ve durum bilgisini bool olarak döner.)
+    /// (Reklam hazÄ±rsa gÃ¶sterir ve durum bilgisini bool olarak dÃ¶ner.)
     /// </summary>
     public bool ShowInterstitialAd(Action onClosed)
     {

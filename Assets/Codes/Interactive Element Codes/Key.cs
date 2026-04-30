@@ -1,27 +1,27 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Key : MonoBehaviour , IResettable
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constants.TAG_PLAYER))
         {
-            // Kapý koduna ulaþmaya çalýþýyoruz
+            // KapÄ± koduna ulaÅŸmaya Ã§alÄ±ÅŸÄ±yoruz
             if (GateController.Instance != null)
             {
                 GateController.Instance.RegisterKeyCollected();
 
-                // Ses çal
-                if (SoundManager.instance != null)
+                // Ses Ã§al
+                if (SoundManager.Instance != null)
                     SoundManager.PlayThemeSFX(SFXType.Key);
 
-                // Anahtarý gizle
+                // AnahtarÄ± gizle
                 gameObject.SetActive(false);
-                Debug.Log("Anahtar baþarýyla toplandý!");
+                Debug.Log("Anahtar baÅŸarÄ±yla toplandÄ±!");
             }
             else
             {
-                Debug.LogError("Hata: Sahnede GateController bulunamadý!");
+                Debug.LogError("Hata: Sahnede GateController bulunamadÄ±!");
             }
         }
     }
@@ -39,11 +39,12 @@ public class Key : MonoBehaviour , IResettable
     }
     private void OnDestroy()
     {
-        // Obje silinirken LevelManager'ýn listesini de temizliyoruz
+        // Obje silinirken LevelManager'Ä±n listesini de temizliyoruz
         if (LevelManager.Instance != null)
         {
-            // Eðer LevelManager'da RemoveResettable fonksiyonu yoksa aþaðýya ekledim
+            // EÄŸer LevelManager'da RemoveResettable fonksiyonu yoksa aÅŸaÄŸÄ±ya ekledim
             LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }
+
