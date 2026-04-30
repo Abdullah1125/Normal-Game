@@ -28,7 +28,7 @@ public class FadeInHintButton : MonoBehaviour
         LevelManager.OnLevelStarted -= CheckLevelChange;
     }
 
-    // Level deðiþimi veya yeniden baþlama durumunda sayacý ve görünürlüðü yönetir.
+    // Level deï¿½iï¿½imi veya yeniden baï¿½lama durumunda sayacï¿½ ve gï¿½rï¿½nï¿½rlï¿½ï¿½ï¿½ yï¿½netir.
     private void CheckLevelChange()
     {
         int newLevelID = -1;

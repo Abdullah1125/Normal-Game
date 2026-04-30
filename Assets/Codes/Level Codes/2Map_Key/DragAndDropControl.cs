@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Handles dragging and dropping the player using mouse or touch.
@@ -33,6 +33,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     {
         cam = Camera.main;
 
+        cam = Camera.main;
+
         // EÄŸer bu script doÄŸrudan oyuncu Ã¼zerindeyse referansÄ± al
         playerRb = GetComponent<Rigidbody2D>();
     }
@@ -43,11 +45,10 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     /// </summary>
     private void Start()
     {
-        // EÄŸer script baÅŸka bir objede ise oyuncuyu etiketiyle bul
-        if (playerRb == null)
+        // EÄŸer script baÅŸka bir objede ise oyuncuyu Singleton Ã¼zerinden bul
+        if (playerRb == null && PlayerController.Instance != null)
         {
-            GameObject pObj = GameObject.FindWithTag(playerTag);
-            if (pObj != null) playerRb = pObj.GetComponent<Rigidbody2D>();
+            playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();
         }
 
         if (LevelManager.Instance != null)

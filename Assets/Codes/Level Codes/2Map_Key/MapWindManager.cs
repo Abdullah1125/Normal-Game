@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class MapWindManager : MonoBehaviour
 {
-    [Header("Wind Power (Rüzgar Gücü)")]
+    [Header("Wind Power (Rï¿½zgar Gï¿½cï¿½)")]
     public Vector2 windForce = new Vector2(-20f, 0f);
     public bool isWindActive = true;
 
-    [Header("Speed Settings (Hýz Ayarlarý)")]
+    [Header("Speed Settings (Hï¿½z Ayarlarï¿½)")]
     public float windSpeed = 35f;
     private float normalSpeed;
 
-    [Header("Visual & Audio Effects (Efekt ve Ses Ayarlarý)")]
+    [Header("Visual & Audio Effects (Efekt ve Ses Ayarlarï¿½)")]
     public ParticleSystem windParticles;
     public AudioSource windAudio;
 
@@ -29,30 +29,27 @@ public class MapWindManager : MonoBehaviour
     {
         if (PlayerController.Instance != null)
         {
-            playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();
-            playerScript = PlayerController.Instance.GetComponent<PlayerController>();
-            if (playerScript != null)
-            {
-                normalSpeed = PlayerController.Instance.defaultSpeed;
-                ApplyWindEffect();
-            }
+            playerScript = PlayerController.Instance;
+            playerRb = playerScript.GetComponent<Rigidbody2D>();
+            normalSpeed = playerScript.defaultSpeed;
+            ApplyWindEffect();
         }
     }
 
     /// <summary>
     /// Handles pause/resume states for audio.
-    /// (Ses için duraklatma ve devam ettirme durumlarýný yönetir.)
+    /// (Ses iï¿½in duraklatma ve devam ettirme durumlarï¿½nï¿½ yï¿½netir.)
     /// </summary>
     void Update()
     {
         if (windAudio == null) return;
 
-        // Oyun durmuþsa sesi duraklat
+        // Oyun durmuï¿½sa sesi duraklat
         if (Time.timeScale == 0f && windAudio.isPlaying)
         {
             windAudio.Pause();
         }
-        // Oyun devam ediyorsa ve rüzgar aktifse sesi sürdür
+        // Oyun devam ediyorsa ve rï¿½zgar aktifse sesi sï¿½rdï¿½r
         else if (Time.timeScale > 0f && isWindActive && !windAudio.isPlaying)
         {
             windAudio.UnPause();
@@ -69,7 +66,7 @@ public class MapWindManager : MonoBehaviour
 
     /// <summary>
     /// Adjusts speed and triggers effects.
-    /// (Hýzý ayarlar ve efektleri tetikler.)
+    /// (Hï¿½zï¿½ ayarlar ve efektleri tetikler.)
     /// </summary>
     void ApplyWindEffect()
     {
@@ -94,7 +91,7 @@ public class MapWindManager : MonoBehaviour
 
     /// <summary>
     /// Toggles VFX and SFX.
-    /// (Görsel ve ses efektlerini açýp kapatýr.)
+    /// (Gï¿½rsel ve ses efektlerini aï¿½ï¿½p kapatï¿½r.)
     /// </summary>
     private void ToggleEffects(bool turnOn)
     {
@@ -106,7 +103,7 @@ public class MapWindManager : MonoBehaviour
             {
                 windAudio.volume = 0.4f;
                 windAudio.loop = true;
-                // Sadece oyun durmamýþsa çalmaya baþla
+                // Sadece oyun durmamï¿½ï¿½sa ï¿½almaya baï¿½la
                 if (!windAudio.isPlaying && Time.timeScale > 0f) windAudio.Play();
             }
         }

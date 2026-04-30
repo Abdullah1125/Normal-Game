@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 
 [RequireComponent(typeof(BoxCollider2D))]
@@ -37,14 +37,18 @@ public class TutorialTrigger : MonoBehaviour
         OnHintToggled -= HandleHint;
     }
 
+    private void Awake()
+{
+    GetComponent<BoxCollider2D>().isTrigger = true;
+}
+
     /// <summary>
     /// Initializes trigger logic and checks level completion status.
     /// (Tetikleyici mantığını başlatır ve bölüm tamamlanma durumunu kontrol eder.)
     /// </summary>
     private void Start()
     {
-        GetComponent<BoxCollider2D>().isTrigger = true;
-
+        
         if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
         {
             if (LevelManager.Instance.activeLevel.isCompleted)

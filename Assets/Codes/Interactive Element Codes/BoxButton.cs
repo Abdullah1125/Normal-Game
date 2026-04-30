@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Manages the button trigger logic. Opens a gate when boxes are placed on it.
@@ -17,7 +17,6 @@ public class BoxButton : MonoBehaviour, IResettable
     private bool isPressed = false;
 
     // Güvenlik ve performans değişkenleri
-    private Rigidbody2D currentBoxRb;
     private int objectsOnButton = 0; // Butonun üzerindeki kutu sayacı
 
     /// <summary>
@@ -79,15 +78,13 @@ public class BoxButton : MonoBehaviour, IResettable
     {
         if (IsBox(other))
         {
-            // Eğer rigidbody henüz hafızada yoksa veya farklı bir kutu geldiyse bir kere bul
-            if (currentBoxRb == null || currentBoxRb.gameObject != other.gameObject)
-            {
-                currentBoxRb = other.GetComponent<Rigidbody2D>();
-            }
+            // GetComponent yerine direkt attachedRigidbody kullanıyoruz.
+            // Bu Unity'nin kendi içinde önbelleğe aldığı bir özelliktir ve performans harcamaz.
+            Rigidbody2D rb = other.attachedRigidbody;
 
-            if (currentBoxRb != null)
+            if (rb != null)
             {
-                currentBoxRb.linearVelocity -= currentBoxRb.linearVelocity * (buttonFriction * Time.fixedDeltaTime);
+                rb.linearVelocity -= rb.linearVelocity * (buttonFriction * Time.fixedDeltaTime);
             }
         }
     }
@@ -141,7 +138,6 @@ public class BoxButton : MonoBehaviour, IResettable
     private void ReleaseButton()
     {
         isPressed = false;
-        currentBoxRb = null; // Hafızayı boşalt
 
         if (sr != null) sr.color = normalColor;
 
@@ -156,7 +152,6 @@ public class BoxButton : MonoBehaviour, IResettable
     {
         objectsOnButton = 0;
         isPressed = false;
-        currentBoxRb = null;
 
         if (sr != null) sr.color = normalColor;
         gameObject.SetActive(true);

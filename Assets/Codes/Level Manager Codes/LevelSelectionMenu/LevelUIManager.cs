@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿﻿﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -81,6 +81,13 @@ public class LevelUIManager : MonoBehaviour
     public GameObject loadingAdPanel; 
     public TextMeshProUGUI loadingText;
 
+    // Onbellege alinan bilesenler
+    private CanvasGroup comingSoonCG;
+    private LocalizedText warningLocText;
+    private GridLayoutGroup cachedGridLayout;
+    private RectTransform cachedCanvasRect;
+    private CanvasScaler cachedCanvasScaler;
+
     private Coroutine _dotsCoroutine;
     void Start()
     {
@@ -93,10 +100,11 @@ public class LevelUIManager : MonoBehaviour
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas != null && canvas.rootCanvas != null)
         {
-            RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
-            if (canvasRect != null)
+            cachedCanvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
+            cachedCanvasScaler = canvas.rootCanvas.GetComponent<CanvasScaler>();
+            if (cachedCanvasRect != null)
             {
-                slideDistance = canvasRect.rect.width;
+                slideDistance = cachedCanvasRect.rect.width;
             }
         }
         else
@@ -122,9 +130,9 @@ public class LevelUIManager : MonoBehaviour
         // BaÅŸlangÄ±Ã§ sayfasÄ±nÄ±n kilit (Coming Soon) durumunu kontrol eder
         if (comingSoonPanel != null)
         {
-            CanvasGroup cg = comingSoonPanel.GetComponent<CanvasGroup>();
-            if (cg == null) cg = comingSoonPanel.AddComponent<CanvasGroup>();
-            cg.alpha = (currentPage > 1) ? 1f : 0f;
+            comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
+            if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
+            comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
             comingSoonPanel.SetActive(currentPage > 1);
         }
 
@@ -190,8 +198,8 @@ public class LevelUIManager : MonoBehaviour
         if (warningPanelCG == null || warningPanelText == null) return;
 
       
-        LocalizedText locText = warningPanelText.GetComponent<LocalizedText>();
-        if (locText != null) locText.enabled = false;
+        if (warningLocText == null) warningLocText = warningPanelText.GetComponent<LocalizedText>();
+        if (warningLocText != null) warningLocText.enabled = false;
 
         
         string baseWarning = "HaritayÄ± bitirmeden geri dÃ¶nemezsin!";
@@ -225,8 +233,9 @@ public class LevelUIManager : MonoBehaviour
     // Ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼ÄŸÃ¼ne gÃ¶re GridLayoutGroup boÅŸluk boyutlarÄ±nÄ± dinamik olarak ayarlar
     private void AdjustGridLayout()
     {
-        GridLayoutGroup gridLayout = gridParent.GetComponent<GridLayoutGroup>();
-        if (gridLayout == null) return;
+        if (cachedGridLayout == null) cachedGridLayout = gridParent.GetComponent<GridLayoutGroup>();
+        if (cachedGridLayout == null) return;
+        GridLayoutGroup gridLayout = cachedGridLayout;
 
         if (!isGridInitialized)
         {
@@ -235,10 +244,9 @@ public class LevelUIManager : MonoBehaviour
             isGridInitialized = true;
         }
 
-        Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas != null)
+        if (cachedCanvasScaler != null)
         {
-            CanvasScaler scaler = canvas.rootCanvas.GetComponent<CanvasScaler>();
+            CanvasScaler scaler = cachedCanvasScaler;
             if (scaler != null)
             {
                 float currentAspect = (float)Screen.width / Screen.height;
@@ -387,14 +395,9 @@ void UpdatePaginationDots()
         isAnimating = true;
 
         // Tam ekran geniÅŸliÄŸinde kaydÄ±rma yapabilmek iÃ§in Canvas'Ä±n gerÃ§ek geniÅŸliÄŸini alÄ±r
-        Canvas canvas = gridRect != null ? gridRect.GetComponentInParent<Canvas>() : null;
-        if (canvas != null && canvas.rootCanvas != null)
+        if (cachedCanvasRect != null)
         {
-            RectTransform canvasRect = canvas.rootCanvas.GetComponent<RectTransform>();
-            if (canvasRect != null)
-            {
-                slideDistance = canvasRect.rect.width;
-            }
+            slideDistance = cachedCanvasRect.rect.width;
         }
         else
         {
@@ -431,11 +434,10 @@ void UpdatePaginationDots()
         if (dummyLevel1Text != null) { dummyLevel1Text.text = Level1Text.text; dummyLevel1Text.gameObject.SetActive(true); dummyText1Rect.anchoredPosition = origText1Pos; }
         if (dummyLevel2Text != null) { dummyLevel2Text.text = Level2Text.text; dummyLevel2Text.gameObject.SetActive(true); dummyText2Rect.anchoredPosition = origText2Pos; }
 
-        CanvasGroup csGroup = null;
+        CanvasGroup csGroup = comingSoonCG;
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            csGroup = comingSoonPanel.GetComponent<CanvasGroup>();
             oldHasCS = (currentPage > 1);
             newHasCS = (targetPage > 1);
         }

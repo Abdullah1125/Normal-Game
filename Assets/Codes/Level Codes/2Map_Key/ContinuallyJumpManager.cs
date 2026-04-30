@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Controls the tiring jump mechanic of the player.
@@ -26,10 +26,6 @@ public class TiringJumpRule : Singleton<TiringJumpRule>, IResettable
     private float lastJumpTime;
     private bool wasGrounded = false;
 
-    // Performans iÃƒÂ§in arama gecikmesi deÃ„Å¸iÃ…Å¸kenleri
-    private float playerSearchCooldown = 0.5f;
-    private float lastSearchTime = 0f;
-
     private Rigidbody2D playerRb;
     private PlayerController player;
 
@@ -50,7 +46,13 @@ public class TiringJumpRule : Singleton<TiringJumpRule>, IResettable
             LevelManager.Instance.RegisterResettable(this);
         }
 
-        FindPlayer();
+        // Singleton üzerinden oyuncu referansını al
+        if (PlayerController.Instance != null)
+        {
+            player = PlayerController.Instance;
+            playerRb = player.GetComponent<Rigidbody2D>();
+            lastGroundY = player.transform.position.y;
+        }
     }
 
     /// <summary>
@@ -67,16 +69,7 @@ public class TiringJumpRule : Singleton<TiringJumpRule>, IResettable
 
     private void Update()
     {
-        // Performans optimizasyonu: Oyuncu yoksa saniyede 60 kez deÃ„Å¸il, yarÃ„Â±m saniyede bir ara
-        if (playerRb == null || player == null)
-        {
-            if (Time.time > lastSearchTime + playerSearchCooldown)
-            {
-                FindPlayer();
-                lastSearchTime = Time.time;
-            }
-            return;
-        }
+        if (playerRb == null || player == null) return;
 
         if (player.isGrounded && !wasGrounded)
         {
@@ -89,17 +82,6 @@ public class TiringJumpRule : Singleton<TiringJumpRule>, IResettable
         }
 
         wasGrounded = player.isGrounded;
-    }
-
-    private void FindPlayer()
-    {
-        GameObject playerObj = GameObject.FindWithTag(Constants.TAG_PLAYER);
-        if (playerObj != null)
-        {
-            playerRb = playerObj.GetComponent<Rigidbody2D>();
-            player = playerObj.GetComponent<PlayerController>();
-            lastGroundY = playerObj.transform.position.y;
-        }
     }
 
     private void OnLanded()
