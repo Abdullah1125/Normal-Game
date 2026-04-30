@@ -200,8 +200,14 @@ public class LevelUIManager : MonoBehaviour
             baseWarning = LocalizationManager.Instance.currentData.warning_panel;
         }
 
-       
-        warningPanelText.text = chapterName + "\n" + baseWarning;
+        if (baseWarning.Contains("{MAP_NAME}"))
+        {
+            warningPanelText.text = baseWarning.Replace("{MAP_NAME}", chapterName);
+        }
+        else
+        {
+            warningPanelText.text = chapterName + "\n" + baseWarning;
+        }
 
         StopAllCoroutines();
         StartCoroutine(FadeWarningPanelRoutine());
