@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using System;
+﻿﻿﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -91,6 +91,10 @@ public class LevelUIManager : MonoBehaviour
     private Coroutine _dotsCoroutine;
     void Start()
     {
+        int lastLevelID = PlayerPrefs.GetInt(Constants.PREF_LAST_LEVEL_ID, 0);
+        int totalPages = Mathf.Max(1, Mathf.CeilToInt((float)allGameLevels.Count / levelsPerPage));
+        currentPage = Mathf.Clamp(lastLevelID / levelsPerPage, 0, totalPages - 1);
+
         if (gridRect == null) gridRect = gridParent.GetComponent<RectTransform>();
 
         // Grid'in editÃ¶rdeki orijinal pozisyonunu hafÄ±zaya alÄ±r
@@ -444,6 +448,9 @@ void UpdatePaginationDots()
 
         // Yeni sayfa verilerini asÄ±l objelere yÃ¼kler
         currentPage = targetPage;
+        PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, currentPage * levelsPerPage);
+        PlayerPrefs.Save();
+
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 

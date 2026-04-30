@@ -18,6 +18,10 @@ public class GyroBoxController : MonoBehaviour, IResettable
     [Tooltip("Dokunmatik modun devreye girmesi için geçmesi gereken süre (Saniye)")]
     public float touchFallbackTime = 90f; // 1.5 dakika
 
+    [Header("Touch Settings (Dokunmatik Ayarları)")]
+    public float dragSpeed = 15f; // Sürükleme hızı
+    public float dragFriction = 5f;
+
     private Rigidbody2D rb;
     private bool isDragging = false;
     private Vector3 offset;
@@ -96,7 +100,7 @@ public class GyroBoxController : MonoBehaviour, IResettable
         {
             activeTimer += Time.deltaTime;
 
-            // Belirlenen süre (90 saniye) aşıldığında dokunmatik kilidini aç
+            // Belirlenen süre aşıldığında dokunmatik kilidini aç
             if (activeTimer >= touchFallbackTime)
             {
                 canUseTouch = true;
@@ -112,8 +116,22 @@ public class GyroBoxController : MonoBehaviour, IResettable
     /// </summary>
     void FixedUpdate()
     {
-        // Dokunmatik mod yedek olarak açılsa bile, sensör verisi okunmaya devam eder.
-        // Bu sayede oyuncu ister telefonu eğer, isterse parmağıyla sürükler.
+        if (!isDragging)
+        {
+            // Unity'nin kendi Damping'ini kapatıyoruz ki düşüşü (Y eksenini) yavaşlatmasın
+            rb.linearDamping = 0f; 
+
+            // Sadece Yatay (X) hızı yumuşakça sıfıra çek (Buzda kaymayı önler)
+            // Dikey (Y) hıza hiç dokunmuyoruz, yerçekimi kendi işini yapıyor
+            float smoothedX = Mathf.Lerp(rb.linearVelocity.x, 0f, Time.fixedDeltaTime * dragFriction);
+            rb.linearVelocity = new Vector2(smoothedX, rb.linearVelocity.y);
+        }
+        else
+        {
+            // Sürüklerken hiçbir sürtünme olmasın
+            rb.linearDamping = 0f; 
+        }
+
         if (SystemInfo.supportsAccelerometer && !Application.isEditor)
         {
             Vector2 tiltForce = new Vector2(Input.acceleration.x, Input.acceleration.y);
@@ -123,7 +141,7 @@ public class GyroBoxController : MonoBehaviour, IResettable
             {
                 rb.AddForce(tiltForce * tiltSpeed * rb.mass);
             }
-            else if (!isDragging) // Sürüklenirken ivmeölçerin kutuyu durdurmaya çalışmasını engeller
+            else if (!isDragging) 
             {
                 rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 15f);
             }
@@ -142,11 +160,15 @@ public class GyroBoxController : MonoBehaviour, IResettable
         isDragging = false;
 
         activeTimer = 0f;
-        InitialTouchCheck(); // Süreyi ve dokunmatik durumunu orijinal haline döndürür
+        InitialTouchCheck(); 
     }
 
     #region Button Interaction (Buton Etkileşimi ve Fren)
 
+    /// <summary>
+    /// Reduces velocity when entering a button trigger.
+    /// (Butona girildiğinde hızı düşürür.)
+    /// </summary>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(Constants.TAG_BOX_BUTTON))
@@ -155,6 +177,10 @@ public class GyroBoxController : MonoBehaviour, IResettable
         }
     }
 
+    /// <summary>
+    /// Applies friction while staying on a button.
+    /// (Buton üzerinde kalırken sürtünme uygular.)
+    /// </summary>
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag(Constants.TAG_BOX_BUTTON))
@@ -165,12 +191,13 @@ public class GyroBoxController : MonoBehaviour, IResettable
 
     #endregion
 
-    #region Manuel Sürükleme (Sensör Yoksa veya Süre Dolarsa Çalışır)
+   #region Manual Drag (Manuel Sürükleme)
 
     private void OnMouseDown()
     {
         if (!canUseTouch) return;
         isDragging = true;
+        
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
@@ -181,15 +208,25 @@ public class GyroBoxController : MonoBehaviour, IResettable
     private void OnMouseDrag()
     {
         if (!canUseTouch || !isDragging) return;
+        
         Vector3 touchPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         Vector3 targetPos = touchPos + offset;
         targetPos.z = 0f;
-        rb.MovePosition(targetPos);
+
+        Vector2 direction = (targetPos - transform.position);
+        
+        // SİHİR BURADA: Yön vektörünü maksimum 2.0f birim ile sınırlandırıyoruz.
+        // Fareyi duvarın 50 metre arkasına çeksen bile, kod kutuyu sadece 2 metre uzaktaymış gibi çeker.
+        // Bu sayede hız asla astronomik seviyelere çıkıp duvarı delmez!
+        direction = Vector2.ClampMagnitude(direction, 2.0f);
+
+        rb.linearVelocity = direction * dragSpeed; 
     }
 
     private void OnMouseUp()
     {
         isDragging = false;
+       isDragging = false;
     }
 
     #endregion

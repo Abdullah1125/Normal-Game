@@ -65,6 +65,10 @@ public class BoxButton : MonoBehaviour, IResettable
 
             if (!isPressed)
             {
+                  if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
+                    {
+                      return;
+                    }
                 PressButton();
             }
         }

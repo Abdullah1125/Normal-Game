@@ -1,8 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Handles dragging and dropping the player using mouse or touch.
-/// (Fare veya dokunmatik kullanarak oyuncuyu sÃ¼rÃ¼kleyip bÄ±rakmayÄ± yÃ¶netir.)
+/// Handles dragging and dropping the player using mouse or touch. Includes jitter prevention.
+/// (Fare veya dokunmatik kullanarak oyuncuyu sürüklemeyi yönetir. Titreme önleyici içerir.)
 /// </summary>
 public class DragAndDropControl : MonoBehaviour, IResettable
 {
@@ -13,39 +13,35 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     [Header("Settings (Ayarlar)")]
     public float grabRadius = 1f;
     public LayerMask playerLayer;
-    public string playerTag = Constants.TAG_PLAYER;
+    public string playerTag = Constants.TAG_PLAYER; // Constants sınıfın varsa hata vermez
+    public float dragSpeed = 25f;
+    public float deadZone = 0.1f; // YENİ: Titremeyi kesecek milimetrik ölü bölge
 
-    [Header("Boundaries (SÄ±nÄ±rlar)")]
+    [Header("Boundaries (Sınırlar)")]
     public bool useBoundaries = true;
     public float minX = -8f;
     public float maxX = 8f;
     public float minY = -4.5f;
     public float maxY = 4.5f;
 
-    // Ã–nbelleÄŸe alÄ±nmÄ±ÅŸ bileÅŸen referansÄ±
     private Rigidbody2D playerRb;
 
     /// <summary>
     /// Caches camera and player references.
-    /// (Kamera ve oyuncu referanslarÄ±nÄ± Ã¶nbelleÄŸe alÄ±r.)
+    /// (Kamera ve oyuncu referanslarını önbelleğe alır.)
     /// </summary>
     private void Awake()
     {
         cam = Camera.main;
-
-        cam = Camera.main;
-
-        // EÄŸer bu script doÄŸrudan oyuncu Ã¼zerindeyse referansÄ± al
         playerRb = GetComponent<Rigidbody2D>();
     }
 
     /// <summary>
     /// Registers to the level management system.
-    /// (Seviye yÃ¶netim sistemine kayÄ±t olur.)
+    /// (Seviye yönetim sistemine kayıt olur.)
     /// </summary>
     private void Start()
     {
-        // EÄŸer script baÅŸka bir objede ise oyuncuyu Singleton Ã¼zerinden bul
         if (playerRb == null && PlayerController.Instance != null)
         {
             playerRb = PlayerController.Instance.GetComponent<Rigidbody2D>();
@@ -59,7 +55,7 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
     /// <summary>
     /// Unregisters from the system to prevent memory leaks.
-    /// (Bellek sÄ±zÄ±ntÄ±sÄ±nÄ± Ã¶nlemek iÃ§in sistem kaydÄ±nÄ± siler.)
+    /// (Bellek sızıntısını önlemek için sistem kaydını siler.)
     /// </summary>
     private void OnDestroy()
     {
@@ -69,16 +65,11 @@ public class DragAndDropControl : MonoBehaviour, IResettable
         }
     }
 
-    private void Update()
-    {
-        HandleInput();
-    }
-
     /// <summary>
-    /// Manages the drag logic without redundant GetComponents.
-    /// (Gereksiz GetComponent aramalarÄ± yapmadan sÃ¼rÃ¼kleme mantÄ±ÄŸÄ±nÄ± yÃ¶netir.)
+    /// Player input detection for grabbing and releasing.
+    /// (Oyuncunun tutma ve bırakma girdilerini kontrol eder.)
     /// </summary>
-    private void HandleInput()
+    private void Update()
     {
         if (playerRb == null) return;
 
@@ -88,18 +79,28 @@ public class DragAndDropControl : MonoBehaviour, IResettable
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             Collider2D hitCollider = Physics2D.OverlapCircle(mousePos, grabRadius, playerLayer);
 
-            // GetComponent artÄ±k burada deÄŸil, Awake/Start iÃ§inde yapÄ±ldÄ±.
             if (hitCollider != null && hitCollider.CompareTag(playerTag))
             {
                 isDragging = true;
-                playerRb.bodyType = RigidbodyType2D.Kinematic;
                 offset = playerRb.transform.position - mousePos;
                 playerRb.linearVelocity = Vector2.zero;
             }
         }
 
-        // 2. SÃ¼rÃ¼kleme 
-        if (isDragging && Input.GetMouseButton(0))
+        // 2. Bırakma
+        if (Input.GetMouseButtonUp(0))
+        {
+            ReleasePlayer();
+        }
+    }
+
+    /// <summary>
+    /// Physical drag calculation with deadzone to prevent jitter.
+    /// (Duvar çarpışmalarını koruyarak ve titremeyi önleyerek fiziksel sürükleme yapar.)
+    /// </summary>
+    private void FixedUpdate()
+    {
+        if (isDragging && Input.GetMouseButton(0) && playerRb != null)
         {
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -112,36 +113,45 @@ public class DragAndDropControl : MonoBehaviour, IResettable
                 targetY = Mathf.Clamp(targetY, minY, maxY);
             }
 
-            playerRb.transform.position = new Vector3(targetX, targetY, playerRb.transform.position.z);
-        }
+            Vector2 targetPos = new Vector2(targetX, targetY);
+            Vector2 direction = (targetPos - playerRb.position);
 
-        // 3. BÄ±rakma
-        if (Input.GetMouseButtonUp(0))
-        {
-            ReleasePlayer();
+            // YENİ: Mesafe Ölçümü (Titreme Koruması)
+            float distance = direction.magnitude;
+
+            // Eğer parmağa/hedefe çok yaklaştıysa hızı sıfırla ki çırpınmasın
+            if (distance < deadZone)
+            {
+                playerRb.linearVelocity = Vector2.zero;
+            }
+            else
+            {
+                // Uzaktaysa ona doğru gitmeye devam et
+                direction = Vector2.ClampMagnitude(direction, 3.0f);
+                playerRb.linearVelocity = direction * dragSpeed;
+            }
         }
     }
 
     /// <summary>
-    /// Returns the player to a dynamic physics state.
-    /// (Oyuncuyu dinamik fizik durumuna geri dÃ¶ndÃ¼rÃ¼r.)
+    /// Returns the player to a normal state.
+    /// (Oyuncuyu normal durumuna geri döndürür.)
     /// </summary>
     private void ReleasePlayer()
     {
         if (playerRb != null)
         {
             isDragging = false;
-            playerRb.bodyType = RigidbodyType2D.Dynamic;
+            playerRb.linearVelocity = Vector2.zero;
         }
     }
 
     /// <summary>
     /// Implementation of IResettable to clean up state on level reset.
-    /// (Seviye sÄ±fÄ±rlandÄ±ÄŸÄ±nda durumu temizlemek iÃ§in IResettable uygulamasÄ±.)
+    /// (Seviye sıfırlandığında durumu temizlemek için IResettable uygulaması.)
     /// </summary>
     public void ResetMechanic()
     {
         ReleasePlayer();
-        isDragging = false;
     }
 }

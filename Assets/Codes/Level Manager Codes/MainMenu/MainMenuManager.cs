@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -34,6 +34,10 @@ public class MainMenuManager : MonoBehaviour
 
         isTransitioning = true;
         UIManager.Instance.SetMainMenuBlock(true);
+
+        // Ana menüden girildiğinde her zaman ilk sayfanın açılması için sıfırlanır
+        PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, 0);
+        PlayerPrefs.Save();
 
         if (LevelTransition.Instance != null)
             LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene(Constants.SCENE_LEVELS));

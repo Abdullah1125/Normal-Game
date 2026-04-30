@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -176,6 +176,8 @@ public class LevelMenuButton : MonoBehaviour
     {
         int mapNum = (globalIndex / 6) + 1;
         PlayerPrefs.SetInt(Constants.PREF_SELECTED_INTERNAL_INDEX, globalIndex % 6);
+        PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, globalIndex);
+        PlayerPrefs.Save();
 
         if (LevelTransition.Instance != null)
             LevelTransition.Instance.FadeOut(() => { SceneManager.LoadScene(mapNum + Constants.SCENE_MAP_SUFFIX); });

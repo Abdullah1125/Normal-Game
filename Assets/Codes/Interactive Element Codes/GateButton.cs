@@ -61,7 +61,7 @@ public class GateButton : MonoBehaviour , IResettable
 
     private void TryPressButton()
     {
-        // ARADIĞIN KISIM BURASI: Level aktif değilse buton basılmaz, rengi kararır
+        // Level aktif değilse buton basılmaz, rengi kararır
         if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
         {
             if (sr != null) sr.color = disabledColor;

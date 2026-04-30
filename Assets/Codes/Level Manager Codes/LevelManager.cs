@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -51,6 +51,7 @@ public class LevelManager : Singleton<LevelManager>
 
         int nextGlobalID = allLevels[currentLevelIndex].levelID + 1;
         PlayerPrefs.SetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + nextGlobalID, 1);
+        PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, allLevels[currentLevelIndex].levelID);
         PlayerPrefs.Save();
 
   

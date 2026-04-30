@@ -9,6 +9,7 @@ public static class Constants
     public const string PREF_SELECTED_INTERNAL_INDEX = "SelectedInternalIndex";
     public const string PREF_LEVEL_UNLOCKED_PREFIX = "LevelUnlocked_";
     public const string PREF_LEVEL_COMPLETE_PREFIX = "LevelComplete_";
+    public const string PREF_LAST_LEVEL_ID = "LastLevelID";
 
     // --- Tags ---
     public const string TAG_PLAYER = "Player";
