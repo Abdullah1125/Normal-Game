@@ -28,10 +28,11 @@ public void ResetMechanic
     public UnityEvent OnButtonPressed; gibi bir şey eklenebilir hepsine 
 
  
+ level başında sıfırlanabilcekler IResettable 
  
  
- 
- 
+ Instance This fln görürsen unutma tag işini tag olursada singleton sistemi var
+
  
  
  

@@ -106,8 +106,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0ee0c1c0f229d428376bd2ac4344ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GyroBoxController
-  tiltSpeed: 30
-  deadZone: 0.15
+  tiltSpeed: 45
+  initialDeadZone: 0.86
+  movingDeadZone: 0.3
+  touchFallbackTime: 75
 --- !u!50 &7374119572279936353
 Rigidbody2D:
   serializedVersion: 5
