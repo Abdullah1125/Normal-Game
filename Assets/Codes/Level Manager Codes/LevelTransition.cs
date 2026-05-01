@@ -1,30 +1,30 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
 /// <summary>
 /// Manages cinematic door transitions and scene loading.
-/// (Sinematik kapÄ± geÃ§iÅŸlerini ve sahne yÃ¼klemelerini yÃ¶netir.)
+/// (Sinematik kapı geçişlerini ve sahne yüklemelerini yönetir.)
 /// </summary>
 public class LevelTransition : Singleton<LevelTransition>
 {
 
-    [Header("Cinematic Doors (Sinematik KapÄ±lar)")]
-    public RectTransform topPanel;    // Ãœst kapÄ± paneli
-    public RectTransform bottomPanel; // Alt kapÄ± paneli
+    [Header("Cinematic Doors (Sinematik Kapılar)")]
+    public RectTransform topPanel;    // Üst kapı paneli
+    public RectTransform bottomPanel; // Alt kapı paneli
     public float doorSpeed = 0.5f;
 
     [Header("Settings (Ayarlar)")]
     public bool openDoorsOnStart = true;
-    public float overlapMargin = 10f; // Kapanmada ortadaki boÅŸluÄŸu kapatmak iÃ§in kesiÅŸme payÄ±
+    public float overlapMargin = 10f; // Kapanmada ortadaki boşluğu kapatmak için kesişme payı
     public TextMeshProUGUI levelText;
 
-    // Sahneler arasÄ± taÅŸÄ±nan statik durum deÄŸiÅŸkenleri
+    // Sahneler arası taşınan statik durum değişkenleri
     public static bool isComingFromDoorTransition = false;
     public static bool isTransitioning = false;
 
-    // Eylem KuyruÄŸu (HafÄ±za) DeÄŸiÅŸkenleri
+    // Eylem Kuyruğu (Hafıza) Değişkenleri
     private bool isQueued = false;
     private System.Action queuedAction = null;
 
@@ -33,12 +33,12 @@ public class LevelTransition : Singleton<LevelTransition>
     [Header("Sounds (Sesler)")]
     public AudioClip fadeSound;
 
-    // Ã–nbellek deÄŸiÅŸkenleri
+    // Önbellek değişkenleri
     private RectTransform canvasRect;
 
     /// <summary>
     /// Initializes singleton, resets states, and caches components.
-    /// (Singleton'Ä± baÅŸlatÄ±r, durumlarÄ± sÄ±fÄ±rlar ve bileÅŸenleri Ã¶nbelleÄŸe alÄ±r.)
+    /// (Singleton'ı başlatır, durumları sıfırlar ve bileşenleri önbelleğe alır.)
     /// </summary>
     protected override void Awake()
     {
@@ -62,7 +62,7 @@ public class LevelTransition : Singleton<LevelTransition>
 
     /// <summary>
     /// Automatically adjusts doors when screen resolution or orientation changes.
-    /// (Ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼ÄŸÃ¼ veya yÃ¶nelimi deÄŸiÅŸtiÄŸinde kapÄ±larÄ± otomatik ayarlar.)
+    /// (Ekran çözünürlüğü veya yönelimi değiştiğinde kapıları otomatik ayarlar.)
     /// </summary>
     private void OnRectTransformDimensionsChange()
     {
@@ -74,7 +74,7 @@ public class LevelTransition : Singleton<LevelTransition>
 
     /// <summary>
     /// Adjusts door sizes and initial positions based on screen dimensions.
-    /// (KapÄ± boyutlarÄ±nÄ± ve baÅŸlangÄ±Ã§ pozisyonlarÄ±nÄ± ekran boyutlarÄ±na gÃ¶re ayarlar.)
+    /// (Kapı boyutlarını ve başlangıç pozisyonlarını ekran boyutlarına göre ayarlar.)
     /// </summary>
     private void SetupDoors()
     {
@@ -95,7 +95,7 @@ public class LevelTransition : Singleton<LevelTransition>
         topPanel.sizeDelta = new Vector2(w, doorHeight);
         bottomPanel.sizeDelta = new Vector2(w, doorHeight);
 
-        // KesiÅŸme payÄ±nÄ± merkeze itme gÃ¼cÃ¼nden Ã§Ä±karÄ±yoruz ki paneller merkezin biraz daha Ã¶tesine geÃ§sin
+        // Kesişme payını merkeze itme gücünden çıkarıyoruz ki paneller merkezin biraz daha ötesine geçsin
         closedYOffset = (doorHeight / 2f) - overlapMargin;
 
         if (isComingFromDoorTransition || openDoorsOnStart)
@@ -118,7 +118,7 @@ public class LevelTransition : Singleton<LevelTransition>
 
     /// <summary>
     /// Opens the doors at the start of the scene if requested.
-    /// (Ä°steniyorsa sahne baÅŸlangÄ±cÄ±nda kapÄ±larÄ± aÃ§ar.)
+    /// (İsteniyorsa sahne başlangıcında kapıları açar.)
     /// </summary>
     private IEnumerator Start()
     {
@@ -144,7 +144,7 @@ public class LevelTransition : Singleton<LevelTransition>
 
     /// <summary>
     /// Closes doors and executes the provided action upon completion.
-    /// (KapÄ±larÄ± kapatÄ±r ve tamamlandÄ±ÄŸÄ±nda belirtilen eylemi Ã§alÄ±ÅŸtÄ±rÄ±r.)
+    /// (Kapıları kapatır ve tamamlandığında belirtilen eylemi çalıştırır.)
     /// </summary>
     public void FadeOut(System.Action onComplete = null)
     {

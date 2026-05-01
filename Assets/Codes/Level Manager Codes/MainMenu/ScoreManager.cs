@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 
 public class ScoreManager : SingletonPersistent<ScoreManager>
 {
 
-    [Header("Timer(ZamanlayÄ±cÄ±)")]
-    public bool isTimerRunning = false; // Oyun baÅŸladÄ±ÄŸÄ±nda sÃ¼re aksÄ±n mÄ±?
+    [Header("Timer(Zamanlayıcı)")]
+    public bool isTimerRunning = false; // Oyun başladığında süre aksın mı?
     public string playerName = "Misafir";
 
     [Header("Persistent Data(KalÄ±cÄ± Veriler)")]
@@ -24,7 +24,7 @@ public class ScoreManager : SingletonPersistent<ScoreManager>
 
     private void Update()
     {
-        // SayaÃ§ aÃ§Ä±ksa toplam sÃ¼reyi sÃ¼rekli artÄ±r
+        // Sayaç açıksa toplam süreyi sürekli artır
         if (isTimerRunning)
         {
             totalTime += Time.deltaTime;
@@ -34,14 +34,14 @@ public class ScoreManager : SingletonPersistent<ScoreManager>
     public void StartTimer() => isTimerRunning = true;
     public void StopTimer() => isTimerRunning = false;
 
-    // PlayerController iÃ§indeki Die() fonksiyonunda Ã§aÄŸÄ±rÄ±lÄ±r
+    // PlayerController içindeki Die() fonksiyonunda çağırılır
     public void AddDeath()
     {
         totalDeaths++;
-        SaveOfflineData(); // Her Ã¶ldÃ¼ÄŸÃ¼nde diske kaydet ki silinmesin!
+        SaveOfflineData(); // Her öldüğünde diske kaydet ki silinmesin!
     }
 
-    // --- DÄ°SK KAYIT SÄ°STEMÄ° ---
+    // --- DİSK KAYIT SİSTEMİ ---
     public void SaveOfflineData()
     {
         PlayerPrefs.SetInt(Constants.PREF_TOTAL_DEATHS, totalDeaths);
@@ -55,7 +55,7 @@ public class ScoreManager : SingletonPersistent<ScoreManager>
         totalTime = PlayerPrefs.GetFloat(Constants.PREF_TOTAL_TIME, 0f);
     }
 
-    // SÃ¼reyi 01:25 gibi ÅŸÄ±k bir formata (Dakika:Saniye) Ã§eviren araÃ§
+    // Süreyi 01:25 gibi şık bir formata (Dakika:Saniye) çeviren araç
     public string GetFormattedTime(float timeToFormat)
     {
         int minutes = Mathf.FloorToInt(timeToFormat / 60F);

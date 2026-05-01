@@ -15,7 +15,7 @@ MonoBehaviour:
   levelID: 12
   levelName: Normal
   isUnlocked: 1
-  isCompleted: 0
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
@@ -24,6 +24,6 @@ MonoBehaviour:
   colliderLeyer: 1
   specialMechanics:
   - {fileID: 830284445212897122, guid: bd16b534ee2714d4da9bb2a98850cbca, type: 3}
-  - {fileID: 8433435834735901630, guid: f136316ba061ddd4d907a1941888b164, type: 3}
+  - {fileID: 4451106363466896853, guid: 8ab0792e2fc81ca488956725852cfc39, type: 3}
   levelHint: 
   hintVisualMap: {fileID: 0}

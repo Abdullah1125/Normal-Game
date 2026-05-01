@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,26 +18,26 @@ public class LevelUIManager : MonoBehaviour
     private List<LevelMenuButton> spawnedButtons = new List<LevelMenuButton>();
     public GameObject comingSoonPanel;
 
-    [Header("Page Backgrounds(Sayfa Arka PlanlarÄ±)")]
+    [Header("Page Backgrounds(Sayfa Arka Planları)")]
     public Image backgroundImageTop;
     public RectTransform bgRectTop;
     public Image backgroundImageBottom;
     public RectTransform bgRectBottom;
     public List<Sprite> pageBackgrounds;
 
-    [Header("Page Transition Settings(Sayfa GeÃ§iÅŸ AyarlarÄ±)")]
+    [Header("Page Transition Settings(Sayfa Geçiş Ayarları)")]
     public CanvasGroup gridCanvasGroup;
     public RectTransform gridRect;
     public float slideDistance = 1920f;
     public float slideDuration = 0.15f;
 
-    [Header("Coming Soon Settings(Ã‡ok YakÄ±nda AyarlarÄ±)")]
+    [Header("Coming Soon Settings(Çok Yakında Ayarları)")]
     public float comingSoonFadeDuration = 0.4f;
     private Coroutine comingSoonCoroutine;
 
     private bool isAnimating = false;
 
-    [Header("Text Settings(YazÄ± AyarlarÄ±)")]
+    [Header("Text Settings(Yazı Ayarları)")]
     public bool reverseTextDirection = false;
 
     private TMP_Text dummyLevel1Text;
@@ -49,21 +49,21 @@ public class LevelUIManager : MonoBehaviour
     private Vector2 origText1Pos;
     private Vector2 origText2Pos;
 
-    [Header("Pagination Settings(SayfalandÄ±rma AyarlarÄ±)")]
+    [Header("Pagination Settings(Sayfalandırma Ayarları)")]
     public GameObject dotPrefab;
     public Transform dotsParent;
     public Color activeColor = Color.white;
     public Color inactiveColor = Color.gray;
 
-    [Header("Page Titles(Sayfa BaÅŸlÄ±klarÄ±)")]
+    [Header("Page Titles(Sayfa Başlıkları)")]
     public TMP_Text Level1Text;
     public TMP_Text Level2Text;
 
-    [Header("Warning Settings(UyarÄ± AyalarÄ±)")]
+    [Header("Warning Settings(Uyarı Ayarları)")]
     public CanvasGroup warningPanelCG;
     public TextMeshProUGUI warningPanelText;
 
-    [Header("Grid Layout Settings(Izgara Boyut AyarlarÄ±)")]
+    [Header("Grid Layout Settings(Izgara Boyut Ayarları)")]
     private Vector2 originalCellSize;
     private Vector2 originalSpacing;
     private bool isGridInitialized = false;
@@ -81,7 +81,7 @@ public class LevelUIManager : MonoBehaviour
     public GameObject loadingAdPanel; 
     public TextMeshProUGUI loadingText;
 
-    // Onbellege alinan bilesenler
+    // Önbelleğe alınan bileşenler
     private CanvasGroup comingSoonCG;
     private LocalizedText warningLocText;
     private GridLayoutGroup cachedGridLayout;
@@ -97,10 +97,10 @@ public class LevelUIManager : MonoBehaviour
 
         if (gridRect == null) gridRect = gridParent.GetComponent<RectTransform>();
 
-        // Grid'in editÃ¶rdeki orijinal pozisyonunu hafÄ±zaya alÄ±r
+        // Grid'in editördeki orijinal pozisyonunu hafızaya alır
         originalGridPos = gridRect.anchoredPosition;
 
-        // Tam ekran geniÅŸliÄŸinde kaydÄ±rma yapabilmek iÃ§in Canvas'Ä±n gerÃ§ek geniÅŸliÄŸini alÄ±r
+        // Tam ekran genişliğinde kaydırma yapabilmek için Canvas'ın gerçek genişliğini alır
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas != null && canvas.rootCanvas != null)
         {
@@ -122,7 +122,7 @@ public class LevelUIManager : MonoBehaviour
         CreateDummyPool();
         CreatePaginationDots();
 
-        // Arka plan gÃ¶rsellerini ve ilk sayfa pozisyonlarÄ±nÄ± ayarlar
+        // Arka plan görsellerini ve ilk sayfa pozisyonlarını ayarlar
         if (backgroundImageTop != null && pageBackgrounds != null && pageBackgrounds.Count > 0)
         {
             if (currentPage < pageBackgrounds.Count) backgroundImageTop.sprite = pageBackgrounds[currentPage];
@@ -131,13 +131,13 @@ public class LevelUIManager : MonoBehaviour
         if (bgRectTop != null) bgRectTop.anchoredPosition = originalGridPos;
         if (backgroundImageBottom != null) backgroundImageBottom.gameObject.SetActive(false);
 
-        // BaÅŸlangÄ±Ã§ sayfasÄ±nÄ±n kilit (Coming Soon) durumunu kontrol eder
+        // Başlangıç sayfasının kilit (Coming Soon) durumunu kontrol eder
         if (comingSoonPanel != null)
         {
             comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
             if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
-            comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
-            comingSoonPanel.SetActive(currentPage > 1);
+            comingSoonCG.alpha = (currentPage > 0) ? 1f : 0f;
+            comingSoonPanel.SetActive(currentPage > 0);
         }
 
         RefreshPageUI();
@@ -145,27 +145,27 @@ public class LevelUIManager : MonoBehaviour
     }
 
     
-    // Animasyonlarda render yÃ¼kÃ¼nÃ¼ azaltmak iÃ§in yedek tablo ve yazÄ± kopyalarÄ±nÄ± oluÅŸturur
+    // Animasyonlarda render yükünü azaltmak için yedek tablo ve yazı kopyalarını oluşturur
     void CreateDummyPool()
     {
         dummyGridObj = Instantiate(gridParent.gameObject, gridParent.parent);
         dummyGridObj.name = "Optimized_DummyGrid";
         dummyRect = dummyGridObj.GetComponent<RectTransform>();
 
-        // KopyanÄ±n anchor ve pivot ayarlarÄ±nÄ± orijinaliyle eÅŸitler
+        // Kopyanın anchor ve pivot ayarlarını orijinaliyle eşitler
         dummyRect.anchorMin = gridRect.anchorMin;
         dummyRect.anchorMax = gridRect.anchorMax;
         dummyRect.pivot = gridRect.pivot;
         dummyRect.sizeDelta = gridRect.sizeDelta;
         dummyGridObj.transform.localScale = gridRect.localScale;
 
-        // YazÄ±larÄ±n RectTransform referanslarÄ±nÄ± ve orijinal konumlarÄ±nÄ± saklar
+        // Yazıların RectTransform referanslarını ve orijinal konumlarını saklar
         text1Rect = Level1Text != null ? Level1Text.GetComponent<RectTransform>() : null;
         text2Rect = Level2Text != null ? Level2Text.GetComponent<RectTransform>() : null;
         if (text1Rect != null) origText1Pos = text1Rect.anchoredPosition;
         if (text2Rect != null) origText2Pos = text2Rect.anchoredPosition;
 
-        // Havuz nesnesinin iÃ§ini temizleyip yeni butonlar ekler
+        // Havuz nesnesinin içini temizleyip yeni butonlar ekler
         foreach (Transform t in dummyGridObj.transform) Destroy(t.gameObject);
         for (int i = 0; i < levelsPerPage; i++)
         {
@@ -173,7 +173,7 @@ public class LevelUIManager : MonoBehaviour
             dummyButtons.Add(btnObj.GetComponent<LevelMenuButton>());
         }
 
-        // Havuz nesnesinin tÄ±klanmasÄ±nÄ± engeller
+        // Havuz nesnesinin tıklanmasını engeller
         CanvasGroup dummyCG = dummyGridObj.GetComponent<CanvasGroup>();
         if (dummyCG == null) dummyCG = dummyGridObj.AddComponent<CanvasGroup>();
         dummyCG.interactable = false;
@@ -182,7 +182,7 @@ public class LevelUIManager : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(dummyRect);
         dummyGridObj.SetActive(false);
 
-        // YazÄ±larÄ±n animasyon sÄ±rasÄ±nda kullanÄ±lacak yedek kopyalarÄ±nÄ± yaratÄ±r
+        // Yazıların animasyon sırasında kullanılacak yedek kopyalarını yaratır
         if (Level1Text != null)
         {
             dummyLevel1Text = Instantiate(Level1Text, Level1Text.transform.parent);
@@ -206,7 +206,7 @@ public class LevelUIManager : MonoBehaviour
         if (warningLocText != null) warningLocText.enabled = false;
 
         
-        string baseWarning = "HaritayÄ± bitirmeden geri dÃ¶nemezsin!";
+        string baseWarning = "Haritayı bitirmeden geri dönemezsin!";
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
             baseWarning = LocalizationManager.Instance.currentData.warning_panel;
@@ -240,7 +240,7 @@ public class LevelUIManager : MonoBehaviour
         if (UIManager.Instance != null) UIManager.Instance.SetLevelMenuBlock(false);
     }
 
-    // Ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼ÄŸÃ¼ne gÃ¶re GridLayoutGroup boÅŸluk boyutlarÄ±nÄ± dinamik olarak ayarlar
+    // Ekran çözünürlüğüne göre GridLayoutGroup boşluk boyutlarını dinamik olarak ayarlar
     private void AdjustGridLayout()
     {
         if (cachedGridLayout == null) cachedGridLayout = gridParent.GetComponent<GridLayoutGroup>();
@@ -262,11 +262,11 @@ public class LevelUIManager : MonoBehaviour
                 float currentAspect = (float)Screen.width / Screen.height;
                 float referenceAspect = scaler.referenceResolution.x / scaler.referenceResolution.y;
                 
-                // En-boy oranÄ±na gÃ¶re Ã§arpan hesapla
+                // En-boy oranına göre çarpan hesapla
                 float aspectMultiplier = currentAspect / referenceAspect;
 
-                // Sadece yatay (X) boÅŸluklarÄ± ekrana gÃ¶re dinamik olarak oranla
-                // HÃ¼cre boyutlarÄ± ve dikey (Y) boÅŸluklar orijinal kalacak
+                // Sadece yatay (X) boşlukları ekrana göre dinamik olarak oranla
+                // Hücre boyutları ve dikey (Y) boşluklar orijinal kalacak
                 gridLayout.cellSize = originalCellSize;
                 gridLayout.spacing = new Vector2(originalSpacing.x * aspectMultiplier, originalSpacing.y);
             }
@@ -305,7 +305,7 @@ void UpdatePaginationDots()
             bool isActive = (i == currentPage);
             spawnedDots[i].color = isActive ? activeColor : inactiveColor;
             
-            // Aktif olan nokta 0.6f, pasif olanlar 0.8f olacak ÅŸekilde Ã¶lÃ§eklenir
+            // Aktif olan nokta 0.6f, pasif olanlar 0.8f olacak şekilde ölçeklenir
             spawnedDots[i].transform.localScale = isActive ? new Vector3(0.5f, 0.5f, 1f) : new Vector3(0.6f, 0.6f, 1f);
         }
     }
@@ -344,14 +344,14 @@ void UpdatePaginationDots()
                 targetButtons[i].gameObject.SetActive(true);
                 LevelData data = allGameLevels[currentDataIndex];
 
-                // BÃ¶lÃ¼m kilit ve tamamlanma verilerini PlayerPrefs'ten Ã§eker
+                // Bölüm kilit ve tamamlanma verilerini PlayerPrefs'ten çeker
                 data.isUnlocked = PlayerPrefs.GetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + data.levelID, 0) == 1;
 
-                bool isComingSoon = (pageIndex > 1);
+                bool isComingSoon = (pageIndex > 0);
                 string localizedLevelName = data.levelName;
 
-                // YerelleÅŸtirilmiÅŸ bÃ¶lÃ¼m isimlerini atar
+                // Yerelleştirilmiş bölüm isimlerini atar
                 if (pageIndex == 0 && i < Level1.Count) localizedLevelName = Level1[i];
                 else if (pageIndex == 1 && i < Level2.Count) localizedLevelName = Level2[i];
 
@@ -399,12 +399,12 @@ void UpdatePaginationDots()
         if (disableAfter) comingSoonPanel.SetActive(false);
     }
 
-    // Grid ve yazÄ±larÄ±n RectTransform interpolasyonu (Lerp) ile yumuÅŸak geÃ§iÅŸ yapmasÄ±nÄ± saÄŸlar
+    // Grid ve yazıların RectTransform interpolasyonu (Lerp) ile yumuşak geçiş yapmasını sağlar
     private System.Collections.IEnumerator AnimatePageChange(int targetPage, int direction)
     {
         isAnimating = true;
 
-        // Tam ekran geniÅŸliÄŸinde kaydÄ±rma yapabilmek iÃ§in Canvas'Ä±n gerÃ§ek geniÅŸliÄŸini alÄ±r
+        // Tam ekran genişliğinde kaydırma yapabilmek için Canvas'ın gerçek genişliğini alır
         if (cachedCanvasRect != null)
         {
             slideDistance = cachedCanvasRect.rect.width;
@@ -428,7 +428,7 @@ void UpdatePaginationDots()
         Vector2 t2Out = origText2Pos + (offsetOut * textDirMult);
         Vector2 t2In = origText2Pos + (offsetIn * textDirMult);
 
-        // Arka plan geÃ§iÅŸi iÃ§in yedek gÃ¶rseli hazÄ±rlar
+        // Arka plan geçişi için yedek görseli hazırlar
         if (backgroundImageBottom != null && pageBackgrounds != null && targetPage < pageBackgrounds.Count)
         {
             backgroundImageBottom.sprite = pageBackgrounds[targetPage];
@@ -436,7 +436,7 @@ void UpdatePaginationDots()
             if (bgRectBottom != null) bgRectBottom.anchoredPosition = inPos;
         }
 
-        // Eski verileri yedek (Dummy) tabloya ve yazÄ±ya aktarÄ±r
+        // Eski verileri yedek (Dummy) tabloya ve yazıya aktarır
         dummyGridObj.SetActive(true);
         dummyRect.anchoredPosition = startPos;
         FillGridWithPageData(currentPage, dummyButtons);
@@ -448,11 +448,11 @@ void UpdatePaginationDots()
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            oldHasCS = (currentPage > 1);
-            newHasCS = (targetPage > 1);
+            oldHasCS = (currentPage > 0);
+            newHasCS = (targetPage > 0);
         }
 
-        // Yeni sayfa verilerini asÄ±l objelere yÃ¼kler
+        // Yeni sayfa verilerini asıl objelere yükler
         currentPage = targetPage;
         PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, currentPage * levelsPerPage);
         PlayerPrefs.Save();
@@ -460,7 +460,7 @@ void UpdatePaginationDots()
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 
-        // Yeni objeleri ekran dÄ±ÅŸÄ±ndaki baÅŸlangÄ±Ã§ konumuna alÄ±r
+        // Yeni objeleri ekran dışındaki başlangıç konumuna alır
         if (gridRect != null) gridRect.anchoredPosition = inPos;
         if (text1Rect != null) text1Rect.anchoredPosition = t1In;
         if (text2Rect != null) text2Rect.anchoredPosition = t2In;
@@ -474,7 +474,7 @@ void UpdatePaginationDots()
             else comingSoonPanel.SetActive(false);
         }
 
-        // YumuÅŸak geÃ§iÅŸ (Ease-Out) animasyon dÃ¶ngÃ¼sÃ¼
+        // Yumuşak geçiş (Ease-Out) animasyon döngüsü
         float t = 0;
         while (t < slideDuration)
         {
@@ -482,13 +482,13 @@ void UpdatePaginationDots()
             float percent = Mathf.Clamp01(t / slideDuration);
             float curve = 1f - Mathf.Pow(1f - percent, 3f);
 
-            // Eski sayfalar dÄ±ÅŸarÄ± kayar
+            // Eski sayfalar dışarı kayar
             if (dummyRect != null) dummyRect.anchoredPosition = Vector2.Lerp(startPos, outPos, curve);
             if (bgRectTop != null) bgRectTop.anchoredPosition = Vector2.Lerp(startPos, outPos, curve);
             if (dummyText1Rect != null) dummyText1Rect.anchoredPosition = Vector2.Lerp(origText1Pos, t1Out, curve);
             if (dummyText2Rect != null) dummyText2Rect.anchoredPosition = Vector2.Lerp(origText2Pos, t2Out, curve);
 
-            // Yeni sayfalar iÃ§eri girer
+            // Yeni sayfalar içeri girer
             if (gridRect != null) gridRect.anchoredPosition = Vector2.Lerp(inPos, startPos, curve);
             if (bgRectBottom != null) bgRectBottom.anchoredPosition = Vector2.Lerp(inPos, startPos, curve);
             if (text1Rect != null) text1Rect.anchoredPosition = Vector2.Lerp(t1In, origText1Pos, curve);
@@ -497,7 +497,7 @@ void UpdatePaginationDots()
             yield return null;
         }
 
-        // Animasyon bittiÄŸinde temizlik ve konum sabitleme iÅŸlemleri
+        // Animasyon bittiğinde temizlik ve konum sabitleme işlemleri
         dummyGridObj.SetActive(false);
         if (gridRect != null) gridRect.anchoredPosition = startPos;
 
@@ -554,12 +554,12 @@ void UpdatePaginationDots()
         while (true)
         {
             dotCount++;
-            if (dotCount > 5) dotCount = 0; // 5 noktadan sonra sÄ±fÄ±rla
+            if (dotCount > 5) dotCount = 0; // 5 noktadan sonra sıfırla
 
             if (loadingText != null)
                 loadingText.text = baseText + new string('.', dotCount);
 
-            yield return new WaitForSeconds(0.4f); // NoktalarÄ±n hÄ±zÄ±
+            yield return new WaitForSeconds(0.4f); // Noktaların hızı
         }
     }
     void Update()
@@ -570,7 +570,7 @@ void UpdatePaginationDots()
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            StartFakeLoading(5.0f, () => { Debug.Log("Test BaÅŸarÄ±yla Bitti!"); });
+            StartFakeLoading(5.0f, () => { Debug.Log("Test Başarıyla Bitti!"); });
         }
     }
 

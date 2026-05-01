@@ -99,16 +99,18 @@ public class BoxButton : MonoBehaviour, IResettable
     /// </summary>
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!gameObject.scene.isLoaded) return; // Sahne kapanırken sahte çıkışları engeller
+        // SİHİRLİ DOKUNUŞ: Eğer sahne yüklenmiyorsa veya obje o an Destroy ediliyorsa KESİNLİKLE işlem yapma
+        if (!gameObject.scene.isLoaded || !other.gameObject.activeInHierarchy) return;
+
+        if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive) return;
 
         if (IsBox(other))
         {
             objectsOnButton--;
 
-            // Eğer butonun üzerinde hiç kutu kalmadıysa ve buton basılıysa kapıyı kapat
             if (objectsOnButton <= 0 && isPressed)
             {
-                objectsOnButton = 0; // Eksi değerlere inmesini garanti altına alıyoruz
+                objectsOnButton = 0;
                 ReleaseButton();
             }
         }

@@ -4,14 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : Singleton<LevelManager>
 {
-
     public int currentLevelIndex = 0;
     public List<LevelData> allLevels;
     [HideInInspector] public LevelData activeLevel;
     public static System.Action OnLevelStarted;
 
+    // SİHİR BURADA: Global geçiş kontrolü
+    public static bool IsTransitioning = false;
+
     private List<GameObject> activeMechanics = new List<GameObject>();
     private List<IResettable> masterResetList = new List<IResettable>();
+
     protected override void Awake()
     {
         base.Awake();
@@ -30,6 +33,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         ApplyLevel();
     }
+
     public void RegisterResettable(IResettable mechanic)
     {
         if (!masterResetList.Contains(mechanic))
@@ -37,11 +41,11 @@ public class LevelManager : Singleton<LevelManager>
             masterResetList.Add(mechanic);
         }
     }
+
     public void NextLevel()
     {
         if (allLevels[currentLevelIndex].isCompleted)
         {
-            Debug.Log("Bu level zaten bitmiÅŸti, MenÃ¼ye dÃ¶nÃ¼lÃ¼yor...");
             GoToLevelSelect();
             return;
         }
@@ -53,8 +57,6 @@ public class LevelManager : Singleton<LevelManager>
         PlayerPrefs.SetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + nextGlobalID, 1);
         PlayerPrefs.SetInt(Constants.PREF_LAST_LEVEL_ID, allLevels[currentLevelIndex].levelID);
         PlayerPrefs.Save();
-
-  
 
         if (currentLevelIndex + 1 >= allLevels.Count)
         {
@@ -81,16 +83,22 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
+    /// <summary>
+    /// Yeni seviyeyi uygular ve eski objeleri temizlerken sesleri mühürler.
+    /// </summary>
     public void ApplyLevel()
     {
         if (currentLevelIndex >= allLevels.Count) return;
 
-        activeLevel = allLevels[currentLevelIndex];
+        // 1. ADIM: Sesleri sustur
+        IsTransitioning = true;
 
+        activeLevel = allLevels[currentLevelIndex];
         SoundManager.UpdateThemeByLevelID(activeLevel.levelID);
 
         masterResetList.RemoveAll(mechanic => mechanic as UnityEngine.Object == null);
 
+        // 2. ADIM: Eski mekanikleri sil (Bu aşamada tetiklenen sesler mühür sayesinde çalmayacak)
         foreach (GameObject obj in activeMechanics)
         {
             if (obj != null) Destroy(obj);
@@ -110,29 +118,30 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         Physics2D.gravity = new Vector2(0, -9.81f);
-
         if (HintManager.Instance != null) HintManager.Instance.UpdateLevelHint();
-
         PlayerController.Instance.ResetSpeed();
-        Physics2D.gravity = new Vector2(0, -9.81f);
-
         if (PlayerController.Instance != null) PlayerController.Instance.UpdateGravityDirection();
 
         OnLevelStarted?.Invoke();
+
+        // 3. ADIM: Objeler yerleşsin diye çok kısa bir süre sonra sesleri tekrar aç
+        Invoke(nameof(EndTransition), 0.2f);
     }
 
-    /// <summary>
-    /// Resets all interactive elements (boxes, keys, buttons, gates) in the level.
-    /// (BÃ¶lÃ¼mdeki tÃ¼m etkileÅŸimli Ã¶ÄŸeleri -kutular, anahtarlar, butonlar, kapÄ±lar- sÄ±fÄ±rlar.)
-    /// </summary>
+    private void EndTransition()
+    {
+        IsTransitioning = false;
+    }
+
     public void ResetAllMechanics()
     {
+        // Reset anında da sahte ses çıkmasın diye mühürle
+        IsTransitioning = true;
+
         masterResetList.RemoveAll(mechanic => (mechanic as Object) == null);
 
-        // Listeyi dÃ¶nerken hem null kontrolÃ¼ yapÄ±yoruz hem de Unity objesi mi diye bakÄ±yoruz
         foreach (IResettable mechanic in masterResetList)
         {
-            // SÄ°HÄ°R: (mechanic as Object) kÄ±smÄ±, objenin Unity tarafÄ±nda silinip silinmediÄŸini kontrol eder
             if (mechanic != null && (mechanic as Object) != null)
             {
                 mechanic.ResetMechanic();
@@ -142,7 +151,10 @@ public class LevelManager : Singleton<LevelManager>
         Physics2D.gravity = new Vector2(0, -9.81f);
         if (PlayerController.Instance != null) PlayerController.Instance.UpdateGravityDirection();
         OnLevelStarted?.Invoke();
+
+        Invoke(nameof(EndTransition), 0.2f);
     }
+
     public void UnregisterResettable(IResettable mechanic)
     {
         if (masterResetList.Contains(mechanic))
@@ -150,6 +162,7 @@ public class LevelManager : Singleton<LevelManager>
             masterResetList.Remove(mechanic);
         }
     }
+
     void GoToLevelSelect()
     {
         if (LevelTransition.Instance != null)
@@ -158,7 +171,4 @@ public class LevelManager : Singleton<LevelManager>
         }
         else SceneManager.LoadScene(Constants.SCENE_LEVELS);
     }
-
-   
 }
-

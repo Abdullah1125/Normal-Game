@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class SoulEffect : MonoBehaviour
@@ -20,11 +20,11 @@ public class SoulEffect : MonoBehaviour
     // OBJE HER HAVUZDAN Ã‡IKTIÄINDA Ã‡ALIÅIR
     void OnEnable()
     {
-        // HafÄ±zayÄ± sÄ±fÄ±rla
+        // Hafızayı sıfırla
         isSettled = false;
         isTouchingGround = false;
 
-        // Rigidbody'yi canlandÄ±r
+        // Rigidbody'yi canlandır
         rb.constraints = RigidbodyConstraints2D.None;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
@@ -32,7 +32,7 @@ public class SoulEffect : MonoBehaviour
         rb.linearDamping = 0.05f;
         rb.angularDamping = 0.5f;
 
-        // YaÅŸam sÃ¼resi bitince kendini yok etmek yerine "havuza geri dÃ¶n"
+        // Yaşam süresi bitince kendini yok etmek yerine "havuza geri dön"
         StopAllCoroutines();
         StartCoroutine(ReturnToPoolAfterTime());
     }
@@ -40,7 +40,7 @@ public class SoulEffect : MonoBehaviour
     private IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(lifeTime);
-        gameObject.SetActive(false); // Depoya geri dÃ¶n!
+        gameObject.SetActive(false); // Depoya geri dön!
     }
 
     void FixedUpdate()

@@ -17,6 +17,7 @@ public static class Constants
     public const string TAG_GROUND = "Ground";
     public const string TAG_BOX = "Box";
     public const string TAG_BOX_BUTTON = "BoxButton";
+    public const string TAG_TARGET_GRID = "TargetGrid";
 
     // --- Scenes ---
     public const string SCENE_MAIN_MENU = "MainMenu";

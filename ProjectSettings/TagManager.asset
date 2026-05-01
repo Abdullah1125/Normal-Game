@@ -10,6 +10,7 @@ TagManager:
   - Background
   - Box
   - BoxButton
+  - TargetGrid
   layers:
   - Default
   - TransparentFX
