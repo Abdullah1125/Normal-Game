@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// List of all sound effect types.
@@ -12,7 +13,7 @@ public enum SFXType
     Key,
     DoorPass,
     SlidingDoor,
-    MenuPop,   // Ortadan açılan için
+    MenuPop,
     MenuSlide
 }
 
@@ -33,31 +34,105 @@ public class ThemeAudio
     public AudioClip slidingDoorSound;
     public AudioClip menuPopSound;
     public AudioClip MenuSlide;
-
-
 }
 
 public class SoundManager : SingletonPersistent<SoundManager>
 {
-
     [Header("Speaker (Hoparlörler)")]
     public AudioSource sfxSource;
 
     [Header("Theme Packages (Tema Ses Paketleri)")]
     public ThemeAudio[] themeAudios = new ThemeAudio[5];
 
+    [Header("Pool Settings (Havuz Ayarları)")]
+    public int initialPoolSize = 10;
+    public int maxPoolSize = 20; // Havuzun çıkabileceği maksimum sınır!
+
     private int currentThemeIndex = 0;
-    private static System.Collections.Generic.Dictionary<AudioClip, float> _soundTimers = new System.Collections.Generic.Dictionary<AudioClip, float>();
+    private static Dictionary<AudioClip, float> _soundTimers = new Dictionary<AudioClip, float>();
+    
+    //  Ses objelerini tutacağımız havuz listesi
+    private List<AudioSource> audioPool = new List<AudioSource>();
+
     /// <summary>
-    /// Sets up the singleton pattern.
-    /// (Singleton yapısını kurar.)
+    /// Sets up the singleton pattern and initializes the audio pool.
+    /// (Singleton yapısını kurar ve ses havuzunu başlatır.)
     /// </summary>
     protected override void Awake()
     {
         base.Awake();
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
+
+        InitializePool();
     }
 
+    /// <summary>
+    /// Creates the initial pool of AudioSources to prevent GC allocation at runtime.
+    /// (Çalışma zamanında GC yükünü önlemek için başlangıç AudioSource havuzunu oluşturur.)
+    /// </summary>
+    private void InitializePool()
+    {
+        for (int i = 0; i < initialPoolSize; i++)
+        {
+            CreateNewAudioSource();
+        }
+    }
+
+    /// <summary>
+    /// Creates a new AudioSource child object and adds it to the pool.
+    /// (Yeni bir AudioSource alt objesi oluşturur ve havuza ekler.)
+    /// </summary>
+    private AudioSource CreateNewAudioSource()
+    {
+        GameObject obj = new GameObject("PooledSFX_" + audioPool.Count);
+        obj.transform.SetParent(transform); // Hiyerarşiyi temiz tutmak için SoundManager'ın altına atar
+        AudioSource newSource = obj.AddComponent<AudioSource>();
+
+        if (sfxSource != null)
+        {
+            newSource.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup;
+        }
+
+        audioPool.Add(newSource);
+        return newSource;
+    }
+
+   /// <summary>
+    /// Havuzdan boş bir kaynak bulur. Boş yoksa ve sınırı aşmadıysa yeni üretir.
+    /// Sınır aşıldıysa en eski çalan sesi zorla susturup onu verir (Voice Stealing).
+    /// </summary>
+    private AudioSource GetAvailableSource()
+    {
+        AudioSource oldestSource = null;
+        float oldestTime = float.MaxValue;
+
+        // 1. Havuzda boşta yatan bir hoparlör var mı diye bak
+        for (int i = 0; i < audioPool.Count; i++)
+        {
+            if (!audioPool[i].isPlaying)
+            {
+                return audioPool[i];
+            }
+
+            // Çalanlar arasında en eskisini bul (Voice Stealing için yedekte tutuyoruz)
+            if (audioPool[i].time < oldestTime)
+            {
+                oldestTime = audioPool[i].time;
+                oldestSource = audioPool[i];
+            }
+        }
+
+        // 2. Havuzda boş yok ama MAKSİMUM sınıra (20) henüz ulaşmadıysak, yeni üret.
+        if (audioPool.Count < maxPoolSize)
+        {
+            return CreateNewAudioSource();
+        }
+
+        // 3. MAKSİMUM sınıra (20) ulaştıysak ve hepsi çalıyorsa, EN ESKİSİNİ SUSTUR VE ÇAL! (Voice Stealing)
+        oldestSource.Stop();
+        return oldestSource;
+    }
+    
     /// <summary>
     /// Updates the current audio theme based on the active level ID.
     /// (Aktif bölüm ID'sine göre mevcut ses temasını günceller.)
@@ -71,8 +146,8 @@ public class SoundManager : SingletonPersistent<SoundManager>
     }
 
     /// <summary>
-    /// Plays a theme-specific sound effect. Adds a volume parameter to lower specific loud sounds.
-    /// (Belirli çok çıkan sesleri kısmak için ses seviyesi parametresi eklendi.)
+    /// Plays a theme-specific sound effect.
+    /// (Temaya özel bir ses efekti çalar.)
     /// </summary>
     public static void PlayThemeSFX(SFXType type, float volumeMultiplier = 1f)
     {
@@ -98,36 +173,31 @@ public class SoundManager : SingletonPersistent<SoundManager>
             PlayClipWithPitch(clipToPlay, volumeMultiplier);
         }
     }
-    // <summary>
-    /// Creates a temporary AudioSource, adjusts volume, and prevents overlapping spam.
-    /// (Geçici bir AudioSource oluşturur, sesi ayarlar ve üst üste binme spam'ini önler.)
+
+    /// <summary>
+    /// Plays a clip using pooled AudioSources to prevent memory allocation spam.
+    /// (Bellek şişmesini önlemek için havuzlanmış AudioSource'ları kullanarak ses çalar.)
     /// </summary>
     private static void PlayClipWithPitch(AudioClip clip, float volumeMultiplier)
     {
-        // 1. ANTI-SPAM KONTROLÜ (Aynı ses 0.08 saniye içinde tekrar çalamaz)
+        // 1. ANTI-SPAM KONTROLÜ
         if (_soundTimers.TryGetValue(clip, out float lastPlayedTime))
         {
-            // Eğer son çalınma üzerinden 0.08 saniyeden az zaman geçtiyse, iptal et!
             if (Time.unscaledTime - lastPlayedTime < 0.08f) return;
         }
 
-        // Sesin son çalınma zamanını hafızaya kaydet
         _soundTimers[clip] = Time.unscaledTime;
 
-        // 2. HAYALET OBJE YARATMA (Eski kodun aynısı)
-        GameObject tempAudioObj = new GameObject("TempSFX_" + clip.name);
-        AudioSource tempSource = tempAudioObj.AddComponent<AudioSource>();
+        // 2. HAVUZDAN ÇEKME (Artık obje yaratıp silmiyoruz)
+        AudioSource tempSource = Instance.GetAvailableSource();
 
-        if (Instance != null && Instance.sfxSource != null)
+        if (Instance.sfxSource != null)
         {
             tempSource.volume = Instance.sfxSource.volume * volumeMultiplier;
-            tempSource.outputAudioMixerGroup = Instance.sfxSource.outputAudioMixerGroup;
         }
 
         tempSource.clip = clip;
         tempSource.pitch = Random.Range(0.9f, 1.05f);
-
         tempSource.Play();
-        Destroy(tempAudioObj, clip.length / tempSource.pitch);
     }
 }
