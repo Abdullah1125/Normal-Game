@@ -50,6 +50,7 @@ MonoBehaviour:
     m_Bits: 256
   playerTag: Player
   dragSpeed: 60
+  deadZone: 0.2
   useBoundaries: 1
   minX: -25.3
   maxX: 27.96

@@ -33,7 +33,6 @@ public class ExtraHintUI : MonoBehaviour
     private Coroutine _dotsCoroutine;
 
     // Önbelleğe alınmış bileşen referansları
-    private LocalizedText cachedLoadingLocText;
     private ButtonFoldAnimator pauseButtonAnim;
     private ButtonFoldAnimator extraHintButtonAnim;
 
@@ -42,9 +41,6 @@ public class ExtraHintUI : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (loadingText != null) 
-            cachedLoadingLocText = loadingText.GetComponent<LocalizedText>();
-            
         if (pauseButton != null) 
             pauseButtonAnim = pauseButton.GetComponent<ButtonFoldAnimator>();
             
@@ -233,13 +229,9 @@ public class ExtraHintUI : MonoBehaviour
     /// </summary>
     private IEnumerator AnimateDots()
     {
-        string baseText = "Reklam Yükleniyor";
-        
-        if (loadingText != null && cachedLoadingLocText != null)
-        {
-            cachedLoadingLocText.UpdateText(); 
-            baseText = loadingText.text.Replace(".", ""); 
-        }
+        string baseText = (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
+            ? LocalizationManager.Instance.currentData.ads_panel
+            : "Loading Ad";
 
         while (true)
         {

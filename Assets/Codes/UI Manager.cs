@@ -10,6 +10,7 @@ public class UIManager : Singleton<UIManager>
     public CanvasGroup hudButtons;        // Oyun içi HUD (Pause/İpucu) grubu
     public CanvasGroup pauseMenuButtons;  // Duraklatma menüsü grubu
     public CanvasGroup hintPanelButtons;  // İpucu paneli grubu
+    public CanvasGroup levelMenuButtons;  // Level seçim ekranı buton grubu
 
 
 
@@ -52,4 +53,8 @@ public class UIManager : Singleton<UIManager>
     // Hint Panel Controls
     public void SetHintBlock(bool state) => SetGroupBlock(hintPanelButtons, state);
     public bool IsHintBlocked() => IsGroupBlocked(hintPanelButtons);
+
+    // Level Menu Controls
+    public void SetLevelMenuBlock(bool state) => SetGroupBlock(levelMenuButtons, state);
+    public bool IsLevelMenuBlocked() => IsGroupBlocked(levelMenuButtons);
 }

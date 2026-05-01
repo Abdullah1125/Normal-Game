@@ -106,11 +106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0ee0c1c0f229d428376bd2ac4344ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GyroBoxController
-  tiltSpeed: 45
+  tiltSpeed: 50
   initialDeadZone: 0.86
   movingDeadZone: 0.3
   touchFallbackTime: 75
   dragSpeed: 60
+  dragFriction: 5
+  grabRadius: 1.5
 --- !u!50 &7374119572279936353
 Rigidbody2D:
   serializedVersion: 5
@@ -126,7 +128,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 18
+  m_GravityScale: 25
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -172,7 +174,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.000000014901161}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -182,5 +184,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 0.9999999}
   m_EdgeRadius: 0

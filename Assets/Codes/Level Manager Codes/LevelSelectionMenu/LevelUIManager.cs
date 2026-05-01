@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -226,12 +226,18 @@ public class LevelUIManager : MonoBehaviour
     }
     private System.Collections.IEnumerator FadeWarningPanelRoutine()
     {
+        // Uyarı görünürken butonları kilitle (spam / çift tıklama koruması)
+        if (UIManager.Instance != null) UIManager.Instance.SetLevelMenuBlock(true);
+
         warningPanelCG.gameObject.SetActive(true);
         float t = 0;
         while (t < 0.4f) { t += Time.deltaTime; warningPanelCG.alpha = t / 0.4f; yield return null; }
         yield return new WaitForSeconds(1.2f);
         while (t > 0) { t -= Time.deltaTime; warningPanelCG.alpha = t / 0.4f; yield return null; }
         warningPanelCG.gameObject.SetActive(false);
+
+        // Animasyon bitti, butonları serbest bırak
+        if (UIManager.Instance != null) UIManager.Instance.SetLevelMenuBlock(false);
     }
 
     // Ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼ÄŸÃ¼ne gÃ¶re GridLayoutGroup boÅŸluk boyutlarÄ±nÄ± dinamik olarak ayarlar
@@ -521,24 +527,28 @@ void UpdatePaginationDots()
     }
     private IEnumerator FakeLoadingRoutine(float duration, Action onComplete)
     {
-        if (loadingAdPanel != null) loadingAdPanel.SetActive(true);
+        // Reklam yüklenirken tüm level butonlarını kilitle
+        if (UIManager.Instance != null) UIManager.Instance.SetLevelMenuBlock(true);
 
+        if (loadingAdPanel != null) loadingAdPanel.SetActive(true);
 
         _dotsCoroutine = StartCoroutine(AnimateDots());
 
         yield return new WaitForSeconds(duration);
 
-
         if (_dotsCoroutine != null) StopCoroutine(_dotsCoroutine);
         if (loadingAdPanel != null) loadingAdPanel.SetActive(false);
 
+        // Bitti, kilidi kaldır
+        if (UIManager.Instance != null) UIManager.Instance.SetLevelMenuBlock(false);
 
         onComplete?.Invoke();
-
     }
     private IEnumerator AnimateDots()
     {
-        string baseText = "Reklam YÃ¼kleniyor"; // BurayÄ± istediÄŸin gibi deÄŸiÅŸtir
+        string baseText = (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
+            ? LocalizationManager.Instance.currentData.ads_panel
+            : "Loading Ad";
         int dotCount = 0;
 
         while (true)

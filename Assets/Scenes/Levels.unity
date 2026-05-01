@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 150784875}
   - component: {fileID: 150784876}
   - component: {fileID: 150784877}
+  - component: {fileID: 150784878}
   m_Layer: 5
   m_Name: LevelGrid
   m_TagString: Untagged
@@ -472,6 +473,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!225 &150784878
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150784874}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &187319231
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +797,6 @@ MonoBehaviour:
   shakeMagnitude: 0.1
   shakeSpeed: 45
   hitStopDuration: 0.05
-  transitionSpeed: 5
 --- !u!1 &534679708 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2626501632310376883, guid: 3bb84f86d0d05664894ed5fbcc5b7f8d, type: 3}
@@ -3450,6 +3462,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900303592}
   m_CullTransparentMesh: 1
+--- !u!1001 &2004101700
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 846308466911853781, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_Name
+      value: UI Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.83454
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -11.9374
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973038524962115361, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102322301927379457, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
+      propertyPath: levelMenuButtons
+      value: 
+      objectReference: {fileID: 150784878}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
 --- !u!1 &2072503303
 GameObject:
   m_ObjectHideFlags: 0
@@ -3777,3 +3850,4 @@ SceneRoots:
   - {fileID: 1124530254}
   - {fileID: 1178187925}
   - {fileID: 73065615}
+  - {fileID: 2004101700}

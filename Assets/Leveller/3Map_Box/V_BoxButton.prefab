@@ -37,6 +37,10 @@ PrefabInstance:
       value: BoxButton
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.740217
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164866609253071571, guid: 177b2aacf4cbf304c9d6f9f5afdb8ec7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.419495
       objectReference: {fileID: 0}
