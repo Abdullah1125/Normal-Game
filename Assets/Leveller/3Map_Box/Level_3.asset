@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_3
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 14
-  levelName: Normal
+  levelName: Jiroskopik Kutu
   isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0

@@ -14,12 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 22
   levelName: Normal
-  isUnlocked: 0
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 1686427910927934492, guid: 8501907609526a045aa8305c2ff2a552, type: 3}
+  - {fileID: 5704557836074088201, guid: fc889e9d84790af42b8cdf07fae91eb8, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

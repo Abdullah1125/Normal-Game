@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_6
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 17
-  levelName: Normal
+  levelName: "D\xFC\u015Fen Buton"
   isUnlocked: 1
   isCompleted: 1
   isLeftForbidden: 0

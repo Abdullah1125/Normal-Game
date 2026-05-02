@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2143722430678271271, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: stopThreshold
-      value: 1.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2143722430678271271, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: slidingDamping
@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7323015699785377822, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.21116
+      value: -6.660075
       objectReference: {fileID: 0}
     - target: {fileID: 7323015699785377822, guid: d9e93fe27e3c56649875a9c382ddf48e, type: 3}
       propertyPath: m_LocalPosition.y

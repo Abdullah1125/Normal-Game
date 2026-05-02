@@ -93,12 +93,14 @@ public class ExtraHintUI : MonoBehaviour
 
         TutorialTrigger.OnHintToggled?.Invoke(true);
 
-        // İpucu metnini yerelleştirme verilerinden çek
-        if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
+        // Jilet dokunuşu: Ekstra ipucunu sihirli fonksiyondan çek
+        if (LocalizationManager.Instance != null)
         {
-            string[] allHints = LocalizationManager.Instance.currentData.extra_hints;
-            if (allHints != null && currentLevelData.levelID < allHints.Length)
-                hintText.text = allHints[currentLevelData.levelID];
+            string translatedExtraHint = LocalizationManager.Instance.GetLevelText(currentLevelData.levelID, "extra");
+            if (!string.IsNullOrEmpty(translatedExtraHint))
+            {
+                hintText.text = translatedExtraHint;
+            }
         }
 
         // Görselin varlığına göre UI düzenini ayarla

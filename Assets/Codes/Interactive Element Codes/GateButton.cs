@@ -1,56 +1,67 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
-public class GateButton : MonoBehaviour , IResettable
+
+/// <summary>
+/// A button that stays pressed if it successfully opens the gate. 
+/// Otherwise, it acts like a spring (reverts on exit).
+/// (Eğer kapıyı başarıyla açıyorsa basılı kalan, aksi halde yaylı gibi eski haline dönen buton.)
+/// </summary>
+public class GateButton : MonoBehaviour, IResettable
 {
-    [Header("Sprites(Görseller)")]
-   
+    [Header("Sprites (Görseller)")]
     public Sprite normalSprite;
     public Sprite pressedSprite;
 
-    [Header("Colors(Renkeler)")]
-    public Color disabledColor = new Color(0.3f, 0.3f, 0.3f);
+    private SpriteRenderer _sr;
+    private PolygonCollider2D _polyCollider;
+    private bool _isPressed = false;
 
-    private bool isPressed = false;
-    private SpriteRenderer sr;
-    private PolygonCollider2D polyCollider;
-
-    [Header("Effects(Efektler)")]
+    [Header("Effects (Efektler)")]
     public ParticleSystem pressParticles;
 
     [Header("Events (Olaylar)")]
     public UnityEvent OnButtonPressed;
+
+    /// <summary>
+    /// Initializes components and saves initial state.
+    /// (Bileşenleri başlatır ve başlangıç durumunu kaydeder.)
+    /// </summary>
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
-        polyCollider = GetComponent<PolygonCollider2D>();
+        _sr = GetComponent<SpriteRenderer>();
+        _polyCollider = GetComponent<PolygonCollider2D>();
 
-        // Başlangıçta Sprite Renderer'daki görseli hafızaya al
-        if (normalSprite == null && sr != null)
+        if (normalSprite == null && _sr != null)
         {
-            normalSprite = sr.sprite;
+            normalSprite = _sr.sprite;
         }
     }
+
+    /// <summary>
+    /// Registers to LevelManager for reset functionality.
+    /// (Sıfırlama işlevselliği için LevelManager'a kaydolur.)
+    /// </summary>
     void Start()
     {
-        // Register to LevelManager (LevelManager'a kendini kaydettir)
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.RegisterResettable(this);
         }
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (IsPlayer(other) && !isPressed)
+        if (IsPlayer(other))
         {
-            TryPressButton();
+            PressButton();
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (IsPlayer(other) && !isPressed)
+        if (IsPlayer(other))
         {
-            TryPressButton();
+            ReleaseButton();
         }
     }
 
@@ -59,84 +70,85 @@ public class GateButton : MonoBehaviour , IResettable
         return other.CompareTag(Constants.TAG_PLAYER);
     }
 
-    private void TryPressButton()
+    /// <summary>
+    /// Handles the press logic. Stays down permanently if the level is active.
+    /// (Basılma mantığını yönetir. Bölüm aktifse kalıcı olarak basılı kalır.)
+    /// </summary>
+    private void PressButton()
     {
-        // Level aktif değilse buton basılmaz, rengi kararır
-        if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
+        // Kapıyı zaten açtıysa tekrar çalışma (Already pressed check)
+        if (_isPressed && LevelManager.Instance != null && LevelManager.Instance.activeLevel.isActive) return;
+
+        _isPressed = true;
+
+        if (pressParticles != null) pressParticles.Play();
+        if (SoundManager.Instance != null) SoundManager.PlayThemeSFX(SFXType.Button);
+
+        if (_sr != null && pressedSprite != null)
         {
-            if (sr != null) sr.color = disabledColor;
+            _sr.sprite = pressedSprite;
+            UpdateCollider();
+        }
+
+        // Sadece level aktifse kapıyı tetikle
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel.isActive)
+        {
+            if (GateController.Instance != null)
+            {
+                GateController.Instance.OpenGate();
+            }
+            OnButtonPressed?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// Reverts the visual only if the gate was NOT opened.
+    /// (Sadece kapı açılmadıysa görseli eski haline döndürür.)
+    /// </summary>
+    private void ReleaseButton()
+    {
+        // Eğer level aktifse (kapı açıldıysa) geri çıkmasın, basılı kalsın
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel.isActive)
+        {
             return;
         }
 
-        PressButton();
-    }
-
-    private void PressButton()
-    {
-        isPressed = true;
-
-        if (pressParticles != null)
+        // Eğer sadece troll butonsa oyuncu gidince eski haline dön
+        _isPressed = false;
+        if (_sr != null && normalSprite != null)
         {
-            pressParticles.Play();
-        }
-
-        // Sprite Değişimi
-        if (sr != null && pressedSprite != null)
-        {
-            sr.sprite = pressedSprite;
-            // Collider'ın havada kalmasını engellemek için güncelleme
+            _sr.sprite = normalSprite;
             UpdateCollider();
         }
-
-      
-
-        // Ses Efekti
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.PlayThemeSFX(SFXType.Button);
-        }
-
-        // KAPIYI AÇAN KISIM
-        if (GateController.Instance != null)
-        {
-            GateController.Instance.OpenGate();
-        }
-
-        OnButtonPressed?.Invoke();
     }
 
-  
-    public void ResetMechanic() 
+    /// <summary>
+    /// Resets the button to its initial state when player dies.
+    /// (Karakter öldüğünde butonu başlangıç durumuna sıfırlar.)
+    /// </summary>
+    public void ResetMechanic()
     {
-        isPressed = false;
-
-        // Sprite'ı ve Rengi eski haline döndür
-        if (sr != null)
+        _isPressed = false;
+        if (_sr != null)
         {
-            sr.sprite = normalSprite;
-            sr.color = Color.white; // Veya orijinal rengin
-            UpdateCollider();
+            _sr.sprite = normalSprite;
+            _sr.color = Color.white;
         }
-
+        UpdateCollider();
         gameObject.SetActive(true);
     }
 
     private void UpdateCollider()
     {
-        // Sprite değişince karakterin havada kalmaması için collider'ı yeniler
-        if (polyCollider != null)
-        {
-            polyCollider.pathCount = 0;
-        }
+        // Collider'ı sprite'a göre güncelle (Update collider to sprite)
+        if (_polyCollider != null) _polyCollider.pathCount = 0;
     }
+
     private void OnDestroy()
     {
-        // Obje silinirken LevelManager'ın listesini de temizliyoruz
         if (LevelManager.Instance != null)
         {
-            // Eğer LevelManager'da RemoveResettable fonksiyonu yoksa aşağıya ekledim
             LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }
-

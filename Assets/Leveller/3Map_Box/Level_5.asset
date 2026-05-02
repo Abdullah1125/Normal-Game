@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 16
-  levelName: Normal
+  levelName: "D\xF6k\xFClen Platformlar"
   isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0

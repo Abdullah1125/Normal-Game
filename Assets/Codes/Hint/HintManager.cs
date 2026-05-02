@@ -10,29 +10,21 @@ public class HintManager : Singleton<HintManager>
 
     public void UpdateLevelHint()
     {
-       
         if (LevelManager.Instance?.activeLevel == null) return;
         if (LocalizationManager.Instance?.currentData == null) return;
 
-        
         int currentLevelID = LevelManager.Instance.activeLevel.levelID;
-        string[] allHints = LocalizationManager.Instance.currentData.hints;
 
-        
-        if (allHints != null && currentLevelID < allHints.Length)
+        // Jilet dokunuþu: Veriyi sihirli fonksiyondan iste
+        string translatedText = LocalizationManager.Instance.GetLevelText(currentLevelID, "hint");
+
+        if (!string.IsNullOrEmpty(translatedText))
         {
-            string translatedText = allHints[currentLevelID];
-
-            
-            if (!string.IsNullOrEmpty(translatedText))
-            {
-                hintText.text = translatedText;
-                hintPanel.SetActive(true);
-                return;
-            }
+            hintText.text = translatedText;
+            hintPanel.SetActive(true);
+            return;
         }
 
-        
         hintPanel.SetActive(false);
     }
 }

@@ -23,7 +23,33 @@
     "ads_panel": "Reklam Yükleniyor",
     "total_death": "Ölüm Sayacı:",
     "total_time": "Geçen Süre:",
-    "hints": [
+    "page_titles": [
+        "BUTON HARİTASI",
+        "ANAHTAR HARİTASI",
+        "KUTU HARİTASI",
+        "BUTON HARİTASI",
+        "ANAHTAR HARİTASI",
+        "BUTON HARİTASI",
+        "KUTU HARİTASI",
+        "ANAHTAR HARİTASI",
+        "BUTON HARİTASI",
+        "KUTU HARİTASI"
+    ],
+    "level_names_1": [
+        "Normal",
+        "Geri Dönüş Yok",
+        "Gizli Kapı",
+        "Kör Hafıza",
+        "Yerçekimi Düğme",
+        "Sürgülü Kapı",
+        "Normal",
+        "Kaçak Anahtar",
+        "Sert Rüzgar",
+        "Sağır,Kör,Dilsiz",
+        "Zıp Zıp",
+        "Tuşları Boşver"
+    ],
+    "hints_1": [
         "",
         "Geri Dönüş Yok",
         "Gizli Geçit",
@@ -37,7 +63,7 @@
         "Zıp Zıp",
         "Alternatif kontrol"
     ],
-    "extra_hints": [
+    "extra_hints_1": [
         "Kuantum fiziği çözmüyoruz. O kocaman butona bas ve açılan kapıdan geç. Eğer bunda bile ipucu istiyorsan, ileride çok canımız yanacak...",
         "Hayatta bazen geriye dönüş yoktur... Tıpkı bu bölümde olduğu gibi. Geri vitesi unut, butonu hallet ve yoluna devam et.",
         "Odak noktanı daha yukarılara taşı, çıkış oralarda bir yerlerde şekilleniyor.  ",
@@ -51,31 +77,29 @@
         "Sürekli zıplamak bedeni tüketir; düzlükte attığın her adım seni daha da alçaltır. Gücünü şarj etmenin tek yolu, yukarıdan aşağıya doğru düşmektir.  Kapının yanındaki ufak boşluk mu? Orası sadece kapıya zahmetsizce ulaşman için bırakıldı.",
         "Tuşların hükmü buraya kadar. Bazen aracılara güvenmek yerine kaderi doğrudan kendi ellerine alman gerekir."
     ],
-    "page_titles": [
-        "BUTON HARİTASI",
-        "ANAHTAR HARİTASI",
-        "KUTU HARİTASI",
-        "BUTON HARİTASI",
-        "ANAHTAR HARİTASI",
-        "BUTON HARİTASI",
-        "KUTU HARİTASI",
-        "ANAHTAR HARİTASI",
-        "BUTON HARİTASI",
-        "KUTU HARİTASI"
+    "level_names_2": [
+        "Normal",
+        "Hayalet Kapı",
+        "Jiroskopik Kutu",
+        "Sol-Sağ Marş",
+        "Dökülen Platformlar",
+        "Düşen Buton"
     ],
-    "Level1": [
-        "Normal",
-        "Geri Dönüş Yok",
-        "Gizli Kapı",
-        "Kör Hafıza",
-        "Yerçekimi Düğme",
-        "Sürgülü Kapı",
-        "Normal",
-        "Kaçak Anahtar",
-        "Sert Rüzgar",
-        "Sağır,Kör,Dilsiz",
-        "Zıp Zıp",
-        "Tuşları Boşver"
+    "hints_2": [
+        "",
+        "Tamamen sahte",
+        "Yan yatır",
+        "Sol-Sağ Marş",
+        "Dökülen Platformlar",
+        "Rolleri tersine çevir"
+    ],
+    "extra_hints_2": [
+        "Aynı anda iki yerde birden olamazsın. Kutuyu kenardan aşağı itmek için gücünü kullan ve bırak butona senin yerine o bassın",
+        "Bu bölgedeki lanet, kapının fiziksel formunu zayıflattı. Kutuyu sürüklemeye ihtiyacın yok; doğrudan içinden geç!",
+        "Kutuyu düşürmek için telefonunu eğ. Sensörün yok mu? Bölüm başladıktan 75 saniye sonra dokunmatik kontroller otomatik açılır.",
+        "Burada tuşa basılı tutmak işe yaramaz. Artık ordudasın! Kapıya doğru ilerlemek için sol ve sağ tuşlarına sırayla bas.",
+        "Yan giriş kapalı.Kapının üstündeki platformlara tırman, sabit dur ve dökülen tavanın seni çıkışa indirmesine izin ver.",
+        "Her şeyi unut. Bu odada butonlar kutulara basar. Kutuyu yere konumlandır, yukarı tırman ve ona basması için butonu düşür."
     ],
     "credit": "Kodlama (Instagram) : @16celik_abdullah \nÇizimler : Göktuğ Condal \nMüzik (Instagram) : @aquilinenoselover \nSes Efekleri : ElevenLabs"
 }

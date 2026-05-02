@@ -18,7 +18,7 @@ public class MobileDirectionButton : MonoBehaviour, IPointerDownHandler, IPointe
     // Parmaðý butona ilk bastýðýnda ÇALIÞIR
     public void OnPointerDown(PointerEventData eventData) => Press();
 
-    // Parmaðý basýlý tutup, kaydýrarak butonun üstüne geldiðinde ÇALIÞIR (Arkadaþýnýn istediði özellik)
+    // Parmaðý basýlý tutup, kaydýrarak butonun üstüne geldiðinde ÇALIÞIRk
     public void OnPointerEnter(PointerEventData eventData) => Press();
 
     // Parmaðý ekrandan çektiðinde ÇALIÞIR

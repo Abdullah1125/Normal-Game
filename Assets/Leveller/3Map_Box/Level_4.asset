@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 15
-  levelName: Normal
+  levelName: "Sol-Sa\u011F Mar\u015F"
   isUnlocked: 1
   isCompleted: 1
   isLeftForbidden: 0

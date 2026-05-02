@@ -12,7 +12,7 @@
     "yes_button": "YES",
     "no_button": "NO",
     "hint_text": "HINT",
-    "warning_panel": "You can't go back before finishing {MAP_NAME}!",
+    "warning_panel": "You can\u0027t go back before finishing {MAP_NAME}!",
     "music_vol": "Music Volume",
     "sfx_vol": "SFX Volume",
     "jump": "Jump",
@@ -23,34 +23,6 @@
     "ads_panel": "Ad Loading",
     "total_death": "Death Counter:",
     "total_time": "Time Counter:",
-    "hints": [
-        "",
-        "No Return",
-        "Secret Passage",
-        "Is Your Memory Clear?",
-        "Upside Down Button",
-        "Sliding Door",
-        "",
-        "Catch That!",
-        "Strong Wind",
-        "Deaf, Blind, Mute",
-        "Pogo Stick",
-        "Alternative Control Scheme"
-    ],
-    "extra_hints": [
-        "We're not solving quantum physics. Press that huge button and go through the opened door. If you want a clue even in this, we will be hurt a lot in the future...",
-        "What is done is done, sometimes there is no turning back in life. Just like how it is in this Level, Forget about the past, push the button and move on",
-        "Move your focus higher, the exit is taking shape somewhere there.",
-        "The only intelligence we have is this little piece of map. Study carefully this section that shows you where you should jump. The rest of the map is entirely up to your reflexes and memorization.",
-        "This route in front of you is not your only reality, it is just the first option you focus on. Don't pause when gravity bends... Your acceleration should already be taking shape in the void as you change direction.",
-        "The game doesn't play itself, dude. Instead of watching from the sidelines and waiting for the door to take pity on you, how about you reach out to the screen and drag that door open?",
-        "To reach the exit, you first need to grab that green looking thing, it is a key. What does a key do? YES! BRILLIANT, a key opens a door! Now go open that door!",
-        "This key doesn't like to give in that easy. When it runs away from you, don't you think that you've made a mistake and give up; it's yelling 'Catch me if you can!' Now go and make sure that key knows its place, eventually it will get tired and give up... hopefully",
-        "After taking the tool that opens the doors, i guess you understand what I am talking about... And then jumping all the way back and going down from there to pass through obstacles is just one of the ways offered to you. Choose your own risk, but remember: If you want to survive, you have to make that double jump with perfect timing, not randomly",
-        "The blind has surrendered to the darkness, the mute to tranquility... It is up to you to complete the trilogy to open the passage. Reset all echoes and embrace the true deafness in this scene.",
-        "Constant jumping exhausts the body; every step you take on the plain brings you lower. The only way to recharge your strength is to fall from top to bottom. The small gap next to the door? It's just left for you to reach the door effortlessly.",
-        "This is as far as the keys can take you. Sometimes you need to take fate directly into your own hands, instead of relying on intermediaries."
-    ],
     "page_titles": [
         "BUTTON MAP",
         "KEY MAP",
@@ -63,7 +35,7 @@
         "BUTTON MAP",
         "BOX MAP"
     ],
-    "Level1": [
+    "level_names_1": [
         "Normal",
         "No Return",
         "Reverse Door",
@@ -76,6 +48,58 @@
         "Deaf,Blind,Mute",
         "Pogo Stick",
         "Alternative Control"
+    ],
+    "hints_1": [
+        "",
+        "No Return",
+        "Secret Passage",
+        "Is Your Memory Clear?",
+        "Upside Down Button",
+        "Sliding Door",
+        "",
+        "Catch That!",
+        "Strong Wind",
+        "Deaf,Blind,Mute",
+        "Pogo Stick",
+        "Alternative Control Scheme"
+    ],
+    "extra_hints_1": [
+        "We\u0027re not solving quantum physics. Press that huge button and go through the opened door. If you want a clue even in this, we will be hurt a lot in the future...",
+        "What is done is done, sometimes there is no turning back in life. Just like how it is in this Level, Forget about the past, push the button and move on",
+        "Move your focus higher, the exit is taking shape somewhere there.",
+        "The only intelligence we have is this little piece of map. Study carefully this section that shows you where you should jump. The rest of the map is entirely up to your reflexes and memorization.",
+        "This route in front of you is not your only reality, it is just the first option you focus on. Don\u0027t pause when gravity bends... Your acceleration should already be taking shape in the void as you change direction.",
+        "The game doesn\u0027t play itself, dude. Instead of watching from the sidelines and waiting for the door to take pity on you, how about you reach out to the screen and drag that door open?",
+        "To reach the exit, you first need to grab that green looking thing, it is a key. What does a key do? YES! BRILLIANT, a key opens a door! Now go open that door!",
+        "This key doesn\u0027t like to give in that easy. When it runs away from you, don\u0027t you think that you\u0027ve made a mistake and give up; it\u0027s yelling \u0027Catch me if you can!\u0027 Now go and make sure that key knows its place, eventually it will get tired and give up... hopefully",
+        "After taking the tool that opens the doors, i guess you understand what I am talking about... And then jumping all the way back and going down from there to pass through obstacles is just one of the ways offered to you. Choose your own risk, but remember: If you want to survive, you have to make that double jump with perfect timing, not randomly",
+        "The blind has surrendered to the darkness, the mute to tranquility... It is up to you to complete the trilogy to open the passage. Reset all echoes and embrace the true deafness in this scene.",
+        "Constant jumping exhausts the body; every step you take on the plain brings you lower. The only way to recharge your strength is to fall from top to bottom. The small gap next to the door? It\u0027s just left for you to reach the door effortlessly.",
+        "This is as far as the keys can take you. Sometimes you need to take fate directly into your own hands, instead of relying on intermediaries."
+    ],
+    "level_names_2": [
+        "Normal",
+        "Ghost Door",
+        "Gyroscopic Box",
+        "Left-Right March",
+        "Collapsed Platforms",
+        "Falling Button"
+    ],
+    "hints_2": [
+        "",
+        "Totally fake",
+        "lay on its side",
+        "Left-Right March",
+        "Collapsed Platforms",
+        "Reverse the roles"
+    ],
+    "extra_hints_2": [
+        "You can't be in two places at once. Use your strength to push the box over the edge and let him press the button instead of you.",
+        "The curse in this area has weakened the physical form of the door. You don't need to drag the box; go straight through it!",
+        "Tilt your phone to drop the box. Don't have a sensor? Touch controls will automatically turn on 75 seconds after the episode starts.",
+        "Holding down the button will not work here. You are in the army now! Press the left and right buttons alternately to move towards the door.",
+        "The side entrance is closed. Climb the platforms above the door, stand still, and let the falling ceiling lower you to the exit.",
+        "Forget everything. In this room, buttons press boxes. Position the box on the floor, climb up and drop the button for him to press."
     ],
     "credit": "Coding (Instagram) : @16celik_abdullah \nArt : Göktuğ Condal \nMusic (Instagram) : @aquilinenoselover \nSfx : ElevenLabs"
 }

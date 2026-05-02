@@ -70,15 +70,14 @@ public class LevelUIManager : MonoBehaviour
 
     private List<Image> spawnedDots = new List<Image>();
 
-    public List<string> Level1 = new List<string>();
-    public List<string> Level2 = new List<string>();
+    // SİHİRLİ DOKUNUŞ: Eski Level1 ve Level2 listelerini sildik. Artık merkezi sistemi kullanıyoruz.
 
     [Header("Object Pooling(Nesne Havuzlama)")]
     private GameObject dummyGridObj;
     private RectTransform dummyRect;
     private List<LevelMenuButton> dummyButtons = new List<LevelMenuButton>();
 
-    public GameObject loadingAdPanel; 
+    public GameObject loadingAdPanel;
     public TextMeshProUGUI loadingText;
 
     // Önbelleğe alınan bileşenler
@@ -136,15 +135,15 @@ public class LevelUIManager : MonoBehaviour
         {
             comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
             if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
-            comingSoonCG.alpha = (currentPage > 0) ? 1f : 0f;
-            comingSoonPanel.SetActive(currentPage > 0);
+            comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
+            comingSoonPanel.SetActive(currentPage > 1);
         }
 
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
     }
 
-    
+
     // Animasyonlarda render yükünü azaltmak için yedek tablo ve yazı kopyalarını oluşturur
     void CreateDummyPool()
     {
@@ -201,11 +200,11 @@ public class LevelUIManager : MonoBehaviour
     {
         if (warningPanelCG == null || warningPanelText == null) return;
 
-      
+
         if (warningLocText == null) warningLocText = warningPanelText.GetComponent<LocalizedText>();
         if (warningLocText != null) warningLocText.enabled = false;
 
-        
+
         string baseWarning = "Haritayı bitirmeden geri dönemezsin!";
         if (LocalizationManager.Instance != null && LocalizationManager.Instance.currentData != null)
         {
@@ -261,7 +260,7 @@ public class LevelUIManager : MonoBehaviour
             {
                 float currentAspect = (float)Screen.width / Screen.height;
                 float referenceAspect = scaler.referenceResolution.x / scaler.referenceResolution.y;
-                
+
                 // En-boy oranına göre çarpan hesapla
                 float aspectMultiplier = currentAspect / referenceAspect;
 
@@ -298,37 +297,40 @@ public class LevelUIManager : MonoBehaviour
             spawnedDots.Add(dotImage);
         }
     }
-void UpdatePaginationDots()
+    void UpdatePaginationDots()
     {
         for (int i = 0; i < spawnedDots.Count; i++)
         {
             bool isActive = (i == currentPage);
             spawnedDots[i].color = isActive ? activeColor : inactiveColor;
-            
+
             // Aktif olan nokta 0.6f, pasif olanlar 0.8f olacak şekilde ölçeklenir
             spawnedDots[i].transform.localScale = isActive ? new Vector3(0.5f, 0.5f, 1f) : new Vector3(0.6f, 0.6f, 1f);
         }
     }
+
     void RefreshPageUI()
     {
         UpdatePaginationDots();
 
         if (LocalizationManager.Instance == null || LocalizationManager.Instance.currentData == null) return;
         var data = LocalizationManager.Instance.currentData;
-        if (data.page_titles == null) return;
 
-        int baseIndex = currentPage * 2;
-        if (baseIndex < data.page_titles.Length) Level1Text.text = data.page_titles[baseIndex];
-        else Level1Text.text = "CHAPTER " + (currentPage + 1);
-
-        if (Level2Text != null)
+        // Sayfa Başlıkları güncellemesi
+        if (data.page_titles != null)
         {
-            if (baseIndex + 1 < data.page_titles.Length) Level2Text.text = data.page_titles[baseIndex + 1];
-            else Level2Text.text = "";
+            int baseIndex = currentPage * 2;
+            if (baseIndex < data.page_titles.Length) Level1Text.text = data.page_titles[baseIndex];
+            else Level1Text.text = "CHAPTER " + (currentPage + 1);
+
+            if (Level2Text != null)
+            {
+                if (baseIndex + 1 < data.page_titles.Length) Level2Text.text = data.page_titles[baseIndex + 1];
+                else Level2Text.text = "";
+            }
         }
 
-        if (LocalizationManager.Instance.currentData.Level1 != null)
-            Level1 = new List<string>(LocalizationManager.Instance.currentData.Level1);
+        Debug.Log($"[LevelUIManager] Page {currentPage} Refresh.");
     }
 
     void FillGridWithPageData(int pageIndex, List<LevelMenuButton> targetButtons)
@@ -348,12 +350,20 @@ void UpdatePaginationDots()
                 data.isUnlocked = PlayerPrefs.GetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + data.levelID, 0) == 1;
 
-                bool isComingSoon = (pageIndex > 0);
+                bool isComingSoon = (pageIndex > 1);
                 string localizedLevelName = data.levelName;
 
-                // Yerelleştirilmiş bölüm isimlerini atar
-                if (pageIndex == 0 && i < Level1.Count) localizedLevelName = Level1[i];
-                else if (pageIndex == 1 && i < Level2.Count) localizedLevelName = Level2[i];
+                // SİHİRLİ DOKUNUŞ: Merkezi sistem üzerinden o butonun ismini çekiyoruz
+                if (LocalizationManager.Instance != null)
+                {
+                    string fetchedName = LocalizationManager.Instance.GetLevelText(currentDataIndex, "name");
+                    if (!string.IsNullOrEmpty(fetchedName))
+                    {
+                        localizedLevelName = fetchedName;
+                    }
+                }
+
+                Debug.Log($"[LevelUIManager] Button {i} (Global {currentDataIndex}) on Page {pageIndex} -> Localized Name: {localizedLevelName}");
 
                 targetButtons[i].Setup(currentDataIndex, data, isComingSoon, localizedLevelName);
             }
@@ -448,8 +458,8 @@ void UpdatePaginationDots()
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            oldHasCS = (currentPage > 0);
-            newHasCS = (targetPage > 0);
+            oldHasCS = (currentPage > 1);
+            newHasCS = (targetPage > 1);
         }
 
         // Yeni sayfa verilerini asıl objelere yükler
@@ -586,6 +596,6 @@ void UpdatePaginationDots()
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 
-        Debug.Log("ğŸ› ï¸ GELÄ°ÅTÄ°RÄ°CÄ° HÄ°LESÄ°: BÃ¼tÃ¼n bÃ¶lÃ¼mlerin kilidi aÃ§Ä±ldÄ±!");
+        Debug.Log("Bölümlerin kilidi acıldı");
     }
 }

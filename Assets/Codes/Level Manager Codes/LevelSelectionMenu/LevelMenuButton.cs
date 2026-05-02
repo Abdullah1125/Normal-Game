@@ -61,7 +61,8 @@ public class LevelMenuButton : MonoBehaviour
         if (levelNameText != null)
         {
             levelNameText.text = locName;
-            levelNameText.gameObject.SetActive(data.isCompleted);
+               levelNameText.gameObject.SetActive(data.isCompleted);
+
         }
     }
 

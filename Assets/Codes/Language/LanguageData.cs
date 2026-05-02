@@ -1,4 +1,4 @@
-[System.Serializable]
+ï»¿[System.Serializable]
 public class LanguageData
 {
     public string play_button;
@@ -25,11 +25,33 @@ public class LanguageData
     public string ads_panel;
     public string total_death;
     public string total_time;
+     public string[] page_titles;
 
-    // Ýpuçlarý
-    public string[] hints;
-    public string[] extra_hints;
-    public string[] page_titles;
-    public string[] Level1;
+ 
+   
+    public string[] level_names_1;
+    public string[] hints_1;
+    public string[] extra_hints_1;
+
+   
+    public string[] level_names_2;
+    public string[] hints_2;
+    public string[] extra_hints_2;
+
+ 
+    public string[] level_names_3;
+    public string[] hints_3;
+    public string[] extra_hints_3;
+
+    
+    public string[] level_names_4;
+    public string[] hints_4;
+    public string[] extra_hints_4;
+
+ 
+    public string[] level_names_5;
+    public string[] hints_5;
+    public string[] extra_hints_5;
+    
     public string credit;
 }
