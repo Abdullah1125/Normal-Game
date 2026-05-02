@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 21
-  levelName: Normal
-  isUnlocked: 0
-  isCompleted: 0
-  isLeftForbidden: 0
+  levelName: "Geri D\xF6n\xFC\u015F Yok"
+  isUnlocked: 1
+  isCompleted: 1
+  isLeftForbidden: 1
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
@@ -24,6 +24,5 @@ MonoBehaviour:
   colliderLeyer: 1
   specialMechanics:
   - {fileID: 1686427910927934492, guid: 8501907609526a045aa8305c2ff2a552, type: 3}
-  - {fileID: 3508692656691587330, guid: 6ffbc22e4d769784f97f839c659fdfa2, type: 3}
   levelHint: 
   hintVisualMap: {fileID: 0}

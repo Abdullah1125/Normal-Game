@@ -4481,7 +4481,7 @@ PrefabInstance:
     - target: {fileID: 5102322301927379457, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
       propertyPath: hudButtons
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1077489686}
     - target: {fileID: 5102322301927379457, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
       propertyPath: hintPanelButtons
       value: 

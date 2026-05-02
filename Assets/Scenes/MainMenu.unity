@@ -6462,7 +6462,11 @@ MonoBehaviour:
     level_names_5: []
     hints_5: []
     extra_hints_5: []
+    gyro_level_name: 
+    gyro_hint: 
+    gyro_extra_hint: 
     credit: 
+  targetGyroLevelID: 14
 --- !u!1 &2061808495
 GameObject:
   m_ObjectHideFlags: 0

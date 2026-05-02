@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.EventSystems; // UI algýlamasý için eklendi
 
 /// <summary>
 /// Allows the gate to be dragged upwards only. Disables the normal gate on start.
-/// (Kapýnýn sadece yukarý kaydýrýlmasýna izin verir. Baþlangýçta normal kapýyý kapatýr.)
+/// Includes pause and UI click-through protections.
+/// (Kapýnýn sadece yukarý kaydýrýlmasýna izin verir. Baþlangýçta normal kapýyý kapatýr. Duraklatma ve arayüz týklama korumalarýný içerir.)
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class SlideUpOnly : MonoBehaviour, IResettable
@@ -45,12 +47,20 @@ public class SlideUpOnly : MonoBehaviour, IResettable
 
     private void OnMouseDown()
     {
+        // JÝLET GÝBÝ KORUMA: Oyun durmuþsa veya bir UI paneline týklanýyorsa kapýyý tutmayý reddet!
+        if (Time.timeScale == 0f) return;
+        if (IsPointerOverUI()) return;
+
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         dragOffset = transform.position - mouseWorldPos;
     }
 
     private void OnMouseDrag()
     {
+        // JÝLET GÝBÝ KORUMA: Oyun durmuþsa sürüklemeyi anýnda kes!
+        if (Time.timeScale == 0f) return;
+        if (IsPointerOverUI()) return;
+
         Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         float newY = mouseWorldPos.y + dragOffset.y;
 
@@ -73,5 +83,23 @@ public class SlideUpOnly : MonoBehaviour, IResettable
             GateController.Instance.gameObject.SetActive(true);
             Debug.Log("JÝLET TROLL: Özel kapý bitti, normal kapý geri açýldý.");
         }
+    }
+
+    /// <summary>
+    /// Checks if the user is currently touching/clicking a UI element.
+    /// (Kullanýcýnýn þu anda bir arayüz elemanýna dokunup dokunmadýðýný kontrol eder.)
+    /// </summary>
+    private bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null) return false;
+
+        // Fare veya Editor kontrolü
+        if (EventSystem.current.IsPointerOverGameObject()) return true;
+
+        // Mobil dokunmatik kontrolü
+        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            return true;
+
+        return false;
     }
 }

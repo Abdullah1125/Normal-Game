@@ -82,16 +82,28 @@
         "Hayalet Kapı",
         "Jiroskopik Kutu",
         "Sol-Sağ Marş",
-        "Dökülen Platformlar",
-        "Düşen Buton"
+        "Dökülen Platform",
+        "Düşen Buton",
+        "Normal",
+        "Tersine Kontrol",
+        "Aşamalı Kapı",
+        "Geri Dönüş Yok",
+        "Yeniden Başlat",
+        "Yarıdan Yerçekim"
     ],
     "hints_2": [
         "",
         "Tamamen sahte",
         "Yan yatır",
         "Sol-Sağ Marş",
-        "Dökülen Platformlar",
-        "Rolleri tersine çevir"
+        "Dökülen Platform",
+        "Rolleri tersine çevir",
+        "",
+        "Tersine Kontrol",
+        "Aşamalı Kapı",
+        "Geri Dönüş Yok",
+        "Yeniden Başlat",
+        "Bölünmüş Yerçekim"
     ],
     "extra_hints_2": [
         "Aynı anda iki yerde birden olamazsın. Kutuyu kenardan aşağı itmek için gücünü kullan ve bırak butona senin yerine o bassın",
@@ -99,7 +111,16 @@
         "Kutuyu düşürmek için telefonunu eğ. Sensörün yok mu? Bölüm başladıktan 75 saniye sonra dokunmatik kontroller otomatik açılır.",
         "Burada tuşa basılı tutmak işe yaramaz. Artık ordudasın! Kapıya doğru ilerlemek için sol ve sağ tuşlarına sırayla bas.",
         "Yan giriş kapalı.Kapının üstündeki platformlara tırman, sabit dur ve dökülen tavanın seni çıkışa indirmesine izin ver.",
-        "Her şeyi unut. Bu odada butonlar kutulara basar. Kutuyu yere konumlandır, yukarı tırman ve ona basması için butonu düşür."
+        "Her şeyi unut. Bu odada butonlar kutulara basar. Kutuyu yere konumlandır, yukarı tırman ve ona basması için butonu düşür.",
+        "Komplo teorileri üretmeyi bırak. Ekranda gizli bir tuzak veya şifre yok. Sadece butona basıp geçeceksin, beynini bu kadar zorlama.",
+        "Kontroller bozuk değil, sadece senin algıların fazla 'düz'. Sağa gitmek için sola, sola gitmek için sağa... Bu kadar basit bir zıtlığı bile kavrayamaman beni gerçekten üzüyor",
+        "Kapı kendi kendine açılmıyor, fark etmişsindir. Butonun üzerinde zıplamaya devam et. Ama sakın durma, yoksa kapı başladığı yere döner. Biraz kondisyon çalışsaydın keşke!",
+        "Arkana bakmayı bırak. O yol çoktan kapandı. Tek seçeneğin önündeki engelleri aşmak, tabii eğer bunu becerebilecek kapasiten varsa!",
+        "Hala menüye gidip gelerek kapının açılmasını mı bekliyorsun? Zeka seviyeni fazla hafife almışım. Bu paradoksu çözmek için bu evrenden tamamen çıkman lazım. Yani diyorum ki; oyunu tamamen kapat ve o minicik parmağınla ikona tekrar basıp oyuna gir. Belki o zaman geçmene acırım.",
+        "Ekranda görünmeyen bir sınır var. O sınırı her geçtiğinde yer çekimi ters döner, geri adım atarsan normale döner. Bildiğin elektrik düğmesi mantığı. Sürekli ileri geri yapıp kendi başını döndürme, sadece sınırın nerede olduğunu ezberle ve ilerle."
     ],
+    "gyro_level_name": "Sürüklenen Kutu",
+    "gyro_hint": "Sürüklenen Kutu",
+    "gyro_extra_hint": "Fizik kurallarını boşver, kutuyu manuel olarak tutup sürükle.",
     "credit": "Kodlama (Instagram) : @16celik_abdullah \nÇizimler : Göktuğ Condal \nMüzik (Instagram) : @aquilinenoselover \nSes Efekleri : ElevenLabs"
 }

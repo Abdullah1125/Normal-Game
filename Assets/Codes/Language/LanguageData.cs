@@ -1,4 +1,6 @@
-﻿[System.Serializable]
+﻿using UnityEngine;
+
+[System.Serializable]
 public class LanguageData
 {
     public string play_button;
@@ -52,6 +54,11 @@ public class LanguageData
     public string[] level_names_5;
     public string[] hints_5;
     public string[] extra_hints_5;
-    
+
+    [Header("Single Gyro Fallback (Sensör Yoksa Gelecek Metinler)")]
+    public string gyro_level_name;   
+    public string gyro_hint;         
+    public string gyro_extra_hint;
+
     public string credit;
 }

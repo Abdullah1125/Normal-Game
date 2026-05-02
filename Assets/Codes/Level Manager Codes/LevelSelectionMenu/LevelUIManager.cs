@@ -590,6 +590,9 @@ public class LevelUIManager : MonoBehaviour
         {
             data.isUnlocked = true;
             PlayerPrefs.SetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + data.levelID, 1);
+            PlayerPrefs.SetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + data.levelID, 1);
+         
+
         }
         PlayerPrefs.Save();
 

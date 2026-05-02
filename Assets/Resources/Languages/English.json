@@ -81,17 +81,29 @@
         "Normal",
         "Ghost Door",
         "Gyroscopic Box",
-        "Left-Right March",
-        "Collapsed Platforms",
-        "Falling Button"
+        "L-R March",
+        "Falling Platforms",
+        "Drop Button",
+        "Normal",
+        "Reverse control",
+        "Step Door",
+        "No Return",
+        "Restart",
+        "Split Gravity"
     ],
     "hints_2": [
         "",
         "Totally fake",
         "lay on its side",
         "Left-Right March",
-        "Collapsed Platforms",
-        "Reverse the roles"
+        "Falling Platforms",
+        "Reverse the roles",
+        "",
+        "Reverse Control",
+        "Step Door",
+        "No Return",
+        "Restart",
+        "Split Gravity"
     ],
     "extra_hints_2": [
         "You can't be in two places at once. Use your strength to push the box over the edge and let him press the button instead of you.",
@@ -99,7 +111,16 @@
         "Tilt your phone to drop the box. Don't have a sensor? Touch controls will automatically turn on 75 seconds after the episode starts.",
         "Holding down the button will not work here. You are in the army now! Press the left and right buttons alternately to move towards the door.",
         "The side entrance is closed. Climb the platforms above the door, stand still, and let the falling ceiling lower you to the exit.",
-        "Forget everything. In this room, buttons press boxes. Position the box on the floor, climb up and drop the button for him to press."
+        "Forget everything. In this room, buttons press boxes. Position the box on the floor, climb up and drop the button for him to press.",
+        "Stop creating conspiracy theories. There is no hidden trap or password on the screen. You will just press the button and pass, do not strain your brain so much.",
+        "The controls are not broken, it's just that your perceptions are too 'flat'. Turn left to go right, right to go left... It really makes me sad that you can't even grasp such a simple contrast",
+        "You may have noticed that the door does not open on its own. Keep jumping on the button. But do not stop, otherwise the door will return to where it started. I wish you had done some conditioning!",
+        "Stop looking back. That road is already closed. Your only option is to overcome the obstacles in front of you, if you have the capacity to do it!",
+        "Are you still going back and forth to the menu and waiting for the door to open? I've underestimated your level of intelligence. To solve this paradox, you need to leave this universe completely. So I'm saying; close the game completely, press the icon again with your tiny finger and enter the game. Maybe then I'll feel sorry for you passing.",
+        "There is an invisible border on the screen. Every time you cross that border, gravity reverses, if you step back, it returns to normal. It's the light switch logic you know. Don't make yourself dizzy by going back and forth all the time, just memorize where the limit is and move forward."
     ],
+    "gyro_level_name": "Dragging Box",
+    "gyro_hint": "Dragging Box",
+    "gyro_extra_hint": "Forget the laws of physics, manually hold and drag the box.",
     "credit": "Coding (Instagram) : @16celik_abdullah \nArt : Göktuğ Condal \nMusic (Instagram) : @aquilinenoselover \nSfx : ElevenLabs"
 }

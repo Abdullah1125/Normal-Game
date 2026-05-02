@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 128206764}
   - component: {fileID: 128206763}
   m_Layer: 5
-  m_Name: Hint Text
+  m_Name: HintText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19912,6 +19912,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3354006991878500888, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
+      propertyPath: m_Name
+      value: EText
+      objectReference: {fileID: 0}
     - target: {fileID: 4174560841656632918, guid: ee2d74302461bf7489cde0ca5491771e, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -20709,7 +20713,7 @@ PrefabInstance:
     - target: {fileID: 5102322301927379457, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
       propertyPath: hudButtons
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1077489686}
     - target: {fileID: 5102322301927379457, guid: 6453070281f6dae4ab5d6a4e2bd7d472, type: 3}
       propertyPath: hintPanelButtons
       value: 

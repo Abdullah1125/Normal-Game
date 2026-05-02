@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Handles dragging and dropping the player using mouse or touch. Includes jitter prevention.
@@ -71,7 +72,17 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     /// </summary>
     private void Update()
     {
+        if (PlayerController.Instance != null && !PlayerController.Instance.canMove) { ReleasePlayer(); return; }
+        if (Time.timeScale == 0f) { ReleasePlayer(); return; }
+        if (IsPointerOverUI()) return;
+
         if (playerRb == null) return;
+
+        if (Time.timeScale == 0f)
+        {
+            ReleasePlayer();
+            return;
+        }
 
         // 1. Karakteri Yakalama
         if (Input.GetMouseButtonDown(0))
@@ -153,5 +164,15 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     public void ResetMechanic()
     {
         ReleasePlayer();
+    }
+    private bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null) return false;
+        // PC (Mouse) kontrolü
+        if (EventSystem.current.IsPointerOverGameObject()) return true;
+        // Mobil (Dokunmatik) kontrolü
+        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return true;
+
+        return false;
     }
 }
