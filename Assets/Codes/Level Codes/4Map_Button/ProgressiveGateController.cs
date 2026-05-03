@@ -2,8 +2,8 @@ using UnityEngine;
 
 /// <summary>
 /// A custom gate that opens progressively. Disables the normal GateController when spawned,
-/// and re-enables it when destroyed (level passed).
-/// (Aþamalý açýlan özel kapý. Sahneye gelince normal kapýyý gizler, yok olurken geri açar.)
+/// and re-enables it when destroyed. Detaches and manages a movement particle effect.
+/// (Aþamalý açýlan özel kapý. Normal kapýyý gizler, hareket efektini ayýrýr ve yönetir.)
 /// </summary>
 public class ProgressiveGateController : MonoBehaviour, IResettable
 {
@@ -11,9 +11,12 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
     public Vector3 moveOffset = new Vector3(0, 3f, 0);
     public float moveSpeed = 5f;
 
-    [Header("Troll Settings (Troll Ayarlarý)")]
+    [Header("Drop Settings (Düþme Ayarlarý)")]
     [Tooltip("If > 0, the gate will slowly close if the player stops jumping. (0'dan büyükse zýplamayý býrakýnca kapý kapanýr.)")]
     public float fallDropRate = 0.5f;
+
+    [Header("Visual Effects (Görsel Efektler)")]
+    public ParticleSystem moveEffect; // Hareket sýrasýnda oynatýlacak efekt
 
     private Vector3 _startPos;
     private Vector3 _endPos;
@@ -24,6 +27,12 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
     {
         _startPos = transform.position;
         _endPos = _startPos + moveOffset;
+
+        // Efekti kapýdan ayýr (Yerde sabit kalmasý için)
+        if (moveEffect != null)
+        {
+            moveEffect.transform.SetParent(null);
+        }
     }
 
     private void Start()
@@ -33,12 +42,12 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
             LevelManager.Instance.RegisterResettable(this);
         }
 
-        //Normal kapýyý (Singleton) bul ve uykuya al ---
+        // Normal kapýyý (Singleton) bul ve uykuya al
         if (GateController.Instance != null && GateController.Instance.gameObject.activeSelf)
         {
             GateController.Instance.gameObject.SetActive(false);
             _didDisableNormalGate = true;
-            Debug.Log("JÝLET TROLL: Normal kapý gizlendi, özel kapý devrede.");
+            Debug.Log("Özel Kontrol: Normal kapý gizlendi, aþamalý kapý devrede.");
         }
     }
 
@@ -51,9 +60,29 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
             _currentProgress = Mathf.Clamp01(_currentProgress);
         }
 
-        // Kapýnýn o anki hedef noktasýný hesapla ve yumuþakça hareket ettir
         Vector3 currentTarget = Vector3.Lerp(_startPos, _endPos, _currentProgress);
-        transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
+
+        // --- EFEKT VE HAREKET MANTIÐI ---
+        if (Vector3.Distance(transform.position, currentTarget) < 0.001f)
+        {
+            // Hedefe ulaþýldý: Pozisyonu sabitle ve efekti durdur
+            transform.position = currentTarget;
+
+            if (moveEffect != null && moveEffect.isPlaying)
+            {
+                moveEffect.Stop();
+            }
+        }
+        else
+        {
+            // Hedefe gidiliyor: Hareketi saðla ve efekti oynat
+            transform.position = Vector3.MoveTowards(transform.position, currentTarget, moveSpeed * Time.deltaTime);
+
+            if (moveEffect != null && !moveEffect.isPlaying)
+            {
+                moveEffect.Play();
+            }
+        }
     }
 
     /// <summary>
@@ -70,6 +99,13 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
     {
         _currentProgress = 0f;
         transform.position = _startPos;
+
+        // Sýfýrlanýrken havada kalan tozu temizle
+        if (moveEffect != null)
+        {
+            moveEffect.Stop();
+            moveEffect.Clear();
+        }
     }
 
     private void OnDestroy()
@@ -79,11 +115,16 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
             LevelManager.Instance.UnregisterResettable(this);
         }
 
-        // --- ALTIN VURUÞ: Level bitince / Obje silinince normal kapýyý geri uyandýr ---
+        // Level bitince / Obje silinince normal kapýyý geri uyandýr
         if (_didDisableNormalGate && GateController.Instance != null)
         {
             GateController.Instance.gameObject.SetActive(true);
-            Debug.Log(": Özel kapý silindi, normal kapý geri açýldý.");
+        }
+
+        // --- KESÝN ÇÖZÜM: Kapý silindiðinde sahnede çöp kalmamasý için baðýmsýz efekti de sil ---
+        if (moveEffect != null && moveEffect.gameObject != null)
+        {
+            Destroy(moveEffect.gameObject);
         }
     }
 }

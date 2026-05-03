@@ -16,6 +16,11 @@ public class ProgressiveGateButton : MonoBehaviour, IResettable
     public Sprite normalSprite;
     public Sprite pressedSprite;
 
+    // --- YENÝ EKLENEN KISIM (GateButton'dan alýndý) ---
+    [Header("Effects (Efektler)")]
+    public ParticleSystem pressParticles;
+    // --------------------------------------------------
+
     private ProgressiveGateController _targetGate;
     private SpriteRenderer _sr;
     private float _lastPressTime;
@@ -37,7 +42,6 @@ public class ProgressiveGateButton : MonoBehaviour, IResettable
         }
 
         // --- OTOMATÝK BAÐLANTI: Sahnedeki özel kapýyý kendisi bulur ---
-        // (Böylece prefablara Inspector üzerinden sürükle býrak yapmana gerek kalmaz)
         _targetGate = Object.FindFirstObjectByType<ProgressiveGateController>();
     }
 
@@ -58,12 +62,21 @@ public class ProgressiveGateButton : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Executes the press logic, pushes the gate, and changes the sprite.
-    /// (Basýlma mantýðýný çalýþtýrýr, kapýyý iter ve görseli deðiþtirir.)
+    /// Executes the press logic, pushes the gate, plays particles, and changes the sprite.
+    /// (Basýlma mantýðýný çalýþtýrýr, kapýyý iter, partikül oynatýr ve görseli deðiþtirir.)
     /// </summary>
     private void PressAction()
     {
         _lastPressTime = Time.time;
+
+        // --- YENÝ EKLENEN KISIM: Efekti oynat ---
+        if (pressParticles != null)
+        {
+            // Eðer efekt zaten oynuyorsa durdurup baþtan baþlat (ardýþýk zýplamalar için daha iyi görünür)
+            pressParticles.Stop();
+            pressParticles.Play();
+        }
+        // ----------------------------------------
 
         if (pressedSprite != null) _sr.sprite = pressedSprite;
 
@@ -90,6 +103,7 @@ public class ProgressiveGateButton : MonoBehaviour, IResettable
     public void ResetMechanic()
     {
         ReleaseAction();
+        // Gerekirse burada partikülleri durdurabilirsin: if(pressParticles != null) pressParticles.Stop();
     }
 
     private void OnDestroy()

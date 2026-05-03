@@ -1,13 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles level finish logic with instant UI lockdown to prevent menu leaks.
-/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir.)
+/// Updates the gate visual dynamically from a list based on the custom LevelManager data (0-indexed).
+/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir. Kapı görselini 0 endeksli LevelManager verisine göre bir listeden dinamik günceller.)
 /// </summary>
 public class FinishPoint : MonoBehaviour, IResettable
 {
-    // Diğer scriptlerin (PauseManager gibi) görebilmesi için static yapıldı
+    [Header("Visual Settings (Görsel Ayarlar)")]
+    public SpriteRenderer gateRenderer; // Kapının SpriteRenderer bileşeni
+    public Sprite normalGateSprite; // Normal levellerde görünecek kapı
+
+    [Tooltip("List of special gate sprites for milestone levels (12, 24, 36...). \n(12, 24, 36 gibi özel bölümlerde sırasıyla çıkacak kapı görselleri listesi.)")]
+    public List<Sprite> specialGateSprites; // Liste olarak özel kapılar
+
     public static bool IsLevelFinishing { get; private set; } = false;
     public static bool isPlayerInZone = false;
     public static bool isFinishBlocked = false;
@@ -16,8 +24,8 @@ public class FinishPoint : MonoBehaviour, IResettable
     private Rigidbody2D _playerRb;
 
     /// <summary>
-    /// Registers to the LevelManager and enforces a clean state on startup.
-    /// (LevelManager'a kayıt olur ve başlangıçta temiz bir durum dayatır.)
+    /// Registers to the LevelManager, updates visual state, and enforces a clean state on startup.
+    /// (LevelManager'a kayıt olur, görsel durumu günceller ve başlangıçta temiz bir durum dayatır.)
     /// </summary>
     private void Start()
     {
@@ -26,7 +34,7 @@ public class FinishPoint : MonoBehaviour, IResettable
             LevelManager.Instance.RegisterResettable(this);
         }
 
-        // Başlangıçta statik kilitlerin kapalı olduğundan kesinlikle emin ol
+        SetupGateVisual();
         ResetMechanic();
     }
 
@@ -43,14 +51,54 @@ public class FinishPoint : MonoBehaviour, IResettable
     }
 
     /// <summary>
+    /// Determines if the current level (0-indexed) is a milestone and applies the correct sprite from the list.
+    /// (Mevcut bölümün (0 endeksli) bir kilometre taşı olup olmadığını belirler ve listeden doğru görseli uygular.)
+    /// </summary>
+    private void SetupGateVisual()
+    {
+        if (gateRenderer == null) return;
+
+        int currentLevelID = 0;
+
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        {
+            currentLevelID = LevelManager.Instance.activeLevel.levelID;
+        }
+
+        // Kural: ID'ler 0'dan başladığı için (+1) ekleyerek 12'ye göre mod (kalan) alıyoruz.
+        if (currentLevelID > 0 && (currentLevelID + 1) % 12 == 0)
+        {
+            if (specialGateSprites != null && specialGateSprites.Count > 0)
+            {
+                // Hangi özel kapının sırası geldiğini hesapla (12. bölüm = index 0, 24. bölüm = index 1 vb.)
+                int specialIndex = ((currentLevelID + 1) / 12) - 1;
+
+                // Başa sarma yok. Sadece listede o sıraya ait görsel varsa kullan.
+                if (specialIndex < specialGateSprites.Count)
+                {
+                    gateRenderer.sprite = specialGateSprites[specialIndex];
+                }
+                else
+                {
+                    // Liste aşıldıysa (örneğin 3 görsel var ama 48. bölüme gelindiyse) normal kapıya dön.
+                    if (normalGateSprite != null) gateRenderer.sprite = normalGateSprite;
+                }
+            }
+        }
+        else
+        {
+            if (normalGateSprite != null) gateRenderer.sprite = normalGateSprite;
+        }
+    }
+
+    /// <summary>
     /// Triggered when the player enters the finish zone.
     /// (Oyuncu bitiş alanına girdiğinde tetiklenir.)
     /// </summary>
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(Constants.TAG_PLAYER) && !_isProcessing && !isFinishBlocked)
+        if (other.CompareTag("Player") && !_isProcessing && !isFinishBlocked)
         {
-            // --- ALTIN VURUŞ: ANINDA KİLİTLE ---
             IsLevelFinishing = true;
 
             if (UIManager.Instance != null)
@@ -69,7 +117,7 @@ public class FinishPoint : MonoBehaviour, IResettable
     /// </summary>
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag(Constants.TAG_PLAYER) && !IsLevelFinishing)
+        if (other.CompareTag("Player") && !IsLevelFinishing)
         {
             isPlayerInZone = false;
             _playerRb = null;
@@ -84,7 +132,6 @@ public class FinishPoint : MonoBehaviour, IResettable
     {
         _isProcessing = true;
 
-        // Karakteri durdur
         if (playerRb != null)
         {
             playerRb.linearVelocity = Vector2.zero;
@@ -97,7 +144,6 @@ public class FinishPoint : MonoBehaviour, IResettable
         if (SoundManager.Instance != null)
             SoundManager.PlayThemeSFX(SFXType.DoorPass);
 
-        // Bir frame bekle ve sahneyi yükle
         yield return new WaitForEndOfFrame();
 
         if (LevelManager.Instance != null)
@@ -123,4 +169,3 @@ public class FinishPoint : MonoBehaviour, IResettable
         }
     }
 }
-

@@ -1,110 +1,125 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// A pushable box that emits particles ONLY when grounded and moving.
+/// (Sadece yere değdiğinde ve hareket ettiğinde partikül yayan kutu.)
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-public class Box : MonoBehaviour , IResettable
+public class Box : MonoBehaviour, IResettable
 {
-    [Header("Friction Settings(Sürtünme Ayarları)")]
-    public float slidingDamping = 0.2f;   // Yandan itilirkenki sürtünme
-    public float stoppingDamping = 3.0f;  // Bırakıldığında durma direnci (Zınk diye durması için artırdım)
+    [Header("Visual Effects (Görsel Efektler)")]
+    public ParticleSystem dustParticles;
+
+    [Header("Friction Settings (Sürtünme Ayarları)")]
+    public float slidingDamping = 0.2f;
+    public float stoppingDamping = 3.0f;
     public float stopThreshold = 0.1f;
 
-    private Rigidbody2D rb;
-    private bool isBeingPushed = false;
-    private Vector2 originalPos;
-
-    // Kekeleme (Stuttering) Koruması için zamanlayıcı
-    private float pushTimeout = 0.1f;
-    private float pushTimer = 0f;
-
-    public static Box Instance;
+    private Rigidbody2D _rb;
+    private bool _isBeingPushed = false;
+    private bool _isTouchingGround = false; // Yere değme kontrolü
+    private Vector2 _originalPos;
+    private float _pushTimer = 0f;
+    private float _pushTimeout = 0.1f;
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        rb = GetComponent<Rigidbody2D>();
-
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.freezeRotation = true;
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
-
-        originalPos = transform.position;
+        _rb = GetComponent<Rigidbody2D>();
+        _originalPos = transform.position;
+        _rb.freezeRotation = true;
+        _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
     }
+
     void Start()
     {
-        // Register to LevelManager (LevelManager'a kendini kaydettir)
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.RegisterResettable(this);
         }
     }
+
     void FixedUpdate()
     {
-        // 1. ZAMANLAYICI KONTROLÜ (Mikro sekmelerde kutu aniden durmasın diye)
-        if (pushTimer > 0)
+        HandlePushLogic();
+        UpdateDustEffect();
+    }
+
+    /// <summary>
+    /// Checks movement, push state, and ground contact to toggle particles.
+    /// (Hareketi, itilme durumunu ve yer temasını kontrol ederek partikülleri yönetir.)
+    /// </summary>
+    private void UpdateDustEffect()
+    {
+        if (dustParticles == null) return;
+
+        bool isMoving = _rb.linearVelocity.magnitude > stopThreshold;
+
+        // ŞART: Hareket edecek + İtilecek + Yere değecek
+        if (isMoving && _isBeingPushed && _isTouchingGround)
         {
-            pushTimer -= Time.fixedDeltaTime;
-            isBeingPushed = true;
-            rb.linearDamping = slidingDamping;
+            if (!dustParticles.isPlaying) dustParticles.Play();
         }
         else
         {
-            isBeingPushed = false;
-        }
-
-        // 2. FREN SİSTEMİ
-        if (!isBeingPushed)
-        {
-            if (rb.linearVelocity.magnitude > stopThreshold)
-            {
-                // Kutuyu daha kararlı durdurmak için Lerp yerine direkt direnç uyguluyoruz
-                rb.linearDamping = stoppingDamping;
-            }
-            else
-            {
-                // Tamamen durdur
-                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y); // Sadece X'i sıfırla, yerçekimini bozma!
-                rb.linearDamping = stoppingDamping;
-            }
+            if (dustParticles.isPlaying) dustParticles.Stop();
         }
     }
 
-    // Enter yerine Stay kullanıyoruz ki oyuncu iterken sürekli tetiklensin
+    private void HandlePushLogic()
+    {
+        if (_pushTimer > 0)
+        {
+            _pushTimer -= Time.fixedDeltaTime;
+            _isBeingPushed = true;
+            _rb.linearDamping = slidingDamping;
+        }
+        else
+        {
+            _isBeingPushed = false;
+            _rb.linearDamping = stoppingDamping;
+        }
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
+        // Oyuncu itme kontrolü
         if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
         {
-            // SİHİR BURADA: Temasın yönünü (Normal) buluyoruz
-            // Eğer normal.x 0.5'ten büyükse, bu yandan bir çarpışmadır (İtme)
-            // Eğer normal.y büyükse, oyuncu kutunun üstündedir veya altındadır.
-            float hitNormalX = Mathf.Abs(collision.contacts[0].normal.x);
-
-            if (hitNormalX > 0.5f)
+            if (Mathf.Abs(collision.contacts[0].normal.x) > 0.5f)
             {
-                // Sadece yandan temas varsa itilme süresini yenile
-                pushTimer = pushTimeout;
+                _pushTimer = _pushTimeout;
             }
+        }
+
+        // Yer kontrolü: Tag "Ground" olmalı
+        if (collision.gameObject.CompareTag(Constants.TAG_GROUND))
+        {
+            _isTouchingGround = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // Yerden ayrıldığında efekti kesmek için
+        if (collision.gameObject.CompareTag(Constants.TAG_GROUND))
+        {
+            _isTouchingGround = false;
         }
     }
 
     public void ResetMechanic()
     {
-        transform.position = originalPos;
-        rb.linearVelocity = Vector2.zero;
-        isBeingPushed = false;
-        pushTimer = 0f;
-        rb.linearDamping = stoppingDamping;
+        transform.position = _originalPos;
+        _rb.linearVelocity = Vector2.zero;
+        _isTouchingGround = false;
+        if (dustParticles != null) dustParticles.Stop();
     }
 
     private void OnDestroy()
     {
-        // Obje silinirken LevelManager'ın listesini de temizliyoruz
         if (LevelManager.Instance != null)
         {
-            // Eğer LevelManager'da RemoveResettable fonksiyonu yoksa aşağıya ekledim
             LevelManager.Instance.UnregisterResettable(this);
         }
     }
 }
-

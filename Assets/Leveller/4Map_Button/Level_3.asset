@@ -16,7 +16,7 @@ MonoBehaviour:
   levelName: "A\u015Famal\u0131 D\xFC\u011Fme"
   isUnlocked: 1
   isCompleted: 1
-  isLeftForbidden: 1
+  isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1

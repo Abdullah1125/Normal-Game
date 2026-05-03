@@ -115,6 +115,7 @@ public class PauseManager : MonoBehaviour
 
     private void LoadLevelScene()
     {
+        ExtraHintUI.ClearHintMemory();
         if (LevelTransition.Instance != null)
             LevelTransition.Instance.FadeOut(() => SceneManager.LoadScene(Constants.SCENE_LEVELS));
         else

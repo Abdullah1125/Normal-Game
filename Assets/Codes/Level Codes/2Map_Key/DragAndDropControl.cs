@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Handles dragging and dropping the player using mouse or touch. Includes jitter prevention.
-/// (Fare veya dokunmatik kullanarak oyuncuyu sürüklemeyi yönetir. Titreme önleyici içerir.)
+/// Handles player movement via drag and drop mechanics with boundary and UI checks.
+/// (Sınır ve arayüz kontrolleriyle oyuncunun sürükle-bırak hareketini yönetir.)
 /// </summary>
 public class DragAndDropControl : MonoBehaviour, IResettable
 {
@@ -14,9 +14,9 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     [Header("Settings (Ayarlar)")]
     public float grabRadius = 1f;
     public LayerMask playerLayer;
-    public string playerTag = Constants.TAG_PLAYER; // Constants sınıfın varsa hata vermez
+    public string playerTag = "Player";
     public float dragSpeed = 25f;
-    public float deadZone = 0.1f; // YENİ: Titremeyi kesecek milimetrik ölü bölge
+    public float deadZone = 0.1f;
 
     [Header("Boundaries (Sınırlar)")]
     public bool useBoundaries = true;
@@ -28,8 +28,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     private Rigidbody2D playerRb;
 
     /// <summary>
-    /// Caches camera and player references.
-    /// (Kamera ve oyuncu referanslarını önbelleğe alır.)
+    /// Caches essential references and components on awake.
+    /// (Bileşen ve referansları Awake sırasında önbelleğe alır.)
     /// </summary>
     private void Awake()
     {
@@ -38,8 +38,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Registers to the level management system.
-    /// (Seviye yönetim sistemine kayıt olur.)
+    /// Registers the object to the level management system.
+    /// (Nesneyi seviye yönetim sistemine kaydeder.)
     /// </summary>
     private void Start()
     {
@@ -55,8 +55,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Unregisters from the system to prevent memory leaks.
-    /// (Bellek sızıntısını önlemek için sistem kaydını siler.)
+    /// Unregisters the object to prevent memory leaks.
+    /// (Bellek sızıntılarını önlemek için kaydı siler.)
     /// </summary>
     private void OnDestroy()
     {
@@ -67,24 +67,46 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Player input detection for grabbing and releasing.
-    /// (Oyuncunun tutma ve bırakma girdilerini kontrol eder.)
+    /// Processes frame-based input and cancellation logic.
+    /// (Kare tabanlı girdi ve iptal mantığını işler.)
     /// </summary>
     private void Update()
     {
-        if (PlayerController.Instance != null && !PlayerController.Instance.canMove) { ReleasePlayer(); return; }
-        if (Time.timeScale == 0f) { ReleasePlayer(); return; }
-        if (IsPointerOverUI()) return;
+        // Duraklatma, reklam veya hareket kısıtlaması durumlarını kontrol et
+        bool shouldCancel = PauseManager.isAdLoading ||
+                            Time.timeScale == 0f ||
+                            (PlayerController.Instance != null && !PlayerController.Instance.canMove);
 
-        if (playerRb == null) return;
-
-        if (Time.timeScale == 0f)
+        if (shouldCancel)
         {
-            ReleasePlayer();
+            // İptal durumunda sürüklemeyi bırak ve hızı sıfırla
+            if (isDragging || (playerRb != null && (playerRb.linearVelocity != Vector2.zero || playerRb.angularVelocity != 0f)))
+            {
+                isDragging = false;
+                if (playerRb != null)
+                {
+                    playerRb.linearVelocity = Vector2.zero;
+                    playerRb.angularVelocity = 0f;
+                }
+            }
             return;
         }
 
-        // 1. Karakteri Yakalama
+        // Arayüz etkileşimi sırasında sürüklemeyi engelle
+        if (!isDragging && IsPointerOverUI()) return;
+
+        if (playerRb == null) return;
+
+        HandleInput();
+    }
+
+    /// <summary>
+    /// Manages mouse and touch input detection.
+    /// (Fare ve dokunmatik girdi algılamasını yönetir.)
+    /// </summary>
+    private void HandleInput()
+    {
+        // Karakteri yakalama mantığı
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -95,10 +117,11 @@ public class DragAndDropControl : MonoBehaviour, IResettable
                 isDragging = true;
                 offset = playerRb.transform.position - mousePos;
                 playerRb.linearVelocity = Vector2.zero;
+                playerRb.angularVelocity = 0f;
             }
         }
 
-        // 2. Bırakma
+        // Sürüklemeyi sonlandırma
         if (Input.GetMouseButtonUp(0))
         {
             ReleasePlayer();
@@ -106,8 +129,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Physical drag calculation with deadzone to prevent jitter.
-    /// (Duvar çarpışmalarını koruyarak ve titremeyi önleyerek fiziksel sürükleme yapar.)
+    /// Executes physics-based movement and boundary clamping.
+    /// (Fizik tabanlı hareketi ve sınırlandırmayı yürütür.)
     /// </summary>
     private void FixedUpdate()
     {
@@ -126,18 +149,15 @@ public class DragAndDropControl : MonoBehaviour, IResettable
 
             Vector2 targetPos = new Vector2(targetX, targetY);
             Vector2 direction = (targetPos - playerRb.position);
-
-            // YENİ: Mesafe Ölçümü (Titreme Koruması)
             float distance = direction.magnitude;
 
-            // Eğer parmağa/hedefe çok yaklaştıysa hızı sıfırla ki çırpınmasın
+            // Ölü bölge kontrolü ile titremeyi önle
             if (distance < deadZone)
             {
                 playerRb.linearVelocity = Vector2.zero;
             }
             else
             {
-                // Uzaktaysa ona doğru gitmeye devam et
                 direction = Vector2.ClampMagnitude(direction, 3.0f);
                 playerRb.linearVelocity = direction * dragSpeed;
             }
@@ -145,8 +165,8 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Returns the player to a normal state.
-    /// (Oyuncuyu normal durumuna geri döndürür.)
+    /// Resets the player to an idle physical state.
+    /// (Oyuncuyu durağan fiziksel duruma döndürür.)
     /// </summary>
     private void ReleasePlayer()
     {
@@ -158,20 +178,27 @@ public class DragAndDropControl : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Implementation of IResettable to clean up state on level reset.
-    /// (Seviye sıfırlandığında durumu temizlemek için IResettable uygulaması.)
+    /// Resets the mechanic state during level resets.
+    /// (Seviye sıfırlamalarında mekanik durumunu sıfırlar.)
     /// </summary>
     public void ResetMechanic()
     {
         ReleasePlayer();
     }
+
+    /// <summary>
+    /// Validates if the pointer is currently interacting with UI.
+    /// (İmlecin arayüzle etkileşimde olup olmadığını doğrular.)
+    /// </summary>
     private bool IsPointerOverUI()
     {
         if (EventSystem.current == null) return false;
-        // PC (Mouse) kontrolü
+
+        // PC ve Mobil için arayüz kontrolü
         if (EventSystem.current.IsPointerOverGameObject()) return true;
-        // Mobil (Dokunmatik) kontrolü
-        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return true;
+
+        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            return true;
 
         return false;
     }

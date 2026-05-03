@@ -1,38 +1,36 @@
 using UnityEngine;
 
 /// <summary>
-/// Manages the button trigger logic. Opens a gate when boxes are placed on it.
-/// (Buton tetikleyicisini yönetir. Kutu nesneleri (Box) değdiğinde kapıyı açar.)
+/// A pressure plate that swaps sprites when a box is placed on it.
+/// (Üzerine kutu konulduğunda görsel değiştiren basınç plakası.)
 /// </summary>
 public class BoxButton : MonoBehaviour, IResettable
 {
-    [Header("Settings (Ayarlar)")]
-    public Color normalColor = Color.white;
-    public Color pressedColor = Color.green;
+    [Header("Sprites (Görseller)")]
+    public Sprite normalSprite;  // Basılmamış hali
+    public Sprite pressedSprite; // Basılmış hali
 
-    [Header("Friction Settings (Sürtünme Ayarları)")]
+    [Header("Visual Effects (Görsel Efektler)")]
+    public ParticleSystem pressParticles;
+
+    [Header("Physics Settings (Fizik Ayarları)")]
     public float buttonFriction = 7f;
 
-    private SpriteRenderer sr;
-    private bool isPressed = false;
+    private SpriteRenderer _sr;
+    private bool _isPressed = false;
+    private int _objectsOnButton = 0;
 
-    // Güvenlik ve performans değişkenleri
-    private int objectsOnButton = 0; // Butonun üzerindeki kutu sayacı
-
-    /// <summary>
-    /// Initializes components and sets the default color.
-    /// (Bileşenleri başlatır ve varsayılan rengi atar.)
-    /// </summary>
     private void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
-        if (sr != null) sr.color = normalColor;
+        _sr = GetComponent<SpriteRenderer>();
+
+        // Başlangıç sprite'ını ayarla
+        if (normalSprite != null && _sr != null)
+        {
+            _sr.sprite = normalSprite;
+        }
     }
 
-    /// <summary>
-    /// Registers to the LevelManager.
-    /// (LevelManager'a kendini kaydettirir.)
-    /// </summary>
     private void Start()
     {
         if (LevelManager.Instance != null)
@@ -41,127 +39,84 @@ public class BoxButton : MonoBehaviour, IResettable
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(Constants.TAG_BOX))
+        {
+            _objectsOnButton++;
+            if (!_isPressed) PressButton();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!gameObject.scene.isLoaded || !other.gameObject.activeInHierarchy) return;
+
+        if (other.CompareTag(Constants.TAG_BOX))
+        {
+            _objectsOnButton--;
+            if (_objectsOnButton <= 0 && _isPressed) ReleaseButton();
+        }
+    }
+
     /// <summary>
-    /// Unregisters from the LevelManager.
-    /// (Obje silinirken hafıza sızıntısını önlemek için listeden çıkar.)
+    /// Swaps to pressed sprite and triggers effects.
+    /// (Basılmış görsele geçer ve efektleri tetikler.)
     /// </summary>
+    private void PressButton()
+    {
+        _isPressed = true;
+
+        // Sprite değiştirme
+        if (_sr != null && pressedSprite != null)
+        {
+            _sr.sprite = pressedSprite;
+        }
+
+        if (pressParticles != null)
+        {
+            pressParticles.Stop();
+            pressParticles.Play();
+        }
+
+        GateController.Instance?.OpenGate();
+    }
+
+    /// <summary>
+    /// Reverts to the normal sprite.
+    /// (Normal görsele geri döner.)
+    /// </summary>
+    private void ReleaseButton()
+    {
+        _isPressed = false;
+
+        // Eski haline dön
+        if (_sr != null && normalSprite != null)
+        {
+            _sr.sprite = normalSprite;
+        }
+
+        GateController.Instance?.CloseGate();
+    }
+
+    public void ResetMechanic()
+    {
+        _objectsOnButton = 0;
+        _isPressed = false;
+
+        if (_sr != null && normalSprite != null)
+        {
+            _sr.sprite = normalSprite;
+        }
+
+        if (pressParticles != null) pressParticles.Stop();
+    }
+
     private void OnDestroy()
     {
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.UnregisterResettable(this);
         }
-    }
-
-    /// <summary>
-    /// Triggered when a box first touches the button.
-    /// (Kutu butona ilk değdiğinde tetiklenir.)
-    /// </summary>
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (IsBox(other))
-        {
-            objectsOnButton++;
-
-            if (!isPressed)
-            {
-                  if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive)
-                    {
-                      return;
-                    }
-                PressButton();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Applies light friction while a box stays on the button.
-    /// (Kutu butonun üzerinde kaldığı sürece tetiklenir ve hafif sürtünme uygular.)
-    /// </summary>
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (IsBox(other))
-        {
-            // GetComponent yerine direkt attachedRigidbody kullanıyoruz.
-            // Bu Unity'nin kendi içinde önbelleğe aldığı bir özelliktir ve performans harcamaz.
-            Rigidbody2D rb = other.attachedRigidbody;
-
-            if (rb != null)
-            {
-                rb.linearVelocity -= rb.linearVelocity * (buttonFriction * Time.fixedDeltaTime);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Triggered when a box leaves the button.
-    /// (Kutu butonun üzerinden ayrıldığında tetiklenir.)
-    /// </summary>
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        // SİHİRLİ DOKUNUŞ: Eğer sahne yüklenmiyorsa veya obje o an Destroy ediliyorsa KESİNLİKLE işlem yapma
-        if (!gameObject.scene.isLoaded || !other.gameObject.activeInHierarchy) return;
-
-        if (LevelManager.Instance != null && !LevelManager.Instance.activeLevel.isActive) return;
-
-        if (IsBox(other))
-        {
-            objectsOnButton--;
-
-            if (objectsOnButton <= 0 && isPressed)
-            {
-                objectsOnButton = 0;
-                ReleaseButton();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Checks if the colliding object is a valid box.
-    /// (Temas eden objenin geçerli bir kutu olup olmadığını kontrol eder.)
-    /// </summary>
-    private bool IsBox(Collider2D other)
-    {
-        return other.CompareTag(Constants.TAG_BOX);
-    }
-
-    /// <summary>
-    /// Activates the button and opens the gate.
-    /// (Butonu aktif hale getirir ve kapıyı açar.)
-    /// </summary>
-    private void PressButton()
-    {
-        isPressed = true;
-        if (sr != null) sr.color = pressedColor;
-
-        GateController.Instance?.OpenGate();
-    }
-
-    /// <summary>
-    /// Deactivates the button and closes the gate.
-    /// (Butonu deaktif hale getirir ve kapıyı kapatır.)
-    /// </summary>
-    private void ReleaseButton()
-    {
-        isPressed = false;
-
-        if (sr != null) sr.color = normalColor;
-
-        GateController.Instance?.CloseGate();
-    }
-
-    /// <summary>
-    /// Required implementation for IResettable. Resets the button's physics and visuals.
-    /// (IResettable arayüzü için zorunlu fonksiyon. Butonun fiziksel ve görsel durumunu sıfırlar.)
-    /// </summary>
-    public void ResetMechanic()
-    {
-        objectsOnButton = 0;
-        isPressed = false;
-
-        if (sr != null) sr.color = normalColor;
-        gameObject.SetActive(true);
-
-        // GateController kendi IResettable koduyla sıfırlanacağı için burada kapatmıyoruz
     }
 }
