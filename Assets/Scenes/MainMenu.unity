@@ -6194,6 +6194,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: b06596eb27c455c4c917b77cb97dc058, type: 3}
     - target: {fileID: 5538123149098531300, guid: 2314f011a31d997409e3cd2a60901198, type: 3}
+      propertyPath: themeAudios.Array.data[1].boxSlideSound
+      value: 
+      objectReference: {fileID: 8300000, guid: b59f0ab2c27674a46835e05eb084ca73, type: 3}
+    - target: {fileID: 5538123149098531300, guid: 2314f011a31d997409e3cd2a60901198, type: 3}
       propertyPath: themeAudios.Array.data[1].doorPassSound
       value: 
       objectReference: {fileID: 8300000, guid: b06596eb27c455c4c917b77cb97dc058, type: 3}

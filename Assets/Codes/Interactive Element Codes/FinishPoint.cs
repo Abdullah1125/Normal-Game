@@ -5,7 +5,8 @@ using System.Collections.Generic;
 /// <summary>
 /// Handles level finish logic with instant UI lockdown to prevent menu leaks.
 /// Updates the gate visual dynamically from a list based on the custom LevelManager data (0-indexed).
-/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir. Kapı görselini 0 endeksli LevelManager verisine göre bir listeden dinamik günceller.)
+/// Listens to LevelManager events to refresh visuals during transitions.
+/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir. Kapı görselini 0 endeksli LevelManager verisine göre bir listeden dinamik günceller. Geçişlerde görselleri yenilemek için LevelManager'ı dinler.)
 /// </summary>
 public class FinishPoint : MonoBehaviour, IResettable
 {
@@ -22,6 +23,26 @@ public class FinishPoint : MonoBehaviour, IResettable
 
     private bool _isProcessing = false;
     private Rigidbody2D _playerRb;
+
+    // --- GÖRSEL YENİLEME SİHRİ BURADA ---
+    /// <summary>
+    /// Subscribes to the LevelManager's start event to ensure visual updates on every level transition.
+    /// (Her seviye geçişinde görsel güncelleme sağlamak için LevelManager'ın başlangıç olayına abone olur.)
+    /// </summary>
+    private void OnEnable()
+    {
+        LevelManager.OnLevelStarted += SetupGateVisual;
+    }
+
+    /// <summary>
+    /// Unsubscribes from events to prevent memory leaks and errors.
+    /// (Hataları ve bellek sızıntılarını önlemek için olay aboneliğinden çıkar.)
+    /// </summary>
+    private void OnDisable()
+    {
+        LevelManager.OnLevelStarted -= SetupGateVisual;
+    }
+    // ------------------------------------
 
     /// <summary>
     /// Registers to the LevelManager, updates visual state, and enforces a clean state on startup.
