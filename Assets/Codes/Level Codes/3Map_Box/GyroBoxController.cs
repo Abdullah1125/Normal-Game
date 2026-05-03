@@ -2,15 +2,16 @@
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Gyro-based box controller with visual effects and ground detection.
-/// (Görsel efektlere ve yer tespitine sahip jiroskopik kutu kontrolcüsü.)
+/// Gyro-based box controller with visual effects, ground detection, and friction audio.
+/// (Görsel efektlere, yer tespitine ve sürtünme sesine sahip jiroskopik kutu kontrolcüsü.)
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
 public class GyroBoxController : MonoBehaviour, IResettable
 {
-    [Header("Visual Effects (Görsel Efektler)")]
+    [Header("Visual & Audio Effects (Görsel ve İşitsel Efektler)")]
     public ParticleSystem dustParticles; // Kayma esnasında çıkacak toz
-    public float movementThreshold = 0.2f; // Efektin tetiklenmesi için gereken min hız
+    public float movementThreshold = 0.2f; // Efektin/Sesin tetiklenmesi için gereken min hız
+    private AudioSource _audioSource;
 
     [Header("Tilt Settings (Eğme Ayarları)")]
     public float tiltSpeed = 45f;
@@ -45,9 +46,15 @@ public class GyroBoxController : MonoBehaviour, IResettable
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
         mainCam = Camera.main;
         rb.mass = 100f;
         originalPos = transform.position;
+
+        // Ses başlangıç ayarları (Döngü ve 3D ses)
+        _audioSource.loop = true;
+        _audioSource.playOnAwake = false;
+        _audioSource.spatialBlend = 1f;
 
         InitialHardwareCheck();
     }
@@ -57,6 +64,12 @@ public class GyroBoxController : MonoBehaviour, IResettable
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.RegisterResettable(this);
+        }
+
+        // SFX Ayarlarına Bağlan (Oyuncu menüden sesi kısarsa kutu da kısılır)
+        if (SoundManager.Instance != null && SoundManager.Instance.sfxSource != null)
+        {
+            _audioSource.outputAudioMixerGroup = SoundManager.Instance.sfxSource.outputAudioMixerGroup;
         }
     }
 
@@ -88,27 +101,40 @@ public class GyroBoxController : MonoBehaviour, IResettable
             ApplyBraking(dragFriction);
         }
 
-        UpdateDustEffect();
+        UpdateEffectsAndSound();
     }
 
     /// <summary>
-    /// Toggles dust particles based on ground contact and movement velocity.
-    /// (Yer teması ve hareket hızına göre toz partiküllerini açar/kapatır.)
+    /// Toggles dust particles and friction sound based on ground contact and movement velocity.
+    /// (Yer teması ve hareket hızına göre toz partiküllerini ve sürtünme sesini açar/kapatır.)
     /// </summary>
-    private void UpdateDustEffect()
+    private void UpdateEffectsAndSound()
     {
-        if (dustParticles == null) return;
-
         // Hareket ediyor mu ve yere değiyor mu?
         bool isMoving = rb.linearVelocity.magnitude > movementThreshold;
+        bool shouldPlay = isMoving && _isTouchingGround;
 
-        if (isMoving && _isTouchingGround)
+        // İşitsel Efekt (Ses)
+        if (shouldPlay)
         {
-            if (!dustParticles.isPlaying) dustParticles.Play();
+            if (!_audioSource.isPlaying)
+            {
+                _audioSource.clip = SoundManager.GetThemeClip(SFXType.BoxSlide);
+                if (_audioSource.clip != null) _audioSource.Play();
+            }
+            // Jiroskopik harekette hızlanmalara göre perdeyi (pitch) dinamik değiştirir
+            _audioSource.pitch = Mathf.Clamp(rb.linearVelocity.magnitude * 0.15f, 0.75f, 1.2f);
         }
         else
         {
-            if (dustParticles.isPlaying) dustParticles.Stop();
+            if (_audioSource.isPlaying) _audioSource.Stop();
+        }
+
+        // Görsel Efekt (Toz)
+        if (dustParticles != null)
+        {
+            if (shouldPlay && !dustParticles.isPlaying) dustParticles.Play();
+            else if (!shouldPlay && dustParticles.isPlaying) dustParticles.Stop();
         }
     }
 
@@ -138,7 +164,7 @@ public class GyroBoxController : MonoBehaviour, IResettable
     #region Collision Logic (Çarpışma Mantığı)
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // Sadece yer tag'ine sahip objelerde toz çıksın
+        // Sadece yer tag'ine sahip objelerde toz çıksın ve ses çalsın
         if (collision.gameObject.CompareTag(Constants.TAG_GROUND))
         {
             _isTouchingGround = true;
@@ -167,6 +193,7 @@ public class GyroBoxController : MonoBehaviour, IResettable
         transform.position = originalPos;
         _isTouchingGround = false;
         if (dustParticles != null) dustParticles.Stop();
+        if (_audioSource != null) _audioSource.Stop();
         StopAllMovement();
     }
 

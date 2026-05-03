@@ -14,7 +14,8 @@ public enum SFXType
     DoorPass,
     SlidingDoor,
     MenuPop,
-    MenuSlide
+    MenuSlide,
+    BoxSlide
 }
 
 /// <summary>
@@ -34,6 +35,8 @@ public class ThemeAudio
     public AudioClip slidingDoorSound;
     public AudioClip menuPopSound;
     public AudioClip MenuSlide;
+    public AudioClip boxSlideSound;
+
 }
 
 public class SoundManager : SingletonPersistent<SoundManager>
@@ -166,6 +169,7 @@ public class SoundManager : SingletonPersistent<SoundManager>
             case SFXType.SlidingDoor: clipToPlay = currentTheme.slidingDoorSound; break;
             case SFXType.MenuPop: clipToPlay = currentTheme.menuPopSound; break;
             case SFXType.MenuSlide: clipToPlay = currentTheme.MenuSlide; break;
+            case SFXType.BoxSlide: clipToPlay = currentTheme.MenuSlide; break;
         }
 
         if (clipToPlay != null)
@@ -199,5 +203,30 @@ public class SoundManager : SingletonPersistent<SoundManager>
         tempSource.clip = clip;
         tempSource.pitch = Random.Range(0.9f, 1.05f);
         tempSource.Play();
+    }
+    /// <summary>
+    /// Returns the specific clip for the current theme without playing it.
+    /// (Mevcut tema için özel klibi çalmadan geri döndürür. Döngüsel sesler için kullanılır.)
+    /// </summary>
+    /// <param name="type">The type of sound effect requested. (İstenen ses efekti türü.)</param>
+    /// <returns>The AudioClip associated with the theme and type, or null. (Temaya ve türe ait AudioClip veya null.)</returns>
+    public static AudioClip GetThemeClip(SFXType type)
+    {
+        if (Instance == null || Instance.themeAudios.Length == 0) return null;
+
+        ThemeAudio currentTheme = Instance.themeAudios[Instance.currentThemeIndex];
+
+        switch (type)
+        {
+            case SFXType.BoxSlide:
+                return currentTheme.boxSlideSound;
+
+            case SFXType.SlidingDoor:
+                return currentTheme.slidingDoorSound;
+
+            // Gelecekte loop (döngüsel) çalacak başka sesler olursa buraya case olarak ekleyebilirsin.
+            default:
+                return null;
+        }
     }
 }
