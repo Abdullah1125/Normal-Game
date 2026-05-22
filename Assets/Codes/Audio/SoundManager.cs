@@ -229,4 +229,16 @@ public class SoundManager : SingletonPersistent<SoundManager>
                 return null;
         }
     }
+
+    /// <summary>
+    /// Plays a specific audio clip directly, bypassing the theme logic.
+    /// (Tema mantığını atlayarak belirli bir ses klibini doğrudan çalar.)
+    /// </summary>
+    public static void PlayClipDirectly(AudioClip clip, float volumeMultiplier = 1f)
+    {
+        if (clip != null)
+        {
+            PlayClipWithPitch(clip, volumeMultiplier);
+        }
+    }
 }

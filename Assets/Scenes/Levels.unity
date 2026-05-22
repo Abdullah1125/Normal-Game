@@ -2357,7 +2357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1301693782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3199,7 +3199,7 @@ MonoBehaviour:
   bgRectBottom: {fileID: 15465612}
   pageBackgrounds:
   - {fileID: 21300000, guid: a259872a92e4c724da0ba203d35983b0, type: 3}
-  - {fileID: 21300000, guid: d665569c37f948243b68fdf5940b8f22, type: 3}
+  - {fileID: 21300000, guid: 92abb4b95a216a043ba0d48dbb880ccd, type: 3}
   - {fileID: 21300000, guid: 3d968e875f6593e4282a05ac8406b1b7, type: 3}
   - {fileID: 21300000, guid: 8a5b7a3bb72a635499d1d1a924856616, type: 3}
   - {fileID: 21300000, guid: 0077e5118025b5e47818b12e0fd5f589, type: 3}

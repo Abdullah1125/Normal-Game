@@ -9,7 +9,7 @@ public class AdMobRewardedManager : SingletonPersistent<AdMobRewardedManager>
 
     [Header("Ad Unit IDs(Reklam Birimi Kimlikleri)")]
     // Test ID'leri yüklüdür; yayına çıkarken kendi ID'lerinle değiştir.
-    private string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+    private string _adUnitId = "ca-app-pub-4730160694099005/3599731596";
 
     private RewardedAd _rewardedAd;
 

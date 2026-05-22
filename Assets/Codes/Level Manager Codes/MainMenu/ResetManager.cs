@@ -98,18 +98,31 @@ public class ResetManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        // 1. Ayarları hafızaya al
         float music = PlayerPrefs.GetFloat(Constants.PREF_MUSIC_VOLUME, 0.75f);
         float sfx = PlayerPrefs.GetFloat(Constants.PREF_SFX_VOLUME, 0.75f);
         string lang = PlayerPrefs.GetString(Constants.PREF_SELECTED_LANG, "English");
 
+        // 2. Diskteki (Harddisk) tüm kayıtları sil
         PlayerPrefs.DeleteAll();
 
+        // 3. Ayarları geri yükle
         PlayerPrefs.SetFloat(Constants.PREF_MUSIC_VOLUME, music);
         PlayerPrefs.SetFloat(Constants.PREF_SFX_VOLUME, sfx);
         PlayerPrefs.SetString(Constants.PREF_SELECTED_LANG, lang);
+
+        // --- İŞTE EKSİĞİ KAPATAN RAM TEMİZLİĞİ ---
+        // ScoreManager ölümsüz olduğu için içindeki verileri manuel olarak sıfırlıyoruz.
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.totalDeaths = 0;
+            ScoreManager.Instance.totalTime = 0f;
+            ScoreManager.Instance.SaveOfflineData(); // Sıfırları diske de yazarak işi garantiye al
+        }
+
         PlayerPrefs.Save();
 
-        Debug.Log("Reset: Temizleme işlemi tamamlandı.");
+        Debug.Log("Reset: Temizleme işlemi tamamlandı. RAM ve Disk sıfırlandı.");
     }
 
     private void ReloadCurrentScene()

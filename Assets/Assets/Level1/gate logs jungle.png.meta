@@ -119,23 +119,17 @@ TextureImporter:
       name: gate logs jungle_0
       rect:
         serializedVersion: 2
-        x: 16
-        y: 58
-        width: 32
-        height: 6
+        x: 15
+        y: 57
+        width: 34
+        height: 7
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline:
-      - - {x: 16, y: -2}
-        - {x: 16, y: 3}
-        - {x: -16, y: 3}
-        - {x: -16, y: -1}
-        - {x: -13, y: -3}
-        - {x: 13, y: -3}
+      outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 89fb0ede3be4db6a0800000000000000
       internalID: -6431898158118158440
@@ -147,20 +141,20 @@ TextureImporter:
       name: gate logs jungle_1
       rect:
         serializedVersion: 2
-        x: 16
+        x: 15
         y: 0
-        width: 32
-        height: 6
+        width: 34
+        height: 7
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 88057b7de4aa38c4499884d90855a89d
-      internalID: -404392398
+      spriteID: d2c87bed7e8d49ec0800000000000000
+      internalID: -3560982914957603795
       vertices: []
       indices: 
       edges: []
@@ -169,7 +163,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4a90657ca7c762e4c9a9bb589fddfaea
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -177,14 +171,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":1,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
-      - key: SpriteEditor.SliceOnImport
-        value: False
+      entries: []
     nameFileIdTable:
       gate logs jungle_0: -6431898158118158440
-      gate logs jungle_1: -404392398
+      gate logs jungle_1: -3560982914957603795
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

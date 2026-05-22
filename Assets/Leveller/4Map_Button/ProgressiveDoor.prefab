@@ -117,7 +117,7 @@ SpriteRenderer:
   m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.2320754, g: 0.7735849, b: 0.264254, a: 1}
+  m_Color: {r: 0.4745098, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -251,6 +251,30 @@ PrefabInstance:
     - target: {fileID: 5392017135619199722, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.062762514
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.062762514
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.15471691
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.b
+      value: 0.06666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.g
+      value: 0.06666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 7694179590063399975, guid: f2e94a6155f45ab43b9592292a80e65b, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.r
+      value: 0.15686275
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

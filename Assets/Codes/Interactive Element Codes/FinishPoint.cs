@@ -5,17 +5,17 @@ using System.Collections.Generic;
 /// <summary>
 /// Handles level finish logic with instant UI lockdown to prevent menu leaks.
 /// Updates the gate visual dynamically from a list based on the custom LevelManager data (0-indexed).
-/// Listens to LevelManager events to refresh visuals during transitions.
-/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir. Kapı görselini 0 endeksli LevelManager verisine göre bir listeden dinamik günceller. Geçişlerde görselleri yenilemek için LevelManager'ı dinler.)
+/// Plays specific milestone sounds based on the next theme index.
+/// (Menü sızıntılarını önlemek için anında UI kilitlemeli bölüm bitiş mantığını yönetir. Kapı görselini 0 endeksli LevelManager verisine göre günceller. Bir sonraki temanın özel sesini çalar.)
 /// </summary>
 public class FinishPoint : MonoBehaviour, IResettable
 {
     [Header("Visual Settings (Görsel Ayarlar)")]
-    public SpriteRenderer gateRenderer; // Kapının SpriteRenderer bileşeni
-    public Sprite normalGateSprite; // Normal levellerde görünecek kapı
+    public SpriteRenderer gateRenderer;
+    public Sprite normalGateSprite;
 
     [Tooltip("List of special gate sprites for milestone levels (12, 24, 36...). \n(12, 24, 36 gibi özel bölümlerde sırasıyla çıkacak kapı görselleri listesi.)")]
-    public List<Sprite> specialGateSprites; // Liste olarak özel kapılar
+    public List<Sprite> specialGateSprites;
 
     public static bool IsLevelFinishing { get; private set; } = false;
     public static bool isPlayerInZone = false;
@@ -24,7 +24,6 @@ public class FinishPoint : MonoBehaviour, IResettable
     private bool _isProcessing = false;
     private Rigidbody2D _playerRb;
 
-    // --- GÖRSEL YENİLEME SİHRİ BURADA ---
     /// <summary>
     /// Subscribes to the LevelManager's start event to ensure visual updates on every level transition.
     /// (Her seviye geçişinde görsel güncelleme sağlamak için LevelManager'ın başlangıç olayına abone olur.)
@@ -42,7 +41,6 @@ public class FinishPoint : MonoBehaviour, IResettable
     {
         LevelManager.OnLevelStarted -= SetupGateVisual;
     }
-    // ------------------------------------
 
     /// <summary>
     /// Registers to the LevelManager, updates visual state, and enforces a clean state on startup.
@@ -72,36 +70,32 @@ public class FinishPoint : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Determines if the current level (0-indexed) is a milestone and applies the correct sprite from the list.
-    /// (Mevcut bölümün (0 endeksli) bir kilometre taşı olup olmadığını belirler ve listeden doğru görseli uygular.)
+    /// Updates the gate visual based on the current level.
+    /// (Mevcut bölüme göre kapı görselini günceller.)
     /// </summary>
     private void SetupGateVisual()
     {
         if (gateRenderer == null) return;
 
         int currentLevelID = 0;
-
         if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
         {
             currentLevelID = LevelManager.Instance.activeLevel.levelID;
         }
 
-        // Kural: ID'ler 0'dan başladığı için (+1) ekleyerek 12'ye göre mod (kalan) alıyoruz.
+        // 12, 24, 36. leveller (ID 11, 23, 35) için görsel kontrolü
         if (currentLevelID > 0 && (currentLevelID + 1) % 12 == 0)
         {
             if (specialGateSprites != null && specialGateSprites.Count > 0)
             {
-                // Hangi özel kapının sırası geldiğini hesapla (12. bölüm = index 0, 24. bölüm = index 1 vb.)
                 int specialIndex = ((currentLevelID + 1) / 12) - 1;
 
-                // Başa sarma yok. Sadece listede o sıraya ait görsel varsa kullan.
                 if (specialIndex < specialGateSprites.Count)
                 {
                     gateRenderer.sprite = specialGateSprites[specialIndex];
                 }
                 else
                 {
-                    // Liste aşıldıysa (örneğin 3 görsel var ama 48. bölüme gelindiyse) normal kapıya dön.
                     if (normalGateSprite != null) gateRenderer.sprite = normalGateSprite;
                 }
             }
@@ -146,8 +140,8 @@ public class FinishPoint : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Executes the final sequence and triggers scene transition.
-    /// (Final sekansını yürütür ve sahne geçişini tetikler.)
+    /// Executes the final sequence, handles specific theme sounds, and triggers scene transition.
+    /// (Final sekansını yürütür, özel tema seslerini ayarlar ve sahne geçişini tetikler.)
     /// </summary>
     private IEnumerator FinishSequence(Rigidbody2D playerRb)
     {
@@ -162,8 +156,36 @@ public class FinishPoint : MonoBehaviour, IResettable
         if (PlayerController.Instance != null)
             PlayerController.Instance.canMove = false;
 
-        if (SoundManager.Instance != null)
-            SoundManager.PlayThemeSFX(SFXType.DoorPass);
+        // --- SES YÖNETİMİ (SOUND MANAGEMENT) ---
+        if (SoundManager.Instance != null && LevelManager.Instance != null)
+        {
+            int currentLevelID = LevelManager.Instance.activeLevel.levelID;
+
+            // Eğer özel bölümdeysek (12, 24, 36...)
+            if ((currentLevelID + 1) % 12 == 0)
+            {
+                // Bir sonraki temanın indeksini hesapla
+                int nextThemeIndex = ((currentLevelID + 1) / 12);
+
+                // Liste aşımını (Out of Bounds) önle
+                if (nextThemeIndex < SoundManager.Instance.themeAudios.Length)
+                {
+                    // Bir sonraki temanın kapı sesini al ve doğrudan çal
+                    AudioClip specialClip = SoundManager.Instance.themeAudios[nextThemeIndex].doorPassSound;
+                    SoundManager.PlayClipDirectly(specialClip);
+                }
+                else
+                {
+                    // Temalar bittiyse varsayılanı çal
+                    SoundManager.PlayThemeSFX(SFXType.DoorPass);
+                }
+            }
+            else
+            {
+                // Normal bölümlerde standart temaya uygun çal
+                SoundManager.PlayThemeSFX(SFXType.DoorPass);
+            }
+        }
 
         yield return new WaitForEndOfFrame();
 

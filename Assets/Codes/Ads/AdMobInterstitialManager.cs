@@ -9,7 +9,7 @@ using System;
 public class AdMobInterstitialManager : SingletonPersistent<AdMobInterstitialManager>
 {
 
-    private string _adUnitId = "ca-app-pub-3940256099942544/1033173712"; // Test ID
+    private string _adUnitId = "ca-app-pub-4730160694099005/2671765525"; // Test ID
     private InterstitialAd _interstitialAd;
 
     private Action _onAdClosedCallback;

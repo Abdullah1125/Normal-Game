@@ -171,4 +171,5 @@ public class LevelManager : Singleton<LevelManager>
         }
         else SceneManager.LoadScene(Constants.SCENE_LEVELS);
     }
+
 }

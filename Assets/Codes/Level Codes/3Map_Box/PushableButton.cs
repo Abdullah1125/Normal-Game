@@ -3,8 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unity 6 button using BoxCast for a thicker detection area.
 /// Active logic: Forgiving mechanic (red zone permanently disappears after first touch).
-/// (Fiziksel olarak kalınlaştırılmış BoxCast kullanan Unity 6 butonu. 
-/// Aktif mantık: İlk temastan sonra kırmızı alan kalıcı olarak silinir.)
+/// Handles custom sprites for pressed and unpressed states.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PushableButton : MonoBehaviour, IResettable
@@ -20,6 +19,10 @@ public class PushableButton : MonoBehaviour, IResettable
     public float slidingDamping = 0.5f;
     public float stoppingDamping = 3.0f;
 
+    [Header("Sprite Settings (Görsel Ayarlar)")]
+    public Sprite normalSprite; // Basılı olmayan halinin görseli
+    public Sprite pressedSprite; // Basılı halinin görseli
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Collider2D myCollider;
@@ -29,7 +32,7 @@ public class PushableButton : MonoBehaviour, IResettable
     private Vector2 originalPos;
 
     /// <summary>
-    /// Bileşenleri alır, trigger durumunu kapatır ve başlangıç pozisyonunu kaydeder.
+    /// Bileşenleri alır, trigger durumunu kapatır, başlangıç pozisyonunu ve görselini kaydeder.
     /// </summary>
     void Awake()
     {
@@ -40,6 +43,12 @@ public class PushableButton : MonoBehaviour, IResettable
         if (myCollider != null) myCollider.isTrigger = false;
 
         originalPos = transform.position;
+
+        // Eğer Inspector'dan normal görsel atanmadıysa, üzerindeki mevcut görseli baz al
+        if (normalSprite == null && sr != null)
+        {
+            normalSprite = sr.sprite;
+        }
     }
 
     /// <summary>
@@ -62,7 +71,7 @@ public class PushableButton : MonoBehaviour, IResettable
 
     /// <summary>
     /// Kalın ışın taraması yapar. İlk temasta kırmızı alanı iptal eder. 
-    /// Yorum satırlarında alternatif zorlu kilit (Strict Reset) mantığını barındırır.
+    /// Duruma göre basılma veya bırakılma fonksiyonlarını çağırır.
     /// </summary>
     private void CheckThickRay()
     {
@@ -75,8 +84,6 @@ public class PushableButton : MonoBehaviour, IResettable
         bool shouldActivate = false;
 
         // --- AKTİF MANTIK: AFFEDİCİ MEKANİK ---
-        // Kutu bir kere uca değdiyse kırmızı alan silinir. 
-        // Kutu düşerse kapı kapanır, geri herhangi bir yere değerse kapı tekrar açılır.
         if (hit.collider != null && hit.collider.CompareTag("Box"))
         {
             if (hasActivatedOnce)
@@ -89,24 +96,6 @@ public class PushableButton : MonoBehaviour, IResettable
                 shouldActivate = true;
             }
         }
-
-        /*
-        ========================================================================================
-        ALTERNATİF MANTIK: KATI SIFIRLAMA (Kutu kaydığında kırmızı alanın geri gelmesi)
-        Oyuncu kutuyu düşürdüğünde kırmızı alanın geri gelmesini ve kapının açılması için 
-        tekrar o hassas uca (yeşil alana) değdirilmesini istiyorsan bu mantığı kullan.
-
-        Nasıl Aktifleştirilir?
-        Yukarıdaki "if (hit.collider != null...)" bloğunun hemen altına (kapanış parantezinden sonra)
-        şu "else" bloğunu eklemen yeterlidir:
-
-        else
-        {
-            // Kutu alandan tamamen çıktığında hafızayı sıfırla, kırmızı alanı geri getir.
-            hasActivatedOnce = false;
-        }
-        ========================================================================================
-        */
 
         if (shouldActivate && !isPressed) Press();
         else if (!shouldActivate && isPressed) Release();
@@ -121,33 +110,34 @@ public class PushableButton : MonoBehaviour, IResettable
     }
 
     /// <summary>
-    /// Buton basıldı durumuna geçer, rengini değiştirir ve kapıyı açar.
+    /// Buton basıldı durumuna geçer, özel görselini yükler ve kapıyı açar.
     /// </summary>
     private void Press()
     {
         isPressed = true;
-        if (sr != null) sr.color = Color.green;
+        if (sr != null && pressedSprite != null) sr.sprite = pressedSprite;
         GateController.Instance?.OpenGate();
     }
 
     /// <summary>
-    /// Buton serbest durumuna geçer, rengini sıfırlar ve kapıyı kapatır.
+    /// Buton serbest durumuna geçer, normal görseline döner ve kapıyı kapatır.
     /// </summary>
     private void Release()
     {
         isPressed = false;
-        if (sr != null) sr.color = Color.white;
+        if (sr != null && normalSprite != null) sr.sprite = normalSprite;
         GateController.Instance?.CloseGate();
     }
 
     /// <summary>
-    /// Sistemi başlangıç pozisyonuna taşır ve tüm kilit hafızasını sıfırlar.
+    /// Sistemi başlangıç pozisyonuna taşır ve tüm kilit ile görsel hafızasını sıfırlar.
     /// </summary>
     public void ResetMechanic()
     {
         transform.position = originalPos;
         rb.linearVelocity = Vector2.zero;
-        hasActivatedOnce = false; // Bölüm sıfırlandığında kırmızı alan mutlaka geri gelir
+        hasActivatedOnce = false;
+
         if (isPressed) Release();
     }
 
