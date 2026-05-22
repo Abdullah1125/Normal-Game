@@ -21,6 +21,8 @@ Originally developed as an academic course assignment, this project has been suc
 * **Integrated Monetization:** A clean implementation of `AdMobInterstitialManager` to serve interstitial ads during natural gameplay pauses without disrupting the core user experience.
 
 ## Screenshots & Gameplay
+<img width="526" height="258" alt="unnamed" src="https://github.com/user-attachments/assets/159285f0-a10d-4f80-bb4f-fef3e82a740a" />
+<img width="526" height="243" alt="unnamecd" src="https://github.com/user-attachments/assets/696d313b-cefb-4522-b1b8-e51b644f2ed2" />
 
 
 ## About the Developer
