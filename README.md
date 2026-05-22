@@ -1,5 +1,7 @@
 # Normal Game
 
+* **Google Play Store:** https://play.google.com/store/apps/details?id=com.istiklal.doga.y2026.normalgame
+
 ## Project Overview
 **Normal Game** is a mobile-first 2D troll platformer designed to test players' patience with unpredictable and deceptive obstacles. 
 
@@ -28,7 +30,6 @@ Originally developed as an academic course assignment, this project has been suc
 I am a Digital Game Design student at Kahramanmaraş İstiklal University. I primarily focus on systems programming, UI architecture, and game mechanics using C# within the Unity engine.
 
 * **LinkedIn:** https://www.linkedin.com/in/abdullah-%C3%A7elik-35b06b205/
-* **Google Play Store:** https://play.google.com/store/apps/details?id=com.istiklal.doga.y2026.normalgame
 
 ## License
 Copyright (c) 2026 Abdullah Çelik
