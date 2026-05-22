@@ -21,8 +21,8 @@ Originally developed as an academic course assignment, this project has been suc
 * **Integrated Monetization:** A clean implementation of `AdMobInterstitialManager` to serve interstitial ads during natural gameplay pauses without disrupting the core user experience.
 
 ## Screenshots & Gameplay
-<img width="526" height="258" alt="unnamed" src="https://github.com/user-attachments/assets/c769765f-dd80-4b34-9a00-6c2da8ae137f" />
-<img width="1507" height="839" alt="Ekran Alıntısı" src="https://github.com/user-attachments/assets/1701d0ad-b16e-4454-82fd-c62dab585f86" />
+<img width="1505" height="838" alt="Ekran Alınrtısı" src="https://github.com/user-attachments/assets/92a6a037-3fd7-4bfc-a2f7-e67464e96625" />
+<img width="1507" height="839" alt="Ekran Alıntısı" src="https://github.com/user-attachments/assets/1d1ab0f4-8ff8-4f72-b30f-7917afdfe91d" />
 
 ## About the Developer
 I am a Digital Game Design student at Kahramanmaraş İstiklal University. I primarily focus on systems programming, UI architecture, and game mechanics using C# within the Unity engine.
