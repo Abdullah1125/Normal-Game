@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 28
-  levelName: "Yorulan Z\u0131plama"
+  levelName: "Geri D\xF6n\xFC\u015F"
   isUnlocked: 1
-  isCompleted: 0
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
-  isJumpForbidden: 1
+  isJumpForbidden: 0
   isActive: 1
   showLayer: 1
   colliderLeyer: 1
   specialMechanics:
-  - {fileID: 8920717485495889620, guid: de98df109ba5e0a43bb2bd1682fedc0c, type: 3}
+  - {fileID: 3004303550225687479, guid: 3eb48207ef4f1bd41a777190df369d96, type: 3}
   levelHint: "Z\u0131p Z\u0131p"
   hintVisualMap: {fileID: 0}

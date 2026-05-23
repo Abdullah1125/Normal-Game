@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
@@ -65,6 +66,7 @@ public class PlayerController : Singleton<PlayerController>
     public ParticleSystem jumpParticles;
     public ParticleSystem walkParticles;
 
+    public static event Action OnPlayerReset;
     /// Oyun başladığında başlangıç pozisyonunu kaydeder ve zamanlayıcıyı başlatır.
     /// </summary>
     void Start()
@@ -155,7 +157,7 @@ public class PlayerController : Singleton<PlayerController>
 
             if (stepTimer <= 0)
             {
-                walkSound.pitch = Random.Range(0.85f, 1.15f);
+                float randomDeger = UnityEngine.Random.Range(0f, 1f);
                 walkSound.PlayOneShot(walkSound.clip, 0.6f);
 
                 if (walkParticles != null) walkParticles.Play();
@@ -272,10 +274,10 @@ public class PlayerController : Singleton<PlayerController>
         coyoteTimeCounter = 0f;
         jumpBufferCounter = 0f;
         jumpCooldownCounter = 0f;
-
+    
         ResetSpeed();
+        OnPlayerReset?.Invoke();
 
-      
         if (LevelManager.Instance != null) LevelManager.Instance.ResetAllMechanics();
     }
 
@@ -342,6 +344,10 @@ public class PlayerController : Singleton<PlayerController>
     private void OnDestroy()
     {
         if (ScoreManager.Instance != null) ScoreManager.Instance.StopTimer();
+    }
+    public void SetCustomSpeed(float newSpeed)
+    {
+        moveSpeed = newSpeed;
     }
 }
 

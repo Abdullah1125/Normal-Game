@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages level selection buttons, including locks, UI updates, and ad integration.
@@ -20,6 +21,8 @@ public class LevelMenuButton : MonoBehaviour
     // Önbellek değişkenleri
     private Button btn;
     private LevelUIManager uiManager;
+
+    public static Func<int, bool> OnCheckTrollBypass;
 
     /// <summary>
     /// Caches necessary component references.
@@ -72,7 +75,15 @@ public class LevelMenuButton : MonoBehaviour
     /// </summary>
     public void OnButtonClick()
     {
+
         if (comingSoonMode) return;
+
+        if (OnCheckTrollBypass != null && OnCheckTrollBypass.Invoke(globalIndex))
+        {
+            ExtraHintUI.lastUnlockedLevelID = -1;
+            LoadMapScene(); // Kilitleri yoksay ve direkt bölümü aç!
+            return;
+        }
 
         int currentChapter = globalIndex / 6;
         int chapterLastLevelIndex = (currentChapter * 6) + 5;

@@ -36,6 +36,12 @@ public class BoxButton : MonoBehaviour, IResettable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // --- BURASI KRİTİK: Level inaktifse buton hiçbir şeyi tetiklemesin ---
+        if (LevelManager.Instance != null && LevelManager.Instance.activeLevel != null)
+        {
+            if (!LevelManager.Instance.activeLevel.isActive) return;
+        }
+
         if (other.CompareTag(Constants.TAG_BOX))
         {
             _objectsOnButton++;
@@ -45,6 +51,8 @@ public class BoxButton : MonoBehaviour, IResettable
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        // Level inaktif olsa bile çıkışta "Release" tetiklenebilir mi? 
+        // İstersen buraya da aynı kontrolü ekleyebilirsin ama genelde sadece giriş engellemek yeterlidir.
         if (!gameObject.scene.isLoaded || !other.gameObject.activeInHierarchy) return;
 
         if (other.CompareTag(Constants.TAG_BOX))
@@ -54,37 +62,27 @@ public class BoxButton : MonoBehaviour, IResettable
         }
     }
 
-    /// <summary>
-    /// Swaps sprite, plays the standard button sound, and triggers particles.
-    /// (Görseli değiştirir, standart buton sesini çalar ve partikülleri tetikler.)
-    /// </summary>
     private void PressButton()
     {
         _isPressed = true;
 
-        // Sprite değişimi
         if (_sr != null && pressedSprite != null) _sr.sprite = pressedSprite;
 
-        // SES: GateButton ile aynı ses efektini tetikler
         if (SoundManager.Instance != null)
         {
             SoundManager.PlayThemeSFX(SFXType.Button);
         }
 
-        // Efekt tetikleme
         if (pressParticles != null)
         {
             pressParticles.Stop();
             pressParticles.Play();
         }
 
+        // GateController'ı tetikle
         GateController.Instance?.OpenGate();
     }
 
-    /// <summary>
-    /// Reverts the button to its original sprite.
-    /// (Butonu orijinal görseline geri döndürür.)
-    /// </summary>
     private void ReleaseButton()
     {
         _isPressed = false;

@@ -88,6 +88,8 @@ public class LevelUIManager : MonoBehaviour
     private CanvasScaler cachedCanvasScaler;
 
     private Coroutine _dotsCoroutine;
+
+    public static event Action OnMenuReady;
     void Start()
     {
         int lastLevelID = PlayerPrefs.GetInt(Constants.PREF_LAST_LEVEL_ID, 0);
@@ -135,12 +137,13 @@ public class LevelUIManager : MonoBehaviour
         {
             comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
             if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
-            comingSoonCG.alpha = (currentPage > 1) ? 1f : 0f;
-            comingSoonPanel.SetActive(currentPage > 1);
+            comingSoonCG.alpha = (currentPage > 2) ? 1f : 0f;
+            comingSoonPanel.SetActive(currentPage > 2);
         }
 
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
+        OnMenuReady?.Invoke();
     }
 
 
@@ -350,7 +353,7 @@ public class LevelUIManager : MonoBehaviour
                 data.isUnlocked = PlayerPrefs.GetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + data.levelID, 0) == 1;
 
-                bool isComingSoon = (pageIndex > 1);
+                bool isComingSoon = (pageIndex > 2);
                 string localizedLevelName = data.levelName;
 
                 // SİHİRLİ DOKUNUŞ: Merkezi sistem üzerinden o butonun ismini çekiyoruz
@@ -458,8 +461,8 @@ public class LevelUIManager : MonoBehaviour
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            oldHasCS = (currentPage > 1);
-            newHasCS = (targetPage > 1);
+            oldHasCS = (currentPage > 2);
+            newHasCS = (targetPage > 2);
         }
 
         // Yeni sayfa verilerini asıl objelere yükler

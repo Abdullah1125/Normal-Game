@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 27
-  levelName: Normal
-  isUnlocked: 0
+  levelName: "Kararan I\u015F\u0131k"
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 8920717485495889620, guid: de98df109ba5e0a43bb2bd1682fedc0c, type: 3}
+  - {fileID: 9051301616585380151, guid: 30e2d4c198c239c41841327ab0abd08f, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

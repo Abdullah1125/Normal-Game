@@ -23,4 +23,8 @@ public static class Constants
     public const string SCENE_MAIN_MENU = "MainMenu";
     public const string SCENE_LEVELS = "Levels";
     public const string SCENE_MAP_SUFFIX = "Map"; // mapNum + Constants.SCENE_MAP_SUFFIX
+
+    public const string PREF_TROLL_HACK_ACTIVE = "TrollHackActive";
+    public const string PREF_TROLL_TARGET_IDX = "TrollHack_TargetIndex";
+    public const string PREF_TROLL_CURRENT_IDX = "TrollHack_CurrentIndex";
 }
