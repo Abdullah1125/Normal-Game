@@ -48,12 +48,8 @@ public class LowStance : MonoBehaviour
             gate.OpenGate();
             isGateOpened = true;
 
-            // Aðýr iþlem olan Reflection'ý sadece bir kere Start'ta yapýp kaydediyoruz.
-            Vector3 startPos = (Vector3)typeof(GateController)
-                .GetField("startPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                .GetValue(gate);
-
-            cachedOpenPosition = startPos + gate.moveOffset;
+          
+            cachedOpenPosition = GateUtility.GetOpenPosition();
         }
     }
 

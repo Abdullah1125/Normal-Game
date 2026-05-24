@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Level_6
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 35
-  levelName: Normal
-  isUnlocked: 0
-  isCompleted: 0
+  levelName: "Renk De\u011Fi\u015Fim Kaosu"
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 5132516796764354051, guid: 19441b2dedef2ae4eab83b67aa6092e2, type: 3}
+  - {fileID: 3886092381347131104, guid: c1183e08caa76374e905c8ec9bdf1a27, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

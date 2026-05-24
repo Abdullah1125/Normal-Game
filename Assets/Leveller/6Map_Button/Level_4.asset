@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 33
-  levelName: Normal
-  isUnlocked: 0
+  levelName: "S\xFCrekli D\xFC\u015F\xFC\u015F D\xF6ng\xFCs\xFC"
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
-  isJumpForbidden: 0
+  isJumpForbidden: 1
   isActive: 1
+  showLayer: 0
+  colliderLeyer: 0
   specialMechanics:
   - {fileID: 5132516796764354051, guid: 19441b2dedef2ae4eab83b67aa6092e2, type: 3}
+  - {fileID: 4737503927542475326, guid: 2d05247ce438b8e4ea22d9f3c239742f, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

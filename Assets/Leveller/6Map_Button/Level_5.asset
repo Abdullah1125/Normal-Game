@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 34
-  levelName: Normal
-  isUnlocked: 0
+  levelName: "Tuzak Kap\u0131"
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
-  - {fileID: 5132516796764354051, guid: 19441b2dedef2ae4eab83b67aa6092e2, type: 3}
+  - {fileID: 263109221841333369, guid: 6d46a8190610ca441817ed7fba5def2b, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

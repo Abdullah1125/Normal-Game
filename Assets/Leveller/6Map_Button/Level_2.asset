@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: Level_2
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 31
-  levelName: Normal
-  isUnlocked: 0
+  levelName: "Z\u0131plama Spam\u0131"
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
-  - {fileID: 5132516796764354051, guid: 19441b2dedef2ae4eab83b67aa6092e2, type: 3}
+  - {fileID: 8826998296829536423, guid: a4fd646796e80074ab53a42807d74a77, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}
