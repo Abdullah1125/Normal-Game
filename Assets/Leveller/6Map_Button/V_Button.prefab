@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: normalSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4c510447a3071bd47980ee0e2d266820, type: 3}
+    - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: pressedSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f859b686429eefc48a624dbe43fcfecb, type: 3}
+    - target: {fileID: 6414349542247852477, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4c510447a3071bd47980ee0e2d266820, type: 3}
+    - target: {fileID: 8715819610817975158, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8715819610817975158, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8715819610817975158, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 0.4375
+      objectReference: {fileID: 0}
     - target: {fileID: 8790384790403858680, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_Name
       value: V_Button
@@ -18,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.36
+      value: 7.35
       objectReference: {fileID: 0}
     - target: {fileID: 9164866609253071571, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_LocalPosition.z
