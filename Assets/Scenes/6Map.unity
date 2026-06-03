@@ -9416,7 +9416,7 @@ Transform:
   m_GameObject: {fileID: 196354817}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.07, y: -1.014, z: 0}
+  m_LocalPosition: {x: 0.07, y: -1.345, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10243,11 +10243,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6557729751503312511, guid: f9a034c389137314caa381600289b94f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.966
+      value: -1.303
       objectReference: {fileID: 0}
     - target: {fileID: 6557729751503312511, guid: f9a034c389137314caa381600289b94f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6557729751503312511, guid: f9a034c389137314caa381600289b94f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10635,11 +10635,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1151303855573462721, guid: bf6f53d1f33804145827c4d2e729acd8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.003
+      value: -1.3399999
       objectReference: {fileID: 0}
     - target: {fileID: 1151303855573462721, guid: bf6f53d1f33804145827c4d2e729acd8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1151303855573462721, guid: bf6f53d1f33804145827c4d2e729acd8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11588,6 +11588,7 @@ GameObject:
   - component: {fileID: 1092393298}
   - component: {fileID: 1092393297}
   - component: {fileID: 1092393302}
+  - component: {fileID: 1092393303}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -11629,8 +11630,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0032539186, y: 0.30645412}
-  m_Size: {x: 1.4488907, y: 2.6537614}
+  m_Offset: {x: 0.0032539186, y: -0.0056855725}
+  m_Size: {x: 1.4488907, y: 2.6959128}
   m_Direction: 0
 --- !u!50 &1092393298
 Rigidbody2D:
@@ -11708,7 +11709,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 25
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 34cec1bc4efb5d84facdd51d13a69f53, type: 3}
+  m_Sprite: {fileID: 1677414809361596622, guid: 93b0ac1281c6b404ea23309a5c35758f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11751,7 +11752,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  soulPrefab: {fileID: 4294205466717147324, guid: b3ee67fb3be444945af2212c1da66eeb, type: 3}
+  soulPrefab: {fileID: 4294205466717147324, guid: 1b976c7208d86de44a2b728d1f2bd4fc, type: 3}
   walkSound: {fileID: 1092393302}
   timeBetweenSteps: 0.48
   jumpParticles: {fileID: 653086620}
@@ -11871,6 +11872,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &1092393303
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092393296}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7ef33fa65928a1f44905fb9d025b7236, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1118983822
 GameObject:
   m_ObjectHideFlags: 0
@@ -13004,7 +13027,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
@@ -14778,6 +14801,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5335460731091469741, guid: 98a9c697e63a1484895c8bba68ad9b3b, type: 3}
+      propertyPath: soulPrefab
+      value: 
+      objectReference: {fileID: 4294205466717147324, guid: 1b976c7208d86de44a2b728d1f2bd4fc, type: 3}
     - target: {fileID: 7878732352209833357, guid: 98a9c697e63a1484895c8bba68ad9b3b, type: 3}
       propertyPath: m_Name
       value: SoulPool

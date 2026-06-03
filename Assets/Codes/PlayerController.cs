@@ -66,9 +66,14 @@ public class PlayerController : Singleton<PlayerController>
     public ParticleSystem jumpParticles;
     public ParticleSystem walkParticles;
 
+    [Header("Animations (Animasyonlar)")]
+    private Animator _anim;
+
     public static event Action OnPlayerReset;
     /// Oyun başladığında başlangıç pozisyonunu kaydeder ve zamanlayıcıyı başlatır.
     /// </summary>
+    /// 
+
     void Start()
     {
         startPos = transform.position;
@@ -81,12 +86,16 @@ public class PlayerController : Singleton<PlayerController>
 
     /// Gerekli bileşenleri alır ve varsayılan değerleri atar.
     /// </summary>
+    /// <summary>
+  
     protected override void Awake()
     {
         base.Awake();
 
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        _anim = GetComponent<Animator>(); // EKLENDİ: Animator referansı alındı
+
         rb.freezeRotation = true;
         rb.gravityScale = 6f;
         moveSpeed = defaultSpeed;
@@ -172,7 +181,9 @@ public class PlayerController : Singleton<PlayerController>
         UpdateVisuals();
     }
 
-    /// Karakterin yönünü ve yer çekimine göre rotasyonunu günceller.
+    /// <summary>
+    /// Updates player facing direction, gravity rotation, and animation states.
+    /// (Karakterin yönünü, yer çekimi rotasyonunu ve animasyon durumlarını günceller.)
     /// </summary>
     private void UpdateVisuals()
     {
@@ -186,6 +197,14 @@ public class PlayerController : Singleton<PlayerController>
         // Gövdeyi ters çevir (Ters yerçekimi)
         if (gravityDir > 0) transform.eulerAngles = new Vector3(0, 0, 180f);
         else transform.eulerAngles = Vector3.zero;
+
+        // --- ANIMATION CONTROL (Animasyon Kontrolü) ---
+        if (_anim != null)
+        {
+            // Sadece yerdeysen ve girdi varsa yürüyor sayılır (havada yürüme engeli)
+            bool isWalking = Mathf.Abs(moveInput) > 0.1f && isGrounded;
+            _anim.SetBool("isWalking", isWalking);
+        }
     }
 
     /// Fizik tabanlı hareketleri ve yer kontrolünü hesaplar.
