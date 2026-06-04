@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.7058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.75686276
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.7607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.b
+      value: 0.7058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.g
+      value: 0.75686276
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502269524354084344, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.r
+      value: 0.7607843
+      objectReference: {fileID: 0}
     - target: {fileID: 3923911139094076754, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: normalSprite
       value: 
@@ -20,6 +44,30 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 4c510447a3071bd47980ee0e2d266820, type: 3}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.7058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.75686276
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.7607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.b
+      value: 0.7058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.g
+      value: 0.75686276
+      objectReference: {fileID: 0}
+    - target: {fileID: 8584751358564003301, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.r
+      value: 0.7607843
+      objectReference: {fileID: 0}
     - target: {fileID: 8715819610817975158, guid: e2a66c1c37e774043891fc7f258258d0, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
       value: 0.5
