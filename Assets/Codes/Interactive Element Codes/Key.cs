@@ -17,11 +17,11 @@ public class Key : MonoBehaviour , IResettable
 
                 // Anahtarı gizle
                 gameObject.SetActive(false);
-                Debug.Log("Anahtar başarıyla toplandı!");
+              
             }
             else
             {
-                Debug.LogError("Hata: Sahnede GateController bulunamadı!");
+             
             }
         }
     }

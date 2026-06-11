@@ -602,6 +602,5 @@ public class LevelUIManager : MonoBehaviour
         RefreshPageUI();
         FillGridWithPageData(currentPage, spawnedButtons);
 
-        Debug.Log("Bölümlerin kilidi acıldı");
     }
 }

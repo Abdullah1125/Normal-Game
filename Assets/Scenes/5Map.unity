@@ -43639,7 +43639,7 @@ GameObject:
   - component: {fileID: 998052145}
   - component: {fileID: 998052143}
   m_Layer: 0
-  m_Name: forest background_0
+  m_Name: desert background_0
   m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43694,7 +43694,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: a259872a92e4c724da0ba203d35983b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 576458a29e6337544abfb8575f891d8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -43713,8 +43713,8 @@ Transform:
   m_GameObject: {fileID: 998052142}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9825, y: 0.4855, z: 0}
-  m_LocalScale: {x: 1.4419461, y: 1.2913977, z: 1}
+  m_LocalPosition: {x: 0.0788, y: 0.4957, z: 0}
+  m_LocalScale: {x: 0.7464347, y: 0.7396812, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -43902,8 +43902,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0032539186, y: -0.00028417795}
-  m_Size: {x: 1.4488907, y: 2.713006}
+  m_Offset: {x: 0.0032539186, y: 0.023208164}
+  m_Size: {x: 1.4488907, y: 2.6660213}
   m_Direction: 0
 --- !u!50 &1092393298
 Rigidbody2D:
@@ -47707,7 +47707,7 @@ SpriteRenderer:
   m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 793e3938b0fed854eb1cbc9827cfc84b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.93207544, g: 0.919765, b: 0.919765, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -47763,7 +47763,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.37254903, g: 0.8039216, b: 0.89411765, a: 1}

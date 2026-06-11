@@ -71,7 +71,7 @@ public class AdMobInterstitialManager : SingletonPersistent<AdMobInterstitialMan
             // REKLAM HATA VERİP ÇÖKERSE (İSİM DÜZELTİLDİ!)
             _interstitialAd.OnAdFullScreenContentFailed += (AdError adError) =>
             {
-                Debug.LogError("Reklam gösterilemedi: " + adError.GetMessage());
+               
                 // Reklam çökse bile oyuncu ekranda takılı kalmasın, levele devam etsin
                 _executeOnMainThread = _onAdClosedCallback;
                 _onAdClosedCallback = null;

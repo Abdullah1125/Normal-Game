@@ -181,6 +181,7 @@ public class PlayerController : Singleton<PlayerController>
         UpdateVisuals();
     }
 
+
     /// <summary>
     /// Updates player facing direction, gravity rotation, and animation states.
     /// (Karakterin yönünü, yer çekimi rotasyonunu ve animasyon durumlarını günceller.)
@@ -201,9 +202,23 @@ public class PlayerController : Singleton<PlayerController>
         // --- ANIMATION CONTROL (Animasyon Kontrolü) ---
         if (_anim != null)
         {
-            // Sadece yerdeysen ve girdi varsa yürüyor sayılır (havada yürüme engeli)
-            bool isWalking = Mathf.Abs(moveInput) > 0.1f && isGrounded;
-            _anim.SetBool("isWalking", isWalking);
+            // EKLENEN KISIM: Karakterin dikey hızını Animator'a ilet
+            // Yukarı çıkıyorsa pozitif, aşağı düşüyorsa negatif değer gider.
+            _anim.SetFloat("yVelocity", rb.linearVelocity.y);
+
+            // Karakter havadaysa yürüme şalterini direkt kapat, Animator'ın kafası karışmasın
+            if (!isGrounded)
+            {
+                _anim.SetBool("isWalking", false);
+                _anim.SetBool("isGrounded", false);
+            }
+            else
+            {
+                // Yerdeyse normal kontrolleri çalıştır
+                bool isWalking = Mathf.Abs(moveInput) > 0.1f;
+                _anim.SetBool("isWalking", isWalking);
+                _anim.SetBool("isGrounded", true);
+            }
         }
     }
 
@@ -329,7 +344,7 @@ public class PlayerController : Singleton<PlayerController>
     private void ApplyJump(float force)
     {
         SoundManager.PlayThemeSFX(SFXType.Jump, 0.8f);
-        if (isGrounded && jumpParticles != null) jumpParticles.Play();
+        if ( jumpParticles != null) jumpParticles.Play();
 
         // Anti-Spam mühürleri
         isGrounded = false;

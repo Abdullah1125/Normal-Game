@@ -73,7 +73,7 @@ public class AdMobRewardedManager : SingletonPersistent<AdMobRewardedManager>
         }
         else
         {
-            Debug.Log("Ödüllü reklam henüz hazır değil.");
+        
             LoadRewardedAd();
             return false;
         }

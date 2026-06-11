@@ -593,7 +593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.827451, g: 0.54509807, b: 0.65882355, a: 0}
+  m_Color: {r: 0.7529412, g: 0.63529414, b: 0.63529414, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1390,7 +1390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.827451, g: 0.54509807, b: 0.65882355, a: 1}
+  m_Color: {r: 0.7529412, g: 0.63529414, b: 0.63529414, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2314,7 +2314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.827451, g: 0.54509807, b: 0.65882355, a: 1}
+  m_Color: {r: 0.7529412, g: 0.63529414, b: 0.63529414, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2357,7 +2357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1301693782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2894,7 +2894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.827451, g: 0.54509807, b: 0.65882355, a: 0}
+  m_Color: {r: 1, g: 0.27058825, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3200,7 +3200,7 @@ MonoBehaviour:
   pageBackgrounds:
   - {fileID: 21300000, guid: a259872a92e4c724da0ba203d35983b0, type: 3}
   - {fileID: 21300000, guid: 92abb4b95a216a043ba0d48dbb880ccd, type: 3}
-  - {fileID: 21300000, guid: 3d968e875f6593e4282a05ac8406b1b7, type: 3}
+  - {fileID: 21300000, guid: 576458a29e6337544abfb8575f891d8a, type: 3}
   - {fileID: 21300000, guid: 8a5b7a3bb72a635499d1d1a924856616, type: 3}
   - {fileID: 21300000, guid: 0077e5118025b5e47818b12e0fd5f589, type: 3}
   gridCanvasGroup: {fileID: 1689561161}
@@ -3435,7 +3435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.85490197, g: 0.7372549, b: 0.7372549, a: 1}
+  m_Color: {r: 0.7509433, g: 0.63334274, b: 0.63334274, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
