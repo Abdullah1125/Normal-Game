@@ -57,7 +57,6 @@ public class ParadoxMechanic : MonoBehaviour, IResettable
         else if (savedSession == _appSessionID)
         {
             // OYUNCU SADECE MENÜYE DÖNDÜ: Kapý kapalý kalsýn
-            Debug.Log("JÝLET TROLL: Ana menüye dönmek kurtarmaz!");
         }
         else
         {
@@ -81,7 +80,6 @@ public class ParadoxMechanic : MonoBehaviour, IResettable
         if (!_isMemoryCleared)
         {
             ClearPuzzleMemory();
-            Debug.Log("JÝLET TROLL: Level geçildi, paradox hafýzasý anýnda silindi!");
         }
     }
 

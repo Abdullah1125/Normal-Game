@@ -333,7 +333,7 @@ public class LevelUIManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[LevelUIManager] Page {currentPage} Refresh.");
+
     }
 
     void FillGridWithPageData(int pageIndex, List<LevelMenuButton> targetButtons)
@@ -366,7 +366,7 @@ public class LevelUIManager : MonoBehaviour
                     }
                 }
 
-                Debug.Log($"[LevelUIManager] Button {i} (Global {currentDataIndex}) on Page {pageIndex} -> Localized Name: {localizedLevelName}");
+
 
                 targetButtons[i].Setup(currentDataIndex, data, isComingSoon, localizedLevelName);
             }
@@ -583,7 +583,9 @@ public class LevelUIManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            StartFakeLoading(5.0f, () => { Debug.Log("Test Başarıyla Bitti!"); });
+          StartFakeLoading(5.0f, () => { Debug.Log("Test Başarıyla Bitti!"); });
+
+
         }
     }
 

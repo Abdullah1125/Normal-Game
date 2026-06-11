@@ -47,7 +47,6 @@ public class ProgressiveGateController : MonoBehaviour, IResettable
         {
             GateController.Instance.gameObject.SetActive(false);
             _didDisableNormalGate = true;
-            Debug.Log("Özel Kontrol: Normal kapý gizlendi, aþamalý kapý devrede.");
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -53,7 +53,7 @@ public class PauseManager : MonoBehaviour
         isToggling = true;
         lastToggleTime = Time.unscaledTime;
 
-        Debug.Log("Sistem: Ayarlar açılıyor...");
+
 
         // Menü butonlarını dondur
         if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
@@ -76,7 +76,7 @@ public class PauseManager : MonoBehaviour
         isToggling = true;
         lastToggleTime = Time.unscaledTime;
 
-        Debug.Log("Sistem: Ayarlar kapatılıyor...");
+
 
         if (settingsAnimator != null) settingsAnimator.CloseMenu();
         else if (settingsPanelUI != null) settingsPanelUI.SetActive(false);
@@ -98,7 +98,7 @@ public class PauseManager : MonoBehaviour
         if (isToggling) return;
         isToggling = true;
 
-        Debug.Log("Sistem: Bölüm Menüsü tuşu tetiklendi!");
+
 
         if (UIManager.Instance != null) UIManager.Instance.SetPauseBlock(true);
 

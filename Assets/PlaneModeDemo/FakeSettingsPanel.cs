@@ -27,7 +27,6 @@ public class FakeSettingsPanel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isOpen = !isOpen;
-            Debug.Log(isOpen ? "Panel AÇIK" : "Panel KAPALI");
         }
     }
 }

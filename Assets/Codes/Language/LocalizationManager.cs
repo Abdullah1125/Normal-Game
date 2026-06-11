@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Manages language data and provides localized texts based on the selected language.
@@ -39,7 +39,7 @@ public class LocalizationManager : SingletonPersistent<LocalizationManager>
             LocalizedText[] allTexts = FindObjectsByType<LocalizedText>(FindObjectsSortMode.None);
             foreach (var t in allTexts) t.UpdateText();
 
-            Debug.Log(langName + " dili yüklendi.");
+
         }
     }
 

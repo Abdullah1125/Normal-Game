@@ -206,7 +206,7 @@ public static class StudentDataLogger
         }
         catch (Exception e)
         {
-            Debug.LogWarning("Telemetry önbelleğe yazılamadı: " + e.Message);
+
         }
     }
 

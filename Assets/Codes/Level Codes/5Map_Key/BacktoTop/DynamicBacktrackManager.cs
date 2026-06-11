@@ -61,7 +61,6 @@ public class DynamicBacktrackManager : MonoBehaviour, IResettable
             }
             else
             {
-                Debug.LogError("Aga Target Level Data dosyasýný Inspector'a atmayý unuttun!");
             }
         }
     }

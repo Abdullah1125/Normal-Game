@@ -122,7 +122,7 @@ public class ResetManager : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        Debug.Log("Reset: Temizleme işlemi tamamlandı. RAM ve Disk sıfırlandı.");
+     
     }
 
     private void ReloadCurrentScene()

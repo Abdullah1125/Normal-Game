@@ -23,7 +23,6 @@ public class ReverseControlsCurse : MonoBehaviour
 
         if (_moveInputUpdate == null)
         {
-            Debug.LogError("JÝLET HATA: PlayerController içinde 'moveInput' alaný bulunamadý!");
             return;
         }
 
@@ -36,7 +35,6 @@ public class ReverseControlsCurse : MonoBehaviour
             _injectedAgents.Add(agent);
         }
 
-        Debug.Log("JÝLET TROLL: Kontroller tersine çevrildi! Sað -> Sol / Sol -> Sað");
     }
 
     /// <summary>

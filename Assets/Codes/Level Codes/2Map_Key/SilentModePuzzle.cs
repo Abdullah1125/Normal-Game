@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class SilentModePuzzle : MonoBehaviour
 {
@@ -62,7 +62,7 @@ public class SilentModePuzzle : MonoBehaviour
         if (GateController.Instance != null)
         {
             GateController.Instance.OpenGate();
-            Debug.Log(" Tam sessizlik sağlandı: Kapı Açıldı!");
+
         }
     }
 
@@ -71,7 +71,7 @@ public class SilentModePuzzle : MonoBehaviour
         if (GateController.Instance != null)
         {
             GateController.Instance.CloseGate();
-            Debug.Log(" Ses geri geldi: Kapı Kapatıldı!");
+
         }
     }
     
