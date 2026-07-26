@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Level_2
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 37
-  levelName: Normal
-  isUnlocked: 0
-  isCompleted: 0
+  levelName: "\u0130nat\xE7\u0131 Buton"
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
-  - {fileID: 5463523237449333621, guid: 1fdb298581c7e284287db80838f0c582, type: 3}
-  - {fileID: 622421129055202947, guid: a6285afde6017ca45b6ccf035e3ffd91, type: 3}
+  - {fileID: 848189026242041685, guid: a6285afde6017ca45b6ccf035e3ffd91, type: 3}
+  - {fileID: 4607660102697771447, guid: c47d8590054084944b526db242dc921a, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

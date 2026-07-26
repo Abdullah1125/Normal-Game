@@ -1,4 +1,4 @@
-﻿{
+{
     "play_button": "PLAY",
     "settings_button": "SETTINGS",
     "exit_button": "EXIT",
@@ -160,6 +160,15 @@
         "You're trapped on the vertical axis. The rhythm of the fall doesn't change, it just repeats. The solution isn't to stop the fall; it's learning how to drift within it.",
         "Everything is working perfectly right now. But if you go and press that button, the door will shut, and you’ll lock yourself in. Now, if you have any common sense, ignore the button and just walk through the door.",
         "When your character's color changes, the game's rules start making fun of your reflexes. Forget your muscle memory, because your character is betraying your commands now. Adapting to this inverted world is the only way to survive."
+    ],
+    "level_names_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
+    ],
+    "hints_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
+    ],
+    "extra_hints_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
     ],
     "gyro_level_name": "Dragging Box",
     "gyro_hint": "Dragging Box",

@@ -161,6 +161,15 @@
         "Şu an her şey kusursuz çalışıyor. Ama gidip o butona basarsan, kapı kapanacak ve kendini kilitleyeceksin. Şimdi, aklın varsa o butonu görmezden gel ve kapıdan geç.",
         "Karakterin rengi değiştiğinde, oyunun kuralları senin reflekslerinle dalga geçmeye başlar. Kas hafızanı unut, çünkü karakterin artık senin komutlarına ihanet ediyor. Tersine dönen dünyaya alışmak, hayatta kalmanın tek yolu."
     ],
+    "level_names_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
+    ],
+    "hints_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
+    ],
+    "extra_hints_4": [
+        "", "", "", "", "", "", "", "", "", "", "", ""
+    ],
     "gyro_level_name": "Sürüklenen Kutu",
     "gyro_hint": "Sürüklenen Kutu",
     "gyro_extra_hint": "Fizik kurallarını boşver, kutuyu manuel olarak tutup sürükle.",

@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 39
-  levelName: Normal
+  levelName: "Silikle\u015Fen Karakter"
   isUnlocked: 0
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
-  - {fileID: 5463523237449333621, guid: 1fdb298581c7e284287db80838f0c582, type: 3}
-  - {fileID: 622421129055202947, guid: a6285afde6017ca45b6ccf035e3ffd91, type: 3}
+  - {fileID: 5372643579261503925, guid: 1fdb298581c7e284287db80838f0c582, type: 3}
+  - {fileID: 848189026242041685, guid: a6285afde6017ca45b6ccf035e3ffd91, type: 3}
+  - {fileID: 4148202233654614990, guid: 734d15ad6fcd3a14fab936ee2d0cd6fd, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}
