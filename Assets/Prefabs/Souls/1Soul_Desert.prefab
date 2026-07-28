@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e570b74ba19acfe42afde83591bd362c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoulEffect
-  lifeTime: 3
+  lifeTime: 4
   soulGravity: 1.5
   stopThreshold: 0.5
 --- !u!212 &7635025498503846681
