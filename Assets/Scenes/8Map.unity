@@ -15279,7 +15279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GateController
   moveOffset: {x: 0, y: 3, z: 0}
   moveSpeed: 2
-  totalKeysNeeded: 1
+  totalKeysNeeded: 2
   keyCountText: {fileID: 0}
   frictionParticles: {fileID: 259619323556222344}
 --- !u!4 &3400741100428778647

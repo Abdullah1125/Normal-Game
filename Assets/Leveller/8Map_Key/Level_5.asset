@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 46
-  levelName: Normal
-  isUnlocked: 0
+  levelName: Buz Pateni
+  isUnlocked: 1
   isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 1606094445828512302, guid: d03a99eb25b018145ad20072f392e053, type: 3}
   - {fileID: 6706844271257675222, guid: d2f041acb37cdd24ab3bf67fb33c17d4, type: 3}
+  - {fileID: 8777176011133675882, guid: 1f663c89fd9bc4c4aa8b0c5f9432df4d, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

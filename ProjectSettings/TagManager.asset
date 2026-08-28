@@ -11,6 +11,7 @@ TagManager:
   - Box
   - BoxButton
   - TargetGrid
+  - menukey
   layers:
   - Default
   - TransparentFX
