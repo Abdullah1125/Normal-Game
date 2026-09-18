@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36065ee7f8d8eca40a935866ce5a9a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FreeFallCurse
-  curseGravityScale: 2.04
-  maxFallSpeed: -3
-  curseFallMultiplier: 2.17
+  curseGravityScale: 2.4
+  maxFallSpeed: -1
+  curseFallMultiplier: 1.47

@@ -96,7 +96,9 @@ public class FinishPoint : MonoBehaviour, IResettable
                 }
                 else
                 {
-                    if (normalGateSprite != null) gateRenderer.sprite = normalGateSprite;
+                    // Eğer listeye yeterli sayıda kapı eklenmediyse (örneğin 36. level için 3. indeks yoksa),
+                    // hata vermemesi ve en başa (normal kapıya) DÖNMEMESİ için listedeki EN SON kapıyı kullan!
+                    gateRenderer.sprite = specialGateSprites[specialGateSprites.Count - 1];
                 }
             }
         }

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Level_3
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 38
-  levelName: Normal
+  levelName: SlideFinish
   isUnlocked: 1
-  isCompleted: 1
+  isCompleted: 0
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
@@ -25,5 +25,6 @@ MonoBehaviour:
   specialMechanics:
   - {fileID: 5372643579261503925, guid: 1fdb298581c7e284287db80838f0c582, type: 3}
   - {fileID: 848189026242041685, guid: a6285afde6017ca45b6ccf035e3ffd91, type: 3}
+  - {fileID: 8147026719567098848, guid: 8ad50f9be4882574094c562f1e4f54c0, type: 3}
   levelHint: 
   hintVisualMap: {fileID: 0}

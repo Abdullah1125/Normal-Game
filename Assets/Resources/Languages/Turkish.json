@@ -162,13 +162,46 @@
         "Karakterin rengi değiştiğinde, oyunun kuralları senin reflekslerinle dalga geçmeye başlar. Kas hafızanı unut, çünkü karakterin artık senin komutlarına ihanet ediyor. Tersine dönen dünyaya alışmak, hayatta kalmanın tek yolu."
     ],
     "level_names_4": [
-        "", "", "", "", "", "", "", "", "", "", "", ""
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "hints_4": [
-        "", "", "", "", "", "", "", "", "", "", "", ""
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "extra_hints_4": [
-        "", "", "", "", "", "", "", "", "", "", "", ""
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
     ],
     "gyro_level_name": "Sürüklenen Kutu",
     "gyro_hint": "Sürüklenen Kutu",

@@ -82,8 +82,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingButtonTrigger
   fallingButton: {fileID: 7372733984627533886}
-  normalSprite: {fileID: 21300000, guid: b3a6608744faa8c4cbdbbb93b0b968f8, type: 3}
-  pressedSprite: {fileID: 21300000, guid: 09a0b42aa9a45e545898148e9b30ca6f, type: 3}
+  normalSprite: {fileID: 21300000, guid: fc9d1f99cf6d6444bb52691a5ea89e07, type: 3}
+  pressedSprite: {fileID: 21300000, guid: 6bbcb810d9937164ca78fc289bcf61d0, type: 3}
   pressParticles: {fileID: 8155335402298147251}
 --- !u!212 &1501216327641309508
 SpriteRenderer:
@@ -134,7 +134,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 15
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b3a6608744faa8c4cbdbbb93b0b968f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc9d1f99cf6d6444bb52691a5ea89e07, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -181,8 +181,8 @@ BoxCollider2D:
   m_Offset: {x: -0.002696842, y: -0.008726239}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.3}
-    oldSize: {x: 1.6, y: 0.8}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.5714285, y: 0.42857143}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -237,8 +237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69b7729eb464dd4eb3fed23feda6481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingBoxButton
-  normalSprite: {fileID: 21300000, guid: b3a6608744faa8c4cbdbbb93b0b968f8, type: 3}
-  pressedSprite: {fileID: 21300000, guid: 09a0b42aa9a45e545898148e9b30ca6f, type: 3}
+  normalSprite: {fileID: 21300000, guid: fc9d1f99cf6d6444bb52691a5ea89e07, type: 3}
+  pressedSprite: {fileID: 21300000, guid: 6bbcb810d9937164ca78fc289bcf61d0, type: 3}
   pressParticles: {fileID: 4763037918246795279}
   targetGroundPosition: {fileID: 4960937245453643737}
   dropSpeed: 25
@@ -291,7 +291,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 15
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b3a6608744faa8c4cbdbbb93b0b968f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc9d1f99cf6d6444bb52691a5ea89e07, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -338,8 +338,8 @@ BoxCollider2D:
   m_Offset: {x: -0.002696842, y: -0.008726239}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.3}
-    oldSize: {x: 1.6, y: 0.8}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.5714285, y: 0.42857143}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

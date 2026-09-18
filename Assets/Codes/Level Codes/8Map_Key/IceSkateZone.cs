@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using System.Reflection;
 using System.Collections.Generic;
 
@@ -29,6 +30,14 @@ public class IceSkateZone : MonoBehaviour, IResettable
     private List<GameObject> _disabledObstacles = new List<GameObject>();
     private List<Collider2D> _obstacleColliders = new List<Collider2D>();
     private Collider2D[] _playerColliders;
+
+    private struct RemovedTile
+    {
+        public Tilemap map;
+        public Vector3Int position;
+        public TileBase tile;
+    }
+    private List<RemovedTile> _removedTiles = new List<RemovedTile>();
 
     public bool IsSliding => _isSliding;
     public Vector2 CurrentDirection => _currentSlideDirection;
@@ -71,6 +80,7 @@ public class IceSkateZone : MonoBehaviour, IResettable
 
         _disabledObstacles.Clear();
         _obstacleColliders.Clear();
+        _removedTiles.Clear();
 
         GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (var obs in obstacles)
@@ -98,6 +108,10 @@ public class IceSkateZone : MonoBehaviour, IResettable
         _currentSlideDirection = Vector2.zero;
         _currentSpeed = 0f;
         _isActive = true;
+
+        // --- YENİ EKLENEN KISIM ---
+        // Karakter doğduğu an otomatik olarak aşağı yönlü hareketi başlat
+        MoveDown();
     }
 
     void Update()
@@ -156,28 +170,60 @@ public class IceSkateZone : MonoBehaviour, IResettable
         {
             if (obs == null) continue;
 
-            bool isInside = false;
-            Collider2D[] obsCols = obs.GetComponentsInChildren<Collider2D>();
-
-            foreach (var oCol in obsCols)
+            Tilemap tilemap = obs.GetComponent<Tilemap>();
+            if (tilemap != null)
             {
-                foreach (var pCol in _playerColliders)
-                {
-                    if (pCol != null && pCol.bounds.Intersects(oCol.bounds))
-                    {
-                        isInside = true;
-                        break;
-                    }
-                }
-                if (isInside) break;
+                RemoveTilesUnderPlayer(tilemap);
             }
-
-            SpriteRenderer[] srs = obs.GetComponentsInChildren<SpriteRenderer>();
-            foreach (var sr in srs)
+            else
             {
-                if (sr.enabled == isInside)
+                SpriteRenderer firstSr = obs.GetComponentInChildren<SpriteRenderer>();
+                if (firstSr != null && !firstSr.enabled) continue;
+
+                bool isInside = false;
+
+                Collider2D[] obsCols = obs.GetComponentsInChildren<Collider2D>();
+                foreach (var oCol in obsCols)
                 {
-                    sr.enabled = !isInside;
+                    foreach (var pCol in _playerColliders)
+                    {
+                        if (pCol != null && pCol.bounds.Intersects(oCol.bounds))
+                        {
+                            isInside = true;
+                            break;
+                        }
+                    }
+                    if (isInside) break;
+                }
+
+                if (isInside)
+                {
+                    SpriteRenderer[] srs = obs.GetComponentsInChildren<SpriteRenderer>();
+                    foreach (var sr in srs) sr.enabled = false;
+                }
+            }
+        }
+    }
+
+    private void RemoveTilesUnderPlayer(Tilemap tilemap)
+    {
+        Bounds bounds = _playerColliders[0].bounds;
+        bounds.Expand(-0.3f);
+
+        Vector3Int minCell = tilemap.WorldToCell(bounds.min);
+        Vector3Int maxCell = tilemap.WorldToCell(bounds.max);
+
+        for (int x = minCell.x; x <= maxCell.x; x++)
+        {
+            for (int y = minCell.y; y <= maxCell.y; y++)
+            {
+                Vector3Int cellPos = new Vector3Int(x, y, 0);
+                TileBase tile = tilemap.GetTile(cellPos);
+
+                if (tile != null)
+                {
+                    _removedTiles.Add(new RemovedTile { map = tilemap, position = cellPos, tile = tile });
+                    tilemap.SetTile(cellPos, null);
                 }
             }
         }
@@ -262,6 +308,15 @@ public class IceSkateZone : MonoBehaviour, IResettable
                 foreach (var sr in srs) sr.enabled = true;
             }
         }
+
+        foreach (var rt in _removedTiles)
+        {
+            if (rt.map != null)
+            {
+                rt.map.SetTile(rt.position, rt.tile);
+            }
+        }
+        _removedTiles.Clear();
 
         foreach (var oCol in _obstacleColliders)
         {

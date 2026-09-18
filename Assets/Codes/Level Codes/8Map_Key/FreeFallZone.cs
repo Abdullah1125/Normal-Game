@@ -8,7 +8,7 @@ using UnityEngine;
 public class FreeFallCurse : MonoBehaviour, IResettable
 {
     [Header("Serbest Düşüş Ayarları")]
-    [Range(0.1f, 3f)]
+    [Range(0.1f, 4f)]
     public float curseGravityScale = 0.7f;
 
     public float maxFallSpeed = -3f;

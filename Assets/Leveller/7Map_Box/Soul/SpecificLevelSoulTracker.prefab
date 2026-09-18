@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3531301850043393931}
   - component: {fileID: 4150743961564985187}
   - component: {fileID: 6483674800103804493}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: SpecificLevelSoulTracker
   m_TagString: Box
   m_Icon: {fileID: 0}
