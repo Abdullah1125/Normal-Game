@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Level_5
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 52
-  levelName: Normal
-  isUnlocked: 0
-  isCompleted: 0
+  levelName: Tepe Taklak
+  isUnlocked: 1
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
   - {fileID: 5752490117677948287, guid: 4855437bb520f4648853df2853311818, type: 3}
+  - {fileID: 1432135169105566050, guid: 970702920cc13af4fbd7a5c8336f7e0a, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

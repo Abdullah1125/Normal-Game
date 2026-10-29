@@ -55,9 +55,12 @@ public class LevelMenuButton : MonoBehaviour
             levelText.text = (index + 1).ToString();
 
         if (data.isCompleted) buttonImage.color = Color.green;
-        else if (data.isUnlocked) buttonImage.color = Color.white;
+        else if (data.isUnlocked)
+        {
+            ColorUtility.TryParseHtmlString("#3E80BA", out Color mainColor);
+            buttonImage.color = mainColor;
+        }
         else buttonImage.color = Color.gray;
-
         if (btn != null)
             btn.interactable = data.isUnlocked;
 

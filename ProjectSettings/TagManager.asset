@@ -13,6 +13,8 @@ TagManager:
   - TargetGrid
   - menukey
   - door
+  - Start
+  - Slide
   layers:
   - Default
   - TransparentFX

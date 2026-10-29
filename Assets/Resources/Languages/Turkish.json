@@ -162,10 +162,10 @@
         "Karakterin rengi değiştiğinde, oyunun kuralları senin reflekslerinle dalga geçmeye başlar. Kas hafızanı unut, çünkü karakterin artık senin komutlarına ihanet ediyor. Tersine dönen dünyaya alışmak, hayatta kalmanın tek yolu."
     ],
     "level_names_4": [
-        "",
-        "",
-        "",
-        "",
+        "İnatçı Kutu",
+        "Manuel Çıkış",
+        "Kayıplara Karış",
+        "İkinci Buton",
         "",
         "",
         "",
@@ -176,10 +176,10 @@
         ""
     ],
     "hints_4": [
-        "",
-        "",
-        "",
-        "",
+        "Fırıldak Kutu",
+        "Kapıyı Sen Kaldır",
+        "Kendine Güven",
+        "Buton Butonu Çağırır",
         "",
         "",
         "",
@@ -190,10 +190,10 @@
         ""
     ],
     "extra_hints_4": [
-        "",
-        "",
-        "",
-        "",
+        "Attığın her adımla kutuyu sağa sola savurup duruyorsun ama bu oyun sonsuza kadar sürmeyecek. Kutu bir süre senin bu saçmalamalarına ayak uydurup yön değiştirse de, en sonunda şalteri indirip butonun üzerine beton gibi çakılacak. Ancak kutu butonun üstünde kilitlendiğinde o kapı açılır, sen de nihayet bir sonraki bölüme geçebilirsin",
+        "Karakterinle o kapıya saatlerce kafa atabilirsin ama milim kıpırdamayacak. Bu bulmacayı oyunun içinden çözemezsin. Burası dokunmatik bir ekran aga... Parmağını o çıkış kapısının üzerine bas, dikey olarak yukarı doğru sürükleyip kaldır. Yolu kendi ellerinle açtıktan sonra karakteri yürütüp bu bölümü bitir",
+        "Çıkışa yaklaştıkça kendi varlığını kaybedeceksin. Bu bir hız testi değil, tamamen bir odaklanma testi. Karakterin görünmez olduğunda panik yapıp tuşlara rastgele basarsan kendini tuzakların içinde bulursun. Nerede zıpladığını ve nerede yere indiğini zihninde canlandırmadan bu bölümü geçmen imkansız.",
+        "Bulmacayı çözmek için kutuyu butona sürüklüyorsun, her şey normal görünüyor değil mi? Ta ki sen butona basınca gökyüzünden gürültüyle yepyeni bir buton düşene kadar... İlk buton kapıyı açmıyor, sadece gerçek butonu sipariş etmene yarıyor. Yeni buton yere indiğinde, kutunu olduğu yerden söküp o yeni butona kadar itmek zorundasın. İki kez yorulacaksın",
         "",
         "",
         "",

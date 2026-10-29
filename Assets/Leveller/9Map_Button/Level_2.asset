@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: Level_2
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelID: 49
-  levelName: Normal
+  levelName: "Zamanl\u0131 D\xFCkkan"
   isUnlocked: 0
-  isCompleted: 0
+  isCompleted: 1
   isLeftForbidden: 0
   isRightForbidden: 0
   isJumpForbidden: 0
   isActive: 1
+  showLayer: 1
+  colliderLeyer: 1
   specialMechanics:
-  - {fileID: 5752490117677948287, guid: 4855437bb520f4648853df2853311818, type: 3}
+  - {fileID: 2361374418457313349, guid: e02db94085957934899cc5238807e9e2, type: 3}
   levelHint: 
+  hintVisualMap: {fileID: 0}

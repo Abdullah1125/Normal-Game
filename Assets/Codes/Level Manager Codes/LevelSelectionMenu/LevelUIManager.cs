@@ -137,8 +137,8 @@ public class LevelUIManager : MonoBehaviour
         {
             comingSoonCG = comingSoonPanel.GetComponent<CanvasGroup>();
             if (comingSoonCG == null) comingSoonCG = comingSoonPanel.AddComponent<CanvasGroup>();
-            comingSoonCG.alpha = (currentPage > 3) ? 1f : 0f;
-            comingSoonPanel.SetActive(currentPage > 3);
+            comingSoonCG.alpha = 0f;
+            comingSoonPanel.SetActive(false);
         }
 
         RefreshPageUI();
@@ -353,7 +353,7 @@ public class LevelUIManager : MonoBehaviour
                 data.isUnlocked = PlayerPrefs.GetInt(Constants.PREF_LEVEL_UNLOCKED_PREFIX + data.levelID, data.levelID == 0 ? 1 : 0) == 1;
                 data.isCompleted = PlayerPrefs.GetInt(Constants.PREF_LEVEL_COMPLETE_PREFIX + data.levelID, 0) == 1;
 
-                bool isComingSoon = (pageIndex > 3);
+                bool isComingSoon = false; // Eskiden (pageIndex > 3) idi, tamamen kaldırıldı
                 string localizedLevelName = data.levelName;
 
                 // SİHİRLİ DOKUNUŞ: Merkezi sistem üzerinden o butonun ismini çekiyoruz
@@ -461,8 +461,8 @@ public class LevelUIManager : MonoBehaviour
         bool oldHasCS = false, newHasCS = false;
         if (comingSoonPanel != null)
         {
-            oldHasCS = (currentPage > 3);
-            newHasCS = (targetPage > 3);
+            oldHasCS = false;
+            newHasCS = false;
         }
 
         // Yeni sayfa verilerini asıl objelere yükler
@@ -575,6 +575,10 @@ public class LevelUIManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f); // Noktaların hızı
         }
     }
+    private Vector2 swipeStartPos;
+    private Vector2 swipeEndPos;
+    public float swipeThreshold = 50f;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -586,6 +590,62 @@ public class LevelUIManager : MonoBehaviour
           StartFakeLoading(5.0f, () => { Debug.Log("Test Başarıyla Bitti!"); });
 
 
+        }
+
+        DetectSwipe();
+    }
+
+    private void DetectSwipe()
+    {
+        if (isAnimating) return;
+
+        // Touch Input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                swipeStartPos = touch.position;
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                swipeEndPos = touch.position;
+                CheckSwipe();
+            }
+        }
+        // Mouse Input
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                swipeStartPos = Input.mousePosition;
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                swipeEndPos = Input.mousePosition;
+                CheckSwipe();
+            }
+        }
+    }
+
+    private void CheckSwipe()
+    {
+        float xDistance = swipeEndPos.x - swipeStartPos.x;
+        float yDistance = swipeEndPos.y - swipeStartPos.y;
+
+        if (Mathf.Abs(xDistance) > Mathf.Abs(yDistance) && Mathf.Abs(xDistance) > swipeThreshold)
+        {
+            if (xDistance > 0)
+            {
+                // Sağa kaydırma (Önceki sayfa)
+                PreviousPage();
+            }
+            else
+            {
+                // Sola kaydırma (Sonraki sayfa)
+                NextPage();
+            }
         }
     }
 

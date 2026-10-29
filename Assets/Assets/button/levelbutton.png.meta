@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9774f2612b94dd74f9c8ccfb957334ef
+guid: 27a3f08bd6f8c2b48b69c94cd22b6b2d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3794358888152633055
-    second: fade2_0
+      213: -4165609410349077520
+    second: levelbutton_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 32
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: fade2_0
+      name: levelbutton_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1920
-        height: 540
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 121f051d1bab75bc0800000000000000
-      internalID: -3794358888152633055
+      spriteID: 0fb6e17cf48c036c0800000000000000
+      internalID: -4165609410349077520
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      fade2_0: -3794358888152633055
+      levelbutton_0: -4165609410349077520
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
